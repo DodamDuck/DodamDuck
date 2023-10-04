@@ -2,12 +2,10 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from 'react-bootstrap';
 import 도담덕로고 from './img/도담덕로고.png'
-import './assets/fonts/fonts.css';
 
 function App() {
   return (
     <>
-    <div className='App'>
       {['sm'].map((expand) => (
       <Navbar key={expand} expand={expand} className="bg-body-tertiary mb-3">
         <Container>
@@ -32,7 +30,6 @@ function App() {
       </Navbar>
       
       ))}
-    </div>
     </>
   );
 }
