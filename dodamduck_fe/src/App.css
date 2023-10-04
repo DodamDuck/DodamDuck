@@ -1,3 +1,7 @@
+.App  {
+  font-family: '210 옴니고딕OTF 045', sans-serif !important;
+}
+
 .main-logo-dodamduck {
   display: inline-block;
   margin-left: 6px;
@@ -16,6 +20,6 @@
 .link-spacing {
   margin-left: 20px !important;
   margin-right: 20px !important;
-  color: rgb(34, 34, 34) !important;
+  color: rgb(55, 55, 55) !important;
   font-weight: 600 !important;
 }
