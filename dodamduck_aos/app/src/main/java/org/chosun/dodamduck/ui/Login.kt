@@ -34,7 +34,10 @@ fun LoginScreen() {
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxSize()
         ) {
-            BottomStartRoundedBox(startRound = 200)
+            BottomStartRoundedBox(
+                modifier = Modifier.height(400.dp),
+                startRound = 200
+            )
             Spacer(modifier = Modifier.height(82.dp))
 
             WelcomeText()
