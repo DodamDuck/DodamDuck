@@ -1,35 +1,58 @@
 package org.chosun.dodamduck.ui
 
+import RoundedBottomBox
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.ui.component.DodamDuckIcon
+import org.chosun.dodamduck.ui.component.PrimaryButton
+import org.chosun.dodamduck.ui.component.WelcomeText
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
+import org.chosun.dodamduck.ui.theme.Primary
 
 @Composable
 fun LoginScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(Primary)
     ) {
-        Text(
-            text = stringResource(id = R.string.login),
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            RoundedBottomBox()
+
+            Spacer(modifier = Modifier.height(82.dp))
+            WelcomeText()
+            Spacer(modifier = Modifier.height(32.dp))
+
+            PrimaryButton(text = stringResource(R.string.login))
+            Spacer(modifier = Modifier.height(27.dp))
+            PrimaryButton(text = stringResource(R.string.register))
+        }
+
+        DodamDuckIcon(
+            modifier = Modifier
+                .offset(y = 60.dp)
+                .align(Alignment.TopCenter),
+            size = 300
         )
     }
+
 }
 
 @Preview
