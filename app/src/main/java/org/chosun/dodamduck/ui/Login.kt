@@ -52,7 +52,6 @@ fun LoginScreen() {
             size = 300
         )
     }
-
 }
 
 @Preview
