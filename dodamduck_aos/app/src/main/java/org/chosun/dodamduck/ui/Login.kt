@@ -35,8 +35,8 @@ fun LoginScreen() {
             modifier = Modifier.fillMaxSize()
         ) {
             RoundedBottomBox()
-
             Spacer(modifier = Modifier.height(82.dp))
+
             WelcomeText()
             Spacer(modifier = Modifier.height(32.dp))
 
