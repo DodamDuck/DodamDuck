@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
@@ -43,9 +44,15 @@ fun LoginScreen() {
             WelcomeText()
             Spacer(modifier = Modifier.height(32.dp))
 
-            PrimaryButton(text = stringResource(R.string.login))
+            PrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.login)
+            )
             Spacer(modifier = Modifier.height(27.dp))
-            PrimaryButton(text = stringResource(R.string.register))
+            PrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.register)
+            )
         }
 
         DodamDuckIcon(
