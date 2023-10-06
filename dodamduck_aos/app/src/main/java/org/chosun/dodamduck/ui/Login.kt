@@ -1,6 +1,6 @@
 package org.chosun.dodamduck.ui
 
-import RoundedBottomBox
+import BottomStartRoundedBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,7 +34,7 @@ fun LoginScreen() {
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxSize()
         ) {
-            RoundedBottomBox()
+            BottomStartRoundedBox(startRound = 200)
             Spacer(modifier = Modifier.height(82.dp))
 
             WelcomeText()

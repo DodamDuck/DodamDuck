@@ -11,12 +11,12 @@ import androidx.compose.ui.draw.clip
 import org.chosun.dodamduck.ui.theme.Secondary
 
 @Composable
-fun RoundedBottomBox() {
+fun BottomStartRoundedBox(startRound: Int = 0) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(400.dp)
-            .clip(RoundedCornerShape(0.dp, 0.dp, 0.dp, 200.dp))
+            .clip(RoundedCornerShape(0.dp, 0.dp, 0.dp, startRound.dp))
             .background(Secondary)
     )
 }
@@ -24,5 +24,5 @@ fun RoundedBottomBox() {
 @Preview
 @Composable
 fun PreviewRoundedBottomBox() {
-    RoundedBottomBox()
+    BottomStartRoundedBox()
 }
