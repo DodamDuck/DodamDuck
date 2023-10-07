@@ -10,4 +10,7 @@
     <string name="duck_icon">DuckIcon</string>
     <string name="welcome">Welcome</string>
     <string name="please_register">앱을 사용 하시려면\n회원가입을 해주세요.</string>
+    <string name="google_icon">googleIcon</string>
+    <string name="sign_up_for_google_account">구글 계정으로 회원가입</string>
+    <string name="visible_icon">visibleIcon</string>
 </resources>
