@@ -1,31 +1,32 @@
 package org.chosun.dodamduck.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.chosun.dodamduck.ui.theme.Primary
 import org.chosun.dodamduck.ui.theme.Secondary
+import org.chosun.dodamduck.ui.theme.WhitetOpacity45
 import kotlin.math.ln
 
+private const val DEFAULT_CORNER_RADIUS = 12
 @Composable
 fun LoginSurface(
     modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    color: Color = Primary,
+    shape: Shape = RoundedCornerShape(DEFAULT_CORNER_RADIUS.dp),
+    color: Color = WhitetOpacity45,
     elevation: Dp = 0.dp,
     content: @Composable () -> Unit
 ) {
@@ -36,8 +37,10 @@ fun LoginSurface(
                 color = getBackgroundColorForElevation(color, elevation),
                 shape = shape
             )
-            .clip(RoundedCornerShape(12.dp))
-    )
+            .border(2.dp, Color.Black, shape)
+    ) {
+        content()
+    }
 }
 
 @Composable
@@ -49,7 +52,8 @@ fun PreviewLoginSurface() {
             .background(Secondary)
     ) {
         LoginSurface(
-            modifier = Modifier.fillMaxWidth().height(100.dp)
+            modifier = Modifier.width(296.dp).height(55.dp)
+                .align(alignment = Alignment.Center)
         ){
 
         }
