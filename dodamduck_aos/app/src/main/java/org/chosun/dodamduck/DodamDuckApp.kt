@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import org.chosun.dodamduck.ui.navigation.BottomNavigation
+import org.chosun.dodamduck.ui.navigation.DodamDuckBottomNavigation
 import org.chosun.dodamduck.ui.navigation.daoDamDuckNavigationGraph
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
@@ -16,7 +16,7 @@ fun DodamDuckApp () {
     DodamDuckTheme {
         val navController = rememberNavController()
         Scaffold (
-            bottomBar = { BottomNavigation(navController = navController) }
+            bottomBar = { DodamDuckBottomNavigation(navController = navController) }
         ) {
             Box(Modifier.padding(it)) {
                 daoDamDuckNavigationGraph(navController = navController)

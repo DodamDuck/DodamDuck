@@ -2,6 +2,7 @@ package org.chosun.dodamduck.ui.navigation
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +25,7 @@ import org.chosun.dodamduck.ui.BoardScreen
 import org.chosun.dodamduck.ui.ChatScreen
 import org.chosun.dodamduck.ui.HomeScreen
 import org.chosun.dodamduck.ui.LibraryScreen
-import org.chosun.dodamduck.ui.LoginScreen
+import org.chosun.dodamduck.ui.OnboardingScreen
 import org.chosun.dodamduck.ui.RegisterScreen
 import org.chosun.dodamduck.ui.UserScreen
 
@@ -32,7 +33,7 @@ sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
 ) {
     object Home : BottomNavItem(R.string.home, R.drawable.ic_home_48, R.string.home.toString())
-    object Login : BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
+    object Onboarding : BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
     object Register : BottomNavItem(R.string.register, R.drawable.ic_home_48, R.string.register.toString())
 
     object Library : BottomNavItem(R.string.library, R.drawable.ic_toy_48, R.string.library.toString())
@@ -46,12 +47,12 @@ sealed class BottomNavItem(
 
 @Composable
 fun daoDamDuckNavigationGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = BottomNavItem.Home.screenRoute) {
+    NavHost(navController = navController, startDestination = BottomNavItem.Onboarding.screenRoute) {
         composable(BottomNavItem.Home.screenRoute) {
             HomeScreen()
         }
-        composable(BottomNavItem.Login.screenRoute) {
-            LoginScreen()
+        composable(BottomNavItem.Onboarding.screenRoute) {
+            OnboardingScreen(navController)
         }
         composable(BottomNavItem.Register.screenRoute) {
             RegisterScreen()
@@ -72,7 +73,7 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
 }
 
 @Composable
-fun BottomNavigation(navController: NavHostController) {
+fun DodamDuckBottomNavigation(navController: NavHostController) {
     val items = listOf<BottomNavItem>(
         BottomNavItem.Home,
         BottomNavItem.Library,
@@ -81,39 +82,41 @@ fun BottomNavigation(navController: NavHostController) {
         BottomNavItem.User
     )
 
-    androidx.compose.material.BottomNavigation(
-        backgroundColor = Color.White,
-        contentColor = Color(0xFF3F414E)
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-        items.forEach { item ->
-            BottomNavigationItem(
-                icon = {
-                    Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = stringResource(id = item.title),
-                        modifier = Modifier
-                            .width(26.dp)
-                            .height(26.dp)
-                    )
-                },
-                label = { Text(stringResource(id = item.title), fontSize = 9.sp) },
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = Gray,
-                selected = currentRoute == item.screenRoute,
-                alwaysShowLabel = false,
-                onClick = {
-                    navController.navigate(item.screenRoute) {
-                        navController.graph.startDestinationRoute?.let {
-                            popUpTo(it) { saveState = true }
+    if(currentRoute != BottomNavItem.Onboarding.screenRoute && currentRoute != BottomNavItem.Register.screenRoute) {
+        BottomNavigation(
+            backgroundColor = Color.White,
+            contentColor = Color(0xFF3F414E)
+        ) {
+            items.forEach { item ->
+                BottomNavigationItem(
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = item.icon),
+                            contentDescription = stringResource(id = item.title),
+                            modifier = Modifier
+                                .width(26.dp)
+                                .height(26.dp)
+                        )
+                    },
+                    label = { Text(stringResource(id = item.title), fontSize = 9.sp) },
+                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                    unselectedContentColor = Gray,
+                    selected = currentRoute == item.screenRoute,
+                    alwaysShowLabel = false,
+                    onClick = {
+                        navController.navigate(item.screenRoute) {
+                            navController.graph.startDestinationRoute?.let {
+                                popUpTo(it) { saveState = true }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
-                }
-            )
+                )
+            }
         }
     }
 }

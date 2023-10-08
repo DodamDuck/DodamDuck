@@ -55,15 +55,18 @@ fun LoginTextField(
                 value = text,
                 onValueChange = { text = it },
                 Modifier
-                    .weight(1f)
                     .wrapContentWidth()
+                    .weight(1f)
                     .fillMaxHeight(),
                 label = {
                     Text(text = label)
                 },
                 colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent
-                ),
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
             )
             if (iconVisible) {
                 VisibleIcon(
@@ -83,6 +86,6 @@ fun PreviewLoginTextField() {
             .fillMaxSize()
             .background(Primary)
     ) {
-        LoginTextField(label = stringResource(id = R.string.email))
+        LoginTextField(label = stringResource(id = R.string.email), iconVisible = false)
     }
 }

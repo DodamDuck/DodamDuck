@@ -111,10 +111,8 @@ fun Body() {
                     DodamDuckTextH2(text = stringResource(R.string.sign_up_for_google_account))
                 }
             }
-            Spacer(Modifier.height(10.dp))
 
-            DodamDuckTextT1(text = "or")
-            Spacer(Modifier.height(12.dp))
+            DodamDuckTextT1(text = "or", modifier = Modifier.padding(vertical = 10.dp))
 
             InputTextField()
 
@@ -136,6 +134,7 @@ fun InputTextField() {
                 label = list[index],
                 width = 296,
                 height = 55,
+                iconVisible = index != 0,
                 modifier = Modifier.padding(vertical = 10.dp)
             )
         }
