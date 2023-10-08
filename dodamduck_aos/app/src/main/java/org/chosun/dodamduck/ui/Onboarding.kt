@@ -16,15 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.DodamDuckIcon
 import org.chosun.dodamduck.ui.component.PrimaryButton
 import org.chosun.dodamduck.ui.component.WelcomeText
+import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
 
 @Composable
-fun LoginScreen() {
+fun OnboardingScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -46,12 +49,13 @@ fun LoginScreen() {
 
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.login)
+                text = stringResource(R.string.login),
             )
             Spacer(modifier = Modifier.height(27.dp))
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.register)
+                text = stringResource(R.string.register),
+                onClick = { navController.navigate(BottomNavItem.Register.screenRoute) }
             )
         }
 
@@ -66,8 +70,8 @@ fun LoginScreen() {
 
 @Preview
 @Composable
-fun LoginPreview() {
+fun OnboardingPreview() {
     DodamDuckTheme {
-        LoginScreen()
+        OnboardingScreen(rememberNavController())
     }
 }
