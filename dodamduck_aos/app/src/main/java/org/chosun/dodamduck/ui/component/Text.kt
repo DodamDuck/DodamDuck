@@ -31,6 +31,24 @@ fun PreviewWelcomeText() {
 }
 
 @Composable
+fun DodamDuckText(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Black,
+    fontSize: Int,
+    fontWeight: FontWeight = FontWeight.Medium
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        color = color,
+        fontFamily = Krona,
+        fontSize = fontSize.sp,
+        fontWeight = fontWeight
+    )
+}
+
+@Composable
 fun DodamDuckTextH1(
     modifier: Modifier = Modifier,
     text: String,
