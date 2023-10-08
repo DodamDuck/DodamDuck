@@ -13,4 +13,8 @@
     <string name="google_icon">googleIcon</string>
     <string name="sign_up_for_google_account">구글 계정으로 회원가입</string>
     <string name="visible_icon">visibleIcon</string>
+    <string name="create_password">Create-Password</string>
+    <string name="confirm_password">Confirm-Password</string>
+    <string name="email">Email</string>
+    <string name="confirmed_the_terms_and_conditions">약관을 확인 했습니다.</string>
 </resources>
