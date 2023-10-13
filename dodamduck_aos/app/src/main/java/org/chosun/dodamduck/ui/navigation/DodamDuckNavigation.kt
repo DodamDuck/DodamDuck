@@ -25,6 +25,7 @@ import org.chosun.dodamduck.ui.BoardScreen
 import org.chosun.dodamduck.ui.ChatScreen
 import org.chosun.dodamduck.ui.HomeScreen
 import org.chosun.dodamduck.ui.LibraryScreen
+import org.chosun.dodamduck.ui.LoginScreen
 import org.chosun.dodamduck.ui.OnboardingScreen
 import org.chosun.dodamduck.ui.RegisterScreen
 import org.chosun.dodamduck.ui.UserScreen
@@ -33,8 +34,9 @@ sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
 ) {
     object Home : BottomNavItem(R.string.home, R.drawable.ic_home_48, R.string.home.toString())
-    object Onboarding : BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
+    object Onboarding : BottomNavItem(R.string.onboarding, R.drawable.ic_home_48, R.string.onboarding.toString())
     object Register : BottomNavItem(R.string.register, R.drawable.ic_home_48, R.string.register.toString())
+    object Login : BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
 
     object Library : BottomNavItem(R.string.library, R.drawable.ic_toy_48, R.string.library.toString())
 
@@ -55,7 +57,10 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
             OnboardingScreen(navController)
         }
         composable(BottomNavItem.Register.screenRoute) {
-            RegisterScreen()
+            RegisterScreen(navController)
+        }
+        composable(BottomNavItem.Login.screenRoute) {
+            LoginScreen(navController)
         }
         composable(BottomNavItem.Library.screenRoute) {
             LibraryScreen()
@@ -85,7 +90,7 @@ fun DodamDuckBottomNavigation(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    if(currentRoute != BottomNavItem.Onboarding.screenRoute && currentRoute != BottomNavItem.Register.screenRoute) {
+    if(currentRoute != BottomNavItem.Onboarding.screenRoute && currentRoute != BottomNavItem.Register.screenRoute && currentRoute!= BottomNavItem.Login.screenRoute) {
         BottomNavigation(
             backgroundColor = Color.White,
             contentColor = Color(0xFF3F414E)

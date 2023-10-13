@@ -1,6 +1,7 @@
 package org.chosun.dodamduck.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ fun AuthBody(
     labelList: List<String>,
     buttonAction: () -> Unit = {},
     forgetTextAction: () -> Unit = {},
+    bottomTextAction: () -> Unit,
     checkBoxVisible: Boolean = true,
     checkBoxText: String,
     buttonText: String,
@@ -73,7 +75,7 @@ fun AuthBody(
                 fontSize = 15,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.DarkGray,
-                modifier = Modifier.padding(top = 25.dp)
+                modifier = Modifier.padding(top = 25.dp).clickable(onClick = bottomTextAction)
             )
         }
     }
@@ -96,7 +98,8 @@ fun PreviewAuthBody() {
             ),
             checkBoxText = stringResource(id = R.string.confirmed_the_terms_and_conditions),
             buttonText = stringResource(id = R.string.register),
-            alreadyText = stringResource(id = R.string.already_account)
+            alreadyText = stringResource(id = R.string.already_account),
+            bottomTextAction = {}
         )
     }
 }

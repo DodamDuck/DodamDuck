@@ -11,14 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
+import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +42,8 @@ fun RegisterScreen() {
                 ),
                 checkBoxText = stringResource(id = R.string.confirmed_the_terms_and_conditions),
                 buttonText = stringResource(id = R.string.register),
-                alreadyText = stringResource(id = R.string.already_account)
+                alreadyText = stringResource(id = R.string.already_account),
+                bottomTextAction = {navController.navigate(BottomNavItem.Login.screenRoute)}
             )
         }
     }
@@ -49,6 +53,6 @@ fun RegisterScreen() {
 @Composable
 fun RegisterPreview() {
     DodamDuckTheme {
-        RegisterScreen()
+        RegisterScreen(rememberNavController())
     }
 }

@@ -50,6 +50,7 @@ fun OnboardingScreen(navController: NavHostController) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.login),
+                onClick = { navController.navigate(BottomNavItem.Login.screenRoute) }
             )
             Spacer(modifier = Modifier.height(27.dp))
             PrimaryButton(
