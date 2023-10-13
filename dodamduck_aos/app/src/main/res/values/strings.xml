@@ -24,4 +24,5 @@
     <string name="password">Password</string>
     <string name="dont_you_have_an_account">계정이 없으신가요?</string>
     <string name="did_you_forget_your_password">패스워드를 잊으셨나요?</string>
+    <string name="onboarding">온보딩</string>
 </resources>
