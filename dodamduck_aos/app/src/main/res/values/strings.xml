@@ -17,4 +17,11 @@
     <string name="confirm_password">Confirm-Password</string>
     <string name="email">Email</string>
     <string name="confirmed_the_terms_and_conditions">약관을 확인 했습니다.</string>
+    <string name="or">or</string>
+    <string name="already_account">이미 계정이 있으신가요?</string>
+    <string name="please_login">앱을 사용 하시려면\n로그인을 해주세요.</string>
+    <string name="log_in_with_google_account">구글 계정으로 로그인</string>
+    <string name="password">Password</string>
+    <string name="dont_you_have_an_account">계정이 없으신가요?</string>
+    <string name="did_you_forget_your_password">패스워드를 잊으셨나요?</string>
 </resources>
