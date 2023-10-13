@@ -2,6 +2,7 @@ package org.chosun.dodamduck.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -32,6 +33,8 @@ fun DodamDuckCheckBox(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
+    boxVisible: Boolean = true,
+    forgetTextAction: () -> Unit = {}
 ) {
     var checkedState by remember { mutableStateOf(true) }
 
@@ -40,39 +43,44 @@ fun DodamDuckCheckBox(
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
-        Box(
-            modifier = Modifier
-                .size(24.dp)
-                .background(
-                    color = Color.Transparent,
-                    shape = RoundedCornerShape(4.dp)
+        if(boxVisible) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .background(
+                        color = Color.Transparent,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = Color.Black,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+            ) {
+                Checkbox(
+                    checked = checkedState,
+                    onCheckedChange = onCheckedChange,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color.Transparent,
+                        uncheckedColor = Color.Transparent,
+                        checkmarkColor = Color.Black,
+                        disabledColor = Color.Gray,
+                        disabledIndeterminateColor = Color.Gray
+                    )
                 )
-                .border(
-                    width = 1.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(4.dp)
-                )
-        ) {
-            Checkbox(
-                checked = checkedState,
-                onCheckedChange = onCheckedChange,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = Color.Transparent,
-                    uncheckedColor = Color.Transparent,
-                    checkmarkColor = Color.Black,
-                    disabledColor = Color.Gray,
-                    disabledIndeterminateColor = Color.Gray
-                )
-            )
+            }
         }
-        Text(text = text, Modifier.padding(start = 5.dp))
+        Text(text = text,
+            Modifier
+                .padding(start = 5.dp)
+                .clickable { forgetTextAction })
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun CheckBoxSamplePreview() {
-    Box (modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         DodamDuckCheckBox(
             stringResource(id = R.string.confirmed_the_terms_and_conditions),
             {},
