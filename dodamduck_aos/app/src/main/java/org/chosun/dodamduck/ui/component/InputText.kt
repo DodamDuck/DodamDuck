@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -32,14 +33,14 @@ private const val DEFAULT_WIDTH = 200
 private const val DEFAULT_HEIGHT = 50
 
 @Composable
-fun LoginTextField(
+fun AuthTextField(
     modifier: Modifier = Modifier,
     label: String = "",
     iconVisible: Boolean = true,
     width: Int = DEFAULT_WIDTH,
     height: Int = DEFAULT_HEIGHT
 ) {
-    LoginSurface(
+    AuthInputSurface(
         modifier = modifier
             .width(width = width.dp)
             .height(height = height.dp)
@@ -72,7 +73,8 @@ fun LoginTextField(
                 VisibleIcon(
                     modifier
                         .wrapContentSize()
-                        .padding(end = 12.dp))
+                        .padding(end = 12.dp)
+                )
             }
         }
     }
@@ -83,9 +85,42 @@ fun LoginTextField(
 fun PreviewLoginTextField() {
     Box(
         Modifier
-            .fillMaxSize()
+            .wrapContentSize()
             .background(Primary)
     ) {
-        LoginTextField(label = stringResource(id = R.string.email), iconVisible = false)
+        AuthTextField(label = stringResource(id = R.string.email), iconVisible = false)
+    }
+}
+
+@Composable
+fun AuthInputTextList(labelList: List<String>) {
+    LazyColumn(modifier = Modifier.padding(vertical = 5.dp)) {
+        items(labelList.size) { index ->
+            AuthTextField(
+                label = labelList[index],
+                width = 296,
+                height = 55,
+                iconVisible = index != 0,
+                modifier = Modifier.padding(vertical = 10.dp)
+            )
+        }
+    }
+}
+
+@Composable
+@Preview
+fun PreviewAuthInputTextList() {
+    Box(
+        Modifier
+            .wrapContentSize()
+            .background(Primary)
+    ) {
+        AuthInputTextList(
+            labelList = listOf(
+                stringResource(R.string.email),
+                stringResource(R.string.create_password),
+                stringResource(R.string.confirm_password)
+            )
+        )
     }
 }

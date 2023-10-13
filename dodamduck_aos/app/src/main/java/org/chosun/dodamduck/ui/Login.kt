@@ -20,8 +20,9 @@ import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
 
+
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -29,21 +30,21 @@ fun RegisterScreen(navController: NavHostController) {
     ) {
         Column {
             AuthTopSurface(
-                stringResource(R.string.register),
-                stringResource(R.string.please_register)
+                stringResource(R.string.login),
+                stringResource(R.string.please_login)
             )
             Spacer(Modifier.height(30.dp))
             AuthBody(
-                googleButtonText = stringResource(R.string.sign_up_for_google_account),
+                googleButtonText = stringResource(R.string.log_in_with_google_account),
                 labelList = listOf(
                     stringResource(R.string.email),
-                    stringResource(R.string.create_password),
-                    stringResource(R.string.confirm_password)
+                    stringResource(R.string.password),
                 ),
-                checkBoxText = stringResource(id = R.string.confirmed_the_terms_and_conditions),
-                buttonText = stringResource(id = R.string.register),
-                alreadyText = stringResource(id = R.string.already_account),
-                bottomTextAction = {navController.navigate(BottomNavItem.Login.screenRoute)}
+                checkBoxText = stringResource(R.string.did_you_forget_your_password),
+                buttonText = stringResource(id = R.string.login),
+                alreadyText = stringResource(R.string.dont_you_have_an_account),
+                checkBoxVisible = false,
+                bottomTextAction = {navController.navigate(BottomNavItem.Register.screenRoute)}
             )
         }
     }
@@ -51,8 +52,8 @@ fun RegisterScreen(navController: NavHostController) {
 
 @Preview
 @Composable
-fun RegisterPreview() {
+fun LoginPreview() {
     DodamDuckTheme {
-        RegisterScreen(rememberNavController())
+        LoginScreen(rememberNavController())
     }
 }
