@@ -1,6 +1,6 @@
 package org.chosun.dodamduck.ui
 
-import BottomStartRoundedBox
+import BottomRoundedBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,7 +38,7 @@ fun OnboardingScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxSize()
         ) {
-            BottomStartRoundedBox(
+            BottomRoundedBox(
                 modifier = Modifier.height(400.dp),
                 startRound = 200
             )
