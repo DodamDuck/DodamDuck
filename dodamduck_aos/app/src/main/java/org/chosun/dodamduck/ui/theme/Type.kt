@@ -42,3 +42,7 @@ val Krona = FontFamily(
 val KadwaBold = FontFamily(
     Font(R.font.kadwa_bold)
 )
+
+val Gugi = FontFamily(
+    Font(R.font.gugi)
+)
