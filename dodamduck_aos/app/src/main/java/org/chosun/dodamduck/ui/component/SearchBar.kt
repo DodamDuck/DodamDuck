@@ -19,18 +19,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.theme.Secondary
 import org.chosun.dodamduck.ui.theme.White9
 
 @Composable
-fun SearchBar() {
+fun DodamDuckSearchBar(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
-            .padding(16.dp)
+        modifier = modifier
+            .padding(horizontal = 50.dp)
             .background(
                 color = White9,
                 shape = RoundedCornerShape(32.dp)
@@ -51,7 +53,7 @@ fun SearchBar() {
         ) {
             DodamDuckText(
                 modifier = Modifier.weight(1f),
-                text = "검색어를 입력하세요",
+                text = stringResource(R.string.hint_enter_search_query),
                 fontSize = 12,
                 color = Color.Gray,
                 fontWeight = FontWeight.Bold,
@@ -72,6 +74,6 @@ fun SearchBar() {
 @Composable
 fun SearchBarPreview() {
     Surface(color = Secondary) {
-        SearchBar()
+        DodamDuckSearchBar()
     }
 }
