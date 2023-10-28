@@ -67,7 +67,8 @@ fun AuthBody(
                 text = buttonText,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 40.dp)
+                    .padding(top = 40.dp),
+                onClick = buttonAction
             )
 
             DodamDuckText(
