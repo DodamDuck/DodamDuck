@@ -107,6 +107,7 @@ fun DodamDuckTextH2(
         color = color,
         fontFamily = Krona,
         fontSize = 16.sp,
+        fontWeight = fontWeight
     )
 }
 

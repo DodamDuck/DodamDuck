@@ -26,4 +26,13 @@
     <string name="dont_you_have_an_account">계정이 없으신가요?</string>
     <string name="did_you_forget_your_password">패스워드를 잊으셨나요?</string>
     <string name="onboarding">온보딩</string>
+    <string name="hint_enter_search_query">검색어를 입력하세요</string>
+    <string name="ask_for_toy_search">찾으시는 장난감이 있으신가요?</string>
+    <string name="dummy_toy_item_metropolitan_city">서울 특별시</string>
+    <string name="dummy_toy_item_district_office">성북구청</string>
+    <string name="dummy_toy_item_name">손목 자연 딸랑이</string>
+    <string name="dumy_toy_item_classification">조작/탐색</string>
+    <string name="dummy_toy_item_age_limit">1개월 이상</string>
+    <string name="dumy_toy_item_price">500원</string>
+    <string name="ask_rental">대여 문의</string>
 </resources>
