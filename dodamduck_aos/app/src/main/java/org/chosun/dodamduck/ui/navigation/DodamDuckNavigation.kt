@@ -34,8 +34,11 @@ sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
 ) {
     object Home : BottomNavItem(R.string.home, R.drawable.ic_home_48, R.string.home.toString())
+
     object Onboarding : BottomNavItem(R.string.onboarding, R.drawable.ic_home_48, R.string.onboarding.toString())
+
     object Register : BottomNavItem(R.string.register, R.drawable.ic_home_48, R.string.register.toString())
+
     object Login : BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
 
     object Library : BottomNavItem(R.string.library, R.drawable.ic_toy_48, R.string.library.toString())

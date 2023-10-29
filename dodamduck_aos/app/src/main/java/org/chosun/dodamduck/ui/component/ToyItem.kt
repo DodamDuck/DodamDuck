@@ -79,7 +79,7 @@ fun ToyItem() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = stringResource(R.string.dummy_toy_item_name), fontSize = 12.sp)
-                Text(text = stringResource(R.string.dumy_toy_item_classification), fontSize = 10.sp)
+                Text(text = stringResource(R.string.dummy_toy_item_classification), fontSize = 10.sp)
             }
 
             Row(
@@ -88,7 +88,7 @@ fun ToyItem() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = stringResource(R.string.dummy_toy_item_age_limit), fontSize = 10.sp)
-                Text(text = stringResource(R.string.dumy_toy_item_price), fontSize = 10.sp)
+                Text(text = stringResource(R.string.dummy_toy_item_price), fontSize = 10.sp)
             }
             OutlinedButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),

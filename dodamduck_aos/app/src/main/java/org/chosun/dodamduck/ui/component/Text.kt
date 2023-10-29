@@ -115,14 +115,16 @@ fun DodamDuckTextH2(
 fun DodamDuckTextH3(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Black
+    color: Color = Color.Black,
+    fontWeight: FontWeight = FontWeight.Light
 ) {
     Text(
         modifier = modifier,
         text = text,
         color = color,
         fontFamily = Krona,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        fontWeight = fontWeight
     )
 }
 
