@@ -15,7 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.viewmodel.ToyLibraryViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckIcon
 import org.chosun.dodamduck.ui.component.DodamDuckSearchBar
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
@@ -26,7 +28,7 @@ import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
 
 @Composable
-fun LibraryScreen() {
+fun LibraryScreen(toyLibraryViewModel: ToyLibraryViewModel = hiltViewModel()) {
     Box(
         modifier = Modifier
             .fillMaxSize()
