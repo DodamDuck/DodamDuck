@@ -142,3 +142,14 @@ fun DodamDuckTextT1(
         fontSize = 20.sp
     )
 }
+
+@Composable
+fun EllipsisText(text: String, maxLength: Int) {
+    val displayText = if (text.length > maxLength) {
+        text.take(maxLength - 3) + "..."
+    } else {
+        text
+    }
+
+    Text(text = displayText)
+}
