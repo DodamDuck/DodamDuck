@@ -24,35 +24,49 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.dto.ToyInfo
 
 @Composable
 @Preview(showBackground = true)
 fun PreviewToyList() {
     Box(modifier = Modifier.fillMaxWidth()) {
-        ToyList()
+        ToyList(
+            toyInfos = listOf(
+                ToyInfo(
+                    "", stringResource(id = R.string.dummy_toy_item_district_office),
+                    "", stringResource(id = R.string.dummy_toy_item_metropolitan_city), "",
+                    stringResource(id = R.string.dummy_toy_item_name),
+                    stringResource(id = R.string.dummy_toy_item_classification),
+                    stringResource(id = R.string.dummy_toy_item_age_limit),
+                    stringResource(id = R.string.dummy_toy_item_price),
+                    ""
+                )
+            )
+        )
     }
 }
 
 @Composable
-fun ToyList() {
+fun ToyList(toyInfos: List<ToyInfo>) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),  // 한 행에 2개의 아이템
+        columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(8.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 8.dp)
     ) {
-        items(8) {  // 예제로 4개의 아이템을 추가
-            ToyItem()
+        items(toyInfos.size) {
+            ToyItem(toyInfos[it])
         }
     }
 }
 
 @Composable
-fun ToyItem() {
+fun ToyItem(toyInfo: ToyInfo) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,8 +78,8 @@ fun ToyItem() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text(text = stringResource(R.string.dummy_toy_item_metropolitan_city))
-            Text(text = stringResource(R.string.dummy_toy_item_district_office))
+            Text(text = toyInfo.addressStreet.split(" ")[0])
+            Text(text = toyInfo.managementAgencyName)
             Image(
                 painter = painterResource(id = R.drawable.ic_toy_48),
                 contentDescription = null,
@@ -78,8 +92,8 @@ fun ToyItem() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(R.string.dummy_toy_item_name), fontSize = 12.sp)
-                Text(text = stringResource(R.string.dummy_toy_item_classification), fontSize = 10.sp)
+                EllipsisText(text = toyInfo.toyName, maxLength = 8)
+                Text(text = toyInfo.area, fontSize = 10.sp)
             }
 
             Row(
@@ -87,8 +101,8 @@ fun ToyItem() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(R.string.dummy_toy_item_age_limit), fontSize = 10.sp)
-                Text(text = stringResource(R.string.dummy_toy_item_price), fontSize = 10.sp)
+                Text(text = toyInfo.ageGroup, fontSize = 10.sp)
+                Text(text = toyInfo.rentalFee, fontSize = 10.sp)
             }
             OutlinedButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
