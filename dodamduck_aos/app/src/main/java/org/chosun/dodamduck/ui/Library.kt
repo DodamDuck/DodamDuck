@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,6 +32,12 @@ import org.chosun.dodamduck.ui.theme.Primary
 
 @Composable
 fun LibraryScreen(toyLibraryViewModel: ToyLibraryViewModel = hiltViewModel()) {
+    val toyInfos by toyLibraryViewModel.toyInfos.collectAsState(initial = null)
+
+    LaunchedEffect(Unit) {
+        toyLibraryViewModel.getToyInfos()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -41,28 +50,38 @@ fun LibraryScreen(toyLibraryViewModel: ToyLibraryViewModel = hiltViewModel()) {
                 modifier = Modifier.height(200.dp),
                 startRound = 40
             ) {
-                DodamDuckTitleText(modifier = Modifier.padding(start = 12.dp, top = 20.dp))
-                DodamDuckIcon(modifier = Modifier.padding(start = 134.dp, top = 20.dp), size = 46)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 26.dp),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    DodamDuckTextH2(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 7.dp),
-                        text = stringResource(R.string.ask_for_toy_search),
-                        color = Brown,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-
-                    DodamDuckSearchBar()
-                }
+                LibraryHeader()
+                LibrarySearchBar()
             }
-            ToyList()
+            ToyList(toyInfos ?: listOf())
         }
+    }
+}
+
+@Composable
+fun LibraryHeader() {
+    DodamDuckTitleText(modifier = Modifier.padding(start = 12.dp, top = 20.dp))
+    DodamDuckIcon(modifier = Modifier.padding(start = 134.dp, top = 20.dp), size = 46)
+}
+
+@Composable
+fun LibrarySearchBar() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 26.dp),
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        DodamDuckTextH2(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 7.dp),
+            text = stringResource(R.string.ask_for_toy_search),
+            color = Brown,
+            fontWeight = FontWeight.ExtraBold
+        )
+
+        DodamDuckSearchBar()
     }
 }
 
