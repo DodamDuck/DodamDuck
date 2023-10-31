@@ -99,7 +99,8 @@ fun DodamDuckTextH2(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    textAlign: TextAlign? = null
 ) {
     Text(
         modifier = modifier,
@@ -107,7 +108,8 @@ fun DodamDuckTextH2(
         color = color,
         fontFamily = Krona,
         fontSize = 16.sp,
-        fontWeight = fontWeight
+        fontWeight = fontWeight,
+        textAlign = textAlign
     )
 }
 
@@ -116,7 +118,8 @@ fun DodamDuckTextH3(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
-    fontWeight: FontWeight = FontWeight.Light
+    fontWeight: FontWeight = FontWeight.Light,
+    textAlign: TextAlign? = null
 ) {
     Text(
         modifier = modifier,
@@ -124,7 +127,8 @@ fun DodamDuckTextH3(
         color = color,
         fontFamily = Krona,
         fontSize = 14.sp,
-        fontWeight = fontWeight
+        fontWeight = fontWeight,
+        textAlign = textAlign
     )
 }
 

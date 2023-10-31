@@ -37,4 +37,6 @@
     <string name="ask_rental">대여 문의</string>
     <string name="dummy_post_info_item">빛가람동 \u00B7 1일전 \u00B7 조회 434</string>
     <string name="writing">글 쓰기</string>
+    <string name="selling_my_stuff">내 물건 팔기</string>
+    <string name="save_temporarily">임시 저장</string>
 </resources>

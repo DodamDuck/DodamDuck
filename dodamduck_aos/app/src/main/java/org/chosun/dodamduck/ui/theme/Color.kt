@@ -7,6 +7,7 @@ val Secondary = Color(0xFFFAF3B2)
 val Brown = Color(0xFF7C6A6A)
 val WhiteOpacity45 = Color(0x73FFFFFF)
 val White9 = Color(0xFFFEFAD9)
+val Gray8 = Color(0xFF8F8F8F)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
