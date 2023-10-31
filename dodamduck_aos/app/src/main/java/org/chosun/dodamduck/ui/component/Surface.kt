@@ -1,6 +1,5 @@
 package org.chosun.dodamduck.ui.component
 
-import BottomRoundedBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
