@@ -46,4 +46,7 @@
     <string name="detail_description">자세한 설명</string>
     <string name="detail_description_content">빛가람동에 올릴 게시글 내용을 작성해 주세요.\n(교환 금지 물픔은 게시가 제한될 수 있어요.)\n\n신뢰할 수 있는 거래를 위해 자세히 적어주세요.</string>
     <string name="frequently_used_button">자주 쓰는 문구</string>
+    <string name="desired_trading_location">거래 희망 장소</string>
+    <string name="dummy_item_location">ex) 이노시티 애시앙 1단지</string>
+    <string name="post_completed">작성 완료</string>
 </resources>
