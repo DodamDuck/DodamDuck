@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -28,6 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.DodamDuckRadioButton
 import org.chosun.dodamduck.ui.component.DodamDuckText
@@ -41,31 +46,31 @@ import org.chosun.dodamduck.ui.component.lazy_components.PhotoSelectionList
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun PostScreen() {
+fun TradeWriteScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Column {
-            PostScreenHeader()
+            TradeWriteScreenHeader(navController)
             PhotoSelectionList(modifier = Modifier.padding(start = 12.dp, top = 23.dp))
-            PostInputText(
+            TradeWriteInputText(
                 modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 8.dp),
                 titleText = stringResource(id = R.string.title),
                 text = stringResource(id = R.string.title)
             )
-            PostTransactionType(
+            TradeTransactionType(
                 modifier = Modifier.padding(
                     start = 12.dp,
                     end = 12.dp,
                     top = 17.dp
                 )
             )
-            PostInputText(
+            TradeWriteInputText(
                 modifier = Modifier
                     .padding(start = 12.dp, end = 12.dp, top = 8.dp)
-                    .height(200.dp),
+                    .height(130.dp),
                 titleText = stringResource(id = R.string.detail_description),
                 text = stringResource(id = R.string.detail_description_content)
             )
@@ -73,14 +78,14 @@ fun PostScreen() {
                 modifier = Modifier.padding(start = 12.dp, top = 17.dp),
                 text = stringResource(R.string.frequently_used_button)
             )
-            PostInputText(
+            TradeWriteInputText(
                 modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 8.dp),
                 titleText = stringResource(R.string.desired_trading_location),
                 text = stringResource(R.string.dummy_item_location)
             )
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                startPadding = 12.dp, endPadding = 12.dp, topPadding = 28.dp,
+                startPadding = 12.dp, endPadding = 12.dp, topPadding = 24.dp,
                 elevation = 0.dp, text = stringResource(R.string.post_completed), shape = RoundedCornerShape(6.dp),
                 height = 80.dp
             )
@@ -89,17 +94,19 @@ fun PostScreen() {
 }
 
 @Composable
-fun PostScreenHeader() {
+fun TradeWriteScreenHeader(navController: NavHostController) {
     Row(
-        modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
+        modifier = Modifier.padding(top = 8.dp, end = 8.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = CenterVertically
     ) {
-        Icon(
-            imageVector = Icons.Default.Close,
-            contentDescription = "Close Icon"
-        )
-        Spacer(Modifier.run { weight(0.7f) })
+        IconButton(onClick = {navController.popBackStack()}, modifier = Modifier.wrapContentSize()) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Close Icon"
+            )
+        }
+        Spacer(Modifier.run { weight(0.5f) })
         DodamDuckTextH2(
             Modifier.weight(2f),
             text = stringResource(R.string.selling_my_stuff),
@@ -117,7 +124,7 @@ fun PostScreenHeader() {
 }
 
 @Composable
-fun PostInputText(modifier: Modifier = Modifier, titleText: String, text: String) {
+fun TradeWriteInputText(modifier: Modifier = Modifier, titleText: String, text: String) {
     DodamDuckText(
         modifier = Modifier.padding(start = 12.dp, top = 17.dp),
         text = titleText,
@@ -134,7 +141,7 @@ fun PostInputText(modifier: Modifier = Modifier, titleText: String, text: String
 }
 
 @Composable
-fun PostTransactionType(modifier: Modifier = Modifier) {
+fun TradeTransactionType(modifier: Modifier = Modifier) {
     var selectedOption by remember { mutableStateOf("exchange") }
     val options = listOf(
         "exchange" to stringResource(R.string.exchange), "donation" to stringResource(
@@ -164,9 +171,9 @@ fun PostTransactionType(modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun PostPreview() {
+fun TradeWritePreview() {
     DodamDuckTheme {
-        PostScreen()
+        TradeWriteScreen(rememberNavController())
     }
 }
 
