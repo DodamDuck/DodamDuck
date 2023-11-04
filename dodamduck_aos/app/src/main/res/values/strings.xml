@@ -39,4 +39,11 @@
     <string name="writing">글 쓰기</string>
     <string name="selling_my_stuff">내 물건 팔기</string>
     <string name="save_temporarily">임시 저장</string>
+    <string name="title">제목</string>
+    <string name="transaction_method">거래 방식</string>
+    <string name="exchange">교환하기</string>
+    <string name="donation">나눔하기</string>
+    <string name="detail_description">자세한 설명</string>
+    <string name="detail_description_content">빛가람동에 올릴 게시글 내용을 작성해 주세요.\n(교환 금지 물픔은 게시가 제한될 수 있어요.)\n\n신뢰할 수 있는 거래를 위해 자세히 적어주세요.</string>
+    <string name="frequently_used_button">자주 쓰는 문구</string>
 </resources>
