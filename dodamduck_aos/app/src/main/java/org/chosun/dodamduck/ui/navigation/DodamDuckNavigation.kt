@@ -28,12 +28,15 @@ import org.chosun.dodamduck.ui.LibraryScreen
 import org.chosun.dodamduck.ui.LoginScreen
 import org.chosun.dodamduck.ui.OnboardingScreen
 import org.chosun.dodamduck.ui.RegisterScreen
+import org.chosun.dodamduck.ui.TradeWriteScreen
 import org.chosun.dodamduck.ui.UserScreen
 
 sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
 ) {
     object Home : BottomNavItem(R.string.home, R.drawable.ic_home_48, R.string.home.toString())
+
+    object TradeWrite : BottomNavItem(R.string.trade_write, R.drawable.ic_home_48, R.string.trade_write.toString())
 
     object Onboarding : BottomNavItem(R.string.onboarding, R.drawable.ic_home_48, R.string.onboarding.toString())
 
@@ -54,7 +57,10 @@ sealed class BottomNavItem(
 fun daoDamDuckNavigationGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = BottomNavItem.Onboarding.screenRoute) {
         composable(BottomNavItem.Home.screenRoute) {
-            HomeScreen()
+            HomeScreen(navController)
+        }
+        composable(BottomNavItem.TradeWrite.screenRoute) {
+            TradeWriteScreen(navController)
         }
         composable(BottomNavItem.Onboarding.screenRoute) {
             OnboardingScreen(navController)

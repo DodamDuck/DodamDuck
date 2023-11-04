@@ -25,14 +25,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.ExchangeItemList
+import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +51,7 @@ fun HomeScreen() {
                 .align(Alignment.BottomEnd)
                 .height(60.dp)
                 .padding(end = 8.dp, bottom = 8.dp),
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(BottomNavItem.TradeWrite.screenRoute) },
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Brown),
             border = BorderStroke(width = 1.dp, color = Brown)
         ) {
@@ -77,6 +80,6 @@ fun Header() {
 @Composable
 fun HomePreview() {
     DodamDuckTheme {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }
