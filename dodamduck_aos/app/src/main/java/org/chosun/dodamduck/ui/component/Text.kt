@@ -1,8 +1,13 @@
 package org.chosun.dodamduck.ui.component
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -12,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.theme.Brown
@@ -99,7 +105,8 @@ fun DodamDuckTextH2(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    textAlign: TextAlign? = null
 ) {
     Text(
         modifier = modifier,
@@ -107,7 +114,8 @@ fun DodamDuckTextH2(
         color = color,
         fontFamily = Krona,
         fontSize = 16.sp,
-        fontWeight = fontWeight
+        fontWeight = fontWeight,
+        textAlign = textAlign
     )
 }
 
@@ -116,7 +124,8 @@ fun DodamDuckTextH3(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
-    fontWeight: FontWeight = FontWeight.Light
+    fontWeight: FontWeight = FontWeight.Light,
+    textAlign: TextAlign? = null
 ) {
     Text(
         modifier = modifier,
@@ -124,7 +133,8 @@ fun DodamDuckTextH3(
         color = color,
         fontFamily = Krona,
         fontSize = 14.sp,
-        fontWeight = fontWeight
+        fontWeight = fontWeight,
+        textAlign = textAlign
     )
 }
 
@@ -152,4 +162,32 @@ fun EllipsisText(text: String, maxLength: Int) {
     }
 
     Text(text = displayText)
+}
+
+@Composable
+fun BackgroundText(
+    modifier: Modifier,
+    text: String,
+    backgroundColor: Color,
+    contentAlignment: Alignment,
+    textAlign: TextAlign? = null,
+    fontSize: Int,
+    color: Color
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                backgroundColor,
+                shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+            ),
+        contentAlignment = contentAlignment
+    ) {
+        Text(
+            text = text,
+            color = color,
+            fontSize = fontSize.sp,
+            textAlign = textAlign
+        )
+    }
 }

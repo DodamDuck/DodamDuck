@@ -1,6 +1,5 @@
 package org.chosun.dodamduck.ui.component
 
-import BottomRoundedBox
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -34,11 +33,13 @@ import kotlin.math.ln
 private const val DEFAULT_CORNER_RADIUS = 12
 
 @Composable
-fun AuthInputSurface(
+fun DodamDuckInputSurface(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(DEFAULT_CORNER_RADIUS.dp),
     color: Color = WhiteOpacity45,
     elevation: Dp = 0.dp,
+    borderColor: Color = Color.Black,
+    borderWidth: Int = 2,
     content: @Composable () -> Unit = {}
 ) {
     Box(
@@ -48,7 +49,7 @@ fun AuthInputSurface(
                 color = getBackgroundColorForElevation(color, elevation),
                 shape = shape
             )
-            .border(2.dp, Color.Black, shape)
+            .border(borderWidth.dp, borderColor, shape)
     ) {
         content()
     }
@@ -62,7 +63,7 @@ fun PreviewAuthInputSurface() {
             .wrapContentSize()
             .background(Secondary)
     ) {
-        AuthInputSurface(
+        DodamDuckInputSurface(
             modifier = Modifier
                 .width(296.dp)
                 .height(55.dp)

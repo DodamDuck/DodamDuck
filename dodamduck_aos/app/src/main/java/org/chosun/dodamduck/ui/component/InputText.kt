@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -33,17 +35,21 @@ private const val DEFAULT_WIDTH = 200
 private const val DEFAULT_HEIGHT = 50
 
 @Composable
-fun AuthTextField(
+fun DodamDuckTextField(
     modifier: Modifier = Modifier,
     label: String = "",
     iconVisible: Boolean = true,
     width: Int = DEFAULT_WIDTH,
-    height: Int = DEFAULT_HEIGHT
+    height: Int = DEFAULT_HEIGHT,
+    borderColor: Color = Color.Black,
+    borderWidth: Int = 2
 ) {
-    AuthInputSurface(
+    DodamDuckInputSurface(
         modifier = modifier
             .width(width = width.dp)
-            .height(height = height.dp)
+            .height(height = height.dp),
+        borderColor = borderColor,
+        borderWidth = borderWidth
     ) {
         var text by remember { mutableStateOf("") }
 
@@ -59,6 +65,7 @@ fun AuthTextField(
                     .wrapContentWidth()
                     .weight(1f)
                     .fillMaxHeight(),
+                singleLine = true,
                 label = {
                     Text(text = label)
                 },
@@ -81,6 +88,46 @@ fun AuthTextField(
 }
 
 @Composable
+fun OutlineTextField(
+    modifier: Modifier = Modifier,
+    label: String = "",
+    width: Int = DEFAULT_WIDTH,
+    height: Int = DEFAULT_HEIGHT,
+    borderColor: Color = Color.Black,
+    borderWidth: Int = 2
+) {
+    DodamDuckInputSurface(
+        modifier = modifier
+            .width(width = width.dp)
+            .height(height = height.dp),
+        shape = RoundedCornerShape(10.dp),
+        borderColor = borderColor,
+        borderWidth = borderWidth
+    ) {
+        var text by remember { mutableStateOf("") }
+
+        Row(modifier = Modifier.fillMaxSize()) {
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                Modifier.fillMaxSize(),
+                label = {
+                    Text(text = label)
+                },
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
+            )
+        }
+    }
+}
+
+
+@Composable
 @Preview
 fun PreviewLoginTextField() {
     Box(
@@ -88,7 +135,26 @@ fun PreviewLoginTextField() {
             .wrapContentSize()
             .background(Primary)
     ) {
-        AuthTextField(label = stringResource(id = R.string.email), iconVisible = false)
+        DodamDuckTextField(label = stringResource(id = R.string.email), iconVisible = false)
+    }
+}
+
+@Composable
+@Preview
+fun PreviewOutlineTextField() {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(Primary)
+    ) {
+        OutlineTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+            label = stringResource(id = R.string.title),
+            borderColor = Color.Gray,
+            borderWidth = 1
+        )
     }
 }
 
@@ -96,7 +162,7 @@ fun PreviewLoginTextField() {
 fun AuthInputTextList(labelList: List<String>) {
     LazyColumn(modifier = Modifier.padding(vertical = 5.dp)) {
         items(labelList.size) { index ->
-            AuthTextField(
+            DodamDuckTextField(
                 label = labelList[index],
                 width = 296,
                 height = 55,
