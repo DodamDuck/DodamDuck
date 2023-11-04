@@ -25,7 +25,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckIcon
 import org.chosun.dodamduck.ui.component.DodamDuckSearchBar
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.DodamDuckTitleText
-import org.chosun.dodamduck.ui.component.ToyList
+import org.chosun.dodamduck.ui.component.lazy_components.ToyList
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
