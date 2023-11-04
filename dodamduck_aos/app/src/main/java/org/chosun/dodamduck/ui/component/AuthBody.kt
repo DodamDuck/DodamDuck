@@ -107,7 +107,7 @@ fun PreviewAuthBody() {
 
 @Composable
 fun GoogleIconField(googleButtonText: String) {
-    AuthInputSurface(
+    DodamDuckInputSurface(
         modifier = Modifier
             .width(296.dp)
             .height(55.dp)
@@ -130,7 +130,7 @@ fun GoogleIconField(googleButtonText: String) {
 @Composable
 @Preview
 fun PreviewGoogleIconField() {
-    AuthInputSurface(
+    DodamDuckInputSurface(
         modifier = Modifier
             .width(296.dp)
             .height(55.dp)

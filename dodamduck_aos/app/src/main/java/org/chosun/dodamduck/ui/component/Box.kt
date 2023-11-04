@@ -41,7 +41,7 @@ fun GrayRoundedBox(
     Box(
         modifier = modifier
             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-            .size(size),
+            .size(size)
     ) {
         content()
     }
