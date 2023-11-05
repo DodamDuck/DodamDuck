@@ -169,7 +169,7 @@ fun BackgroundText(
     modifier: Modifier,
     text: String,
     backgroundColor: Color,
-    contentAlignment: Alignment,
+    contentAlignment: Alignment = Alignment.Center,
     textAlign: TextAlign? = null,
     fontSize: Int,
     color: Color
