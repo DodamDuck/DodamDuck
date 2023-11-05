@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui.component
+package org.chosun.dodamduck.ui.component.lazy_components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 
 @Composable
 @Preview(showBackground = true)
