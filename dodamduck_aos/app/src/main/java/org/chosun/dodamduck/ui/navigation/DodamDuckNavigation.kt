@@ -23,7 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.PostScreen
 import org.chosun.dodamduck.ui.ChatScreen
-import org.chosun.dodamduck.ui.HomeScreen
+import org.chosun.dodamduck.ui.TradeScreen
 import org.chosun.dodamduck.ui.LibraryScreen
 import org.chosun.dodamduck.ui.LoginScreen
 import org.chosun.dodamduck.ui.OnboardingScreen
@@ -57,7 +57,7 @@ sealed class BottomNavItem(
 fun daoDamDuckNavigationGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = BottomNavItem.Onboarding.screenRoute) {
         composable(BottomNavItem.Home.screenRoute) {
-            HomeScreen(navController)
+            TradeScreen(navController)
         }
         composable(BottomNavItem.TradeWrite.screenRoute) {
             TradeWriteScreen(navController)

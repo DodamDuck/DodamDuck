@@ -35,14 +35,14 @@ import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun TradeScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Column {
-            Header()
+            TradeHeader()
             ExchangeItemList(modifier = Modifier.padding(top = 24.dp))
         }
 
@@ -63,7 +63,7 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 @Composable
-fun Header() {
+fun TradeHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,8 +78,8 @@ fun Header() {
 
 @Preview
 @Composable
-fun HomePreview() {
+fun TradePreview() {
     DodamDuckTheme {
-        HomeScreen(rememberNavController())
+        TradeScreen(rememberNavController())
     }
 }
