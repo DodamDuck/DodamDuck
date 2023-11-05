@@ -29,7 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
-import org.chosun.dodamduck.ui.component.ExchangeItemList
+import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
