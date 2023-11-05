@@ -44,7 +44,7 @@ fun LoginScreen(navController: NavHostController) {
                 buttonText = stringResource(id = R.string.login),
                 alreadyText = stringResource(R.string.dont_you_have_an_account),
                 checkBoxVisible = false,
-                buttonAction = {navController.navigate(BottomNavItem.Library.screenRoute)},
+                buttonAction = {navController.navigate(BottomNavItem.Home.screenRoute)},
                 bottomTextAction = {navController.navigate(BottomNavItem.Register.screenRoute)}
             )
         }

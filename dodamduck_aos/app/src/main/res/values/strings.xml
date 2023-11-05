@@ -49,4 +49,5 @@
     <string name="desired_trading_location">거래 희망 장소</string>
     <string name="dummy_item_location">ex) 이노시티 애시앙 1단지</string>
     <string name="post_completed">작성 완료</string>
+    <string name="trade_write">교환 작성</string>
 </resources>

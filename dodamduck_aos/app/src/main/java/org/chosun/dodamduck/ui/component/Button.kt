@@ -64,7 +64,7 @@ fun PreviewPrimaryButton() {
 
 @Composable
 fun DodamDuckRadioButton(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     text: String,
     selected: Boolean,
     onSelect: () -> Unit
