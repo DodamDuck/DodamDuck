@@ -21,7 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.ui.BoardScreen
+import org.chosun.dodamduck.ui.PostScreen
 import org.chosun.dodamduck.ui.ChatScreen
 import org.chosun.dodamduck.ui.HomeScreen
 import org.chosun.dodamduck.ui.LibraryScreen
@@ -78,7 +78,7 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
             ChatScreen()
         }
         composable(BottomNavItem.Board.screenRoute) {
-            BoardScreen()
+            PostScreen()
         }
         composable(BottomNavItem.User.screenRoute) {
             UserScreen()

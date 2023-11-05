@@ -16,7 +16,7 @@ import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun BoardScreen() {
+fun PostScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -34,8 +34,8 @@ fun BoardScreen() {
 
 @Preview
 @Composable
-fun BoardPreview() {
+fun PostPreview() {
     DodamDuckTheme {
-        BoardScreen()
+        PostScreen()
     }
 }
