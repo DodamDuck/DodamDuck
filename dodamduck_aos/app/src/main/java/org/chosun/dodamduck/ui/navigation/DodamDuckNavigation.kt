@@ -27,6 +27,7 @@ import org.chosun.dodamduck.ui.TradeScreen
 import org.chosun.dodamduck.ui.LibraryScreen
 import org.chosun.dodamduck.ui.LoginScreen
 import org.chosun.dodamduck.ui.OnboardingScreen
+import org.chosun.dodamduck.ui.PostWriteScreen
 import org.chosun.dodamduck.ui.RegisterScreen
 import org.chosun.dodamduck.ui.TradeWriteScreen
 import org.chosun.dodamduck.ui.UserScreen
@@ -46,7 +47,9 @@ sealed class BottomNavItem(
 
     object Library : BottomNavItem(R.string.library, R.drawable.ic_toy_48, R.string.library.toString())
 
-    object Board : BottomNavItem(R.string.board, R.drawable.ic_board_48, R.string.board.toString())
+    object Post : BottomNavItem(R.string.board, R.drawable.ic_board_48, R.string.board.toString())
+
+    object PostWrite : BottomNavItem(R.string.post_write, R.drawable.ic_board_48, R.string.post_write.toString())
 
     object Chat : BottomNavItem(R.string.chat, R.drawable.ic_chat_48, R.string.chat.toString())
 
@@ -77,8 +80,11 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
         composable(BottomNavItem.Chat.screenRoute) {
             ChatScreen()
         }
-        composable(BottomNavItem.Board.screenRoute) {
-            PostScreen()
+        composable(BottomNavItem.Post.screenRoute) {
+            PostScreen(navController)
+        }
+        composable(BottomNavItem.PostWrite.screenRoute) {
+            PostWriteScreen(navController)
         }
         composable(BottomNavItem.User.screenRoute) {
             UserScreen()
@@ -92,14 +98,19 @@ fun DodamDuckBottomNavigation(navController: NavHostController) {
         BottomNavItem.Home,
         BottomNavItem.Library,
         BottomNavItem.Chat,
-        BottomNavItem.Board,
+        BottomNavItem.Post,
         BottomNavItem.User
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    if(currentRoute != BottomNavItem.Onboarding.screenRoute && currentRoute != BottomNavItem.Register.screenRoute && currentRoute!= BottomNavItem.Login.screenRoute) {
+    if(currentRoute != BottomNavItem.Onboarding.screenRoute
+        && currentRoute != BottomNavItem.Register.screenRoute
+        && currentRoute != BottomNavItem.Login.screenRoute
+        && currentRoute != BottomNavItem.TradeWrite.screenRoute
+        && currentRoute != BottomNavItem.PostWrite.screenRoute
+        ) {
         BottomNavigation(
             backgroundColor = Color.White,
             contentColor = Color(0xFF3F414E)

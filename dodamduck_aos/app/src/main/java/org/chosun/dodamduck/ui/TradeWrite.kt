@@ -96,7 +96,7 @@ fun TradeWriteScreen(navController: NavHostController) {
 @Composable
 fun TradeWriteScreenHeader(navController: NavHostController) {
     Row(
-        modifier = Modifier.padding(top = 8.dp, end = 8.dp),
+        modifier = Modifier.padding(end = 8.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = CenterVertically
     ) {
@@ -120,7 +120,7 @@ fun TradeWriteScreenHeader(navController: NavHostController) {
             textAlign = TextAlign.End
         )
     }
-    Divider(modifier = Modifier.padding(top = 10.dp))
+    Divider()
 }
 
 @Composable
