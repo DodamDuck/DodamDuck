@@ -40,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.repository.DummyItemFactory
 import org.chosun.dodamduck.ui.component.CommentIcon
@@ -50,7 +52,7 @@ import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun PostDetailScreen() {
+fun PostDetailScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +63,7 @@ fun PostDetailScreen() {
                 modifier = Modifier
                     .size(40.dp)
                     .padding(top = 8.dp)
-                    .clickable {  },
+                    .clickable {navController.popBackStack()},
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "Back Button",
             )
@@ -167,7 +169,9 @@ fun PostDetailComments() {
 fun PostDetailBottom() {
     var rememberText by remember { mutableStateOf("") }
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp),
         verticalAlignment = CenterVertically
     ) {
         Icon(
@@ -208,6 +212,6 @@ fun PostDetailBottom() {
 @Composable
 fun PostDetailPreview() {
     DodamDuckTheme {
-        PostDetailScreen()
+        PostDetailScreen(rememberNavController())
     }
 }

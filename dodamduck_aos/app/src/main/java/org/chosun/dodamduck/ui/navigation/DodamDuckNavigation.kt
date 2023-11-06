@@ -27,6 +27,7 @@ import org.chosun.dodamduck.ui.TradeScreen
 import org.chosun.dodamduck.ui.LibraryScreen
 import org.chosun.dodamduck.ui.LoginScreen
 import org.chosun.dodamduck.ui.OnboardingScreen
+import org.chosun.dodamduck.ui.PostDetailScreen
 import org.chosun.dodamduck.ui.PostWriteScreen
 import org.chosun.dodamduck.ui.RegisterScreen
 import org.chosun.dodamduck.ui.TradeWriteScreen
@@ -50,6 +51,8 @@ sealed class BottomNavItem(
     object Post : BottomNavItem(R.string.board, R.drawable.ic_board_48, R.string.board.toString())
 
     object PostWrite : BottomNavItem(R.string.post_write, R.drawable.ic_board_48, R.string.post_write.toString())
+    
+    object PostDetail: BottomNavItem(R.string.post_detail, R.drawable.ic_board_48, R.string.post_detail.toString())
 
     object Chat : BottomNavItem(R.string.chat, R.drawable.ic_chat_48, R.string.chat.toString())
 
@@ -83,6 +86,9 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
         composable(BottomNavItem.Post.screenRoute) {
             PostScreen(navController)
         }
+        composable(BottomNavItem.PostDetail.screenRoute) {
+            PostDetailScreen(navController)
+        }
         composable(BottomNavItem.PostWrite.screenRoute) {
             PostWriteScreen(navController)
         }
@@ -110,6 +116,7 @@ fun DodamDuckBottomNavigation(navController: NavHostController) {
         && currentRoute != BottomNavItem.Login.screenRoute
         && currentRoute != BottomNavItem.TradeWrite.screenRoute
         && currentRoute != BottomNavItem.PostWrite.screenRoute
+        && currentRoute != BottomNavItem.PostDetail.screenRoute
         ) {
         BottomNavigation(
             backgroundColor = Color.White,
