@@ -13,10 +13,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
@@ -190,4 +194,52 @@ fun BackgroundText(
             textAlign = textAlign
         )
     }
+}
+
+@Composable
+fun SpannableText(
+    modifier: Modifier = Modifier,
+    text: String,
+    highlightText: String,
+    highlightColor: Color,
+    highlightFontSize: TextUnit,
+    defaultFontSize: TextUnit,
+    defaultColor: Color = Color.Black,
+    highlightFontWeight: FontWeight = FontWeight.Medium,
+    defaultFontWeight: FontWeight = FontWeight.Medium
+) {
+    val annotatedString = buildAnnotatedString {
+        val startIndex = text.indexOf(highlightText)
+        if (startIndex >= 0) {
+            // 하이라이트되지 않은 텍스트의 시작 부분
+            append(text.substring(0, startIndex))
+            // 하이라이트 텍스트
+            withStyle(style = SpanStyle(color = highlightColor, fontSize = highlightFontSize, fontWeight = highlightFontWeight)) {
+                append(highlightText)
+            }
+            // 하이라이트 뒤의 텍스트
+            withStyle(style = SpanStyle(color = defaultColor, fontSize = defaultFontSize, fontWeight = highlightFontWeight)) {
+                append(text.substring(startIndex + highlightText.length))
+            }
+        } else {
+            // 텍스트에 하이라이트할 부분이 없으면 모두 기본 스타일을 적용
+            withStyle(style = SpanStyle(color = defaultColor, fontSize = defaultFontSize, fontWeight = defaultFontWeight)) {
+                append(text)
+            }
+        }
+    }
+
+    Text(modifier = modifier, text = annotatedString)
+}
+
+@Composable
+@Preview
+fun ExampleUsage() {
+    SpannableText(
+        text = "T. 요새 종강을 애타는 ...",
+        highlightText = "T.",
+        highlightColor = Color(0xFF795548), // 갈색
+        highlightFontSize = 20.sp,
+        defaultFontSize = 16.sp
+    )
 }
