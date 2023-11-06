@@ -2,6 +2,7 @@ package org.chosun.dodamduck.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,7 +65,10 @@ fun PostScreen(navController: NavHostController) {
 
             LazyColumn() {
                 items(10) {
-                    PostItem(modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp))
+                    PostItem(modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                        .clickable { navController.navigate(BottomNavItem.PostDetail.screenRoute) }
+                    )
                     Divider()
                 }
             }

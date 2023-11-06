@@ -24,9 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.ui.theme.Brown
@@ -66,37 +67,36 @@ fun PostItem(modifier: Modifier = Modifier) {
                 contentDescription = "Exchange Item"
             )
 
-            Row(modifier = Modifier
-                .align(Alignment.End)
-                .padding(top = 2.dp)) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_comment_26),
-                    contentDescription = "Chat Icon",
-                    Modifier.size(25.dp)
-                )
-                Text(
-                    fontSize = 12.sp,
-                    text = "3",
-                    color = Color.Gray
-                )
-            }
+            CommentIcon(
+                    modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(top = 2.dp),
+                text = "3"
+            )
         }
     }
 }
 
 @Composable
-fun PostType() {
+fun PostType(
+    text: String = "수다",
+    modifier: Modifier = Modifier,
+    horizontalPadding: Dp = 12.dp,
+    verticalPadding: Dp = 2.dp,
+    fontSize: Int = 10,
+    fontWeight: FontWeight = FontWeight.Light
+) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(3.dp)),
         color = Brown
     ) {
         DodamDuckText(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
-            text = "수다",
+            modifier = Modifier.padding(horizontal = horizontalPadding, verticalPadding),
+            text = text,
             color = Color.White,
-            fontWeight = FontWeight.Light,
-            fontSize = 10
+            fontWeight = fontWeight,
+            fontSize = fontSize
         )
     }
 }
