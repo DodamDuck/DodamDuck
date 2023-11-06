@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 
 @Composable
@@ -50,7 +51,7 @@ fun ExchangeItemList(modifier: Modifier = Modifier) {
 
 @Composable
 fun ExchangeItemItem() {
-    Row{
+    Row {
         Image(
             modifier = Modifier.border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
             contentScale = ContentScale.Crop,
@@ -75,17 +76,10 @@ fun ExchangeItemItem() {
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        Image(painter = painterResource(id = R.drawable.ic_comment_26),
-            contentDescription = "Chat Icon",
-            Modifier
-                .size(32.dp)
-                .align(alignment = Alignment.Bottom)
-        )
-        Text(
-            modifier = Modifier.align(alignment = Alignment.Bottom),
-            fontSize = 14.sp,
-            text = "3",
-            color = Color.Gray
+        CommentIcon(
+            modifier = Modifier
+                .align(alignment = Alignment.Bottom),
+            size = 34.dp
         )
     }
 }
