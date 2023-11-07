@@ -99,7 +99,7 @@ fun ChatItem(
 
 @Preview
 @Composable
-fun ChatPreview() {
+fun ChatListPreview() {
     DodamDuckTheme {
         ChatListScreen()
     }
