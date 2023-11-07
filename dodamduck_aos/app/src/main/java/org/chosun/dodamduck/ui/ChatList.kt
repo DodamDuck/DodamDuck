@@ -16,7 +16,7 @@ import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun ChatScreen() {
+fun ChatListScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -36,6 +36,6 @@ fun ChatScreen() {
 @Composable
 fun ChatPreview() {
     DodamDuckTheme {
-        ChatScreen()
+        ChatListScreen()
     }
 }
