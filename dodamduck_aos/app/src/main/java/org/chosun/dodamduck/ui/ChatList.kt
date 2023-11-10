@@ -3,6 +3,7 @@ package org.chosun.dodamduck.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,11 +28,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun ChatListScreen() {
+fun ChatListScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +53,7 @@ fun ChatListScreen() {
 
             LazyColumn {
                 items(12) {
-                    ChatItem()
+                    ChatItem(navController = navController)
                     Divider(modifier = Modifier.padding(top = 15.dp))
                 }
             }
@@ -59,12 +63,14 @@ fun ChatListScreen() {
 
 @Composable
 fun ChatItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     Row(
         modifier = modifier
             .padding(top = 15.dp)
             .fillMaxWidth()
+            .clickable { navController.navigate(BottomNavItem.Chat.screenRoute)  }
     ) {
         Image(
             modifier = Modifier
@@ -99,8 +105,8 @@ fun ChatItem(
 
 @Preview
 @Composable
-fun ChatPreview() {
+fun ChatListPreview() {
     DodamDuckTheme {
-        ChatListScreen()
+        ChatListScreen(rememberNavController())
     }
 }

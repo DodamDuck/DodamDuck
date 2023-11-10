@@ -1,6 +1,7 @@
 package org.chosun.dodamduck.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -17,6 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.theme.Primary
 
@@ -187,6 +194,49 @@ fun PreviewAuthInputTextList() {
                 stringResource(R.string.create_password),
                 stringResource(R.string.confirm_password)
             )
+        )
+    }
+}
+
+@Composable
+fun DodamDuckMessageInputFeild() {
+    var rememberText by remember { mutableStateOf("") }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier
+                .size(34.dp)
+                .clickable { },
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add Button",
+        )
+
+        TextField(
+            modifier = Modifier.weight(1f),
+            value = rememberText,
+            onValueChange = { rememberText = it },
+            singleLine = true,
+            label = {
+                androidx.compose.material3.Text(text = "메세지를 입력하세요", fontSize = 14.sp)
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
+        )
+
+        Icon(
+            modifier = Modifier
+                .size(34.dp)
+                .clickable { },
+            imageVector = Icons.Default.Send,
+            contentDescription = "Send Button",
         )
     }
 }
