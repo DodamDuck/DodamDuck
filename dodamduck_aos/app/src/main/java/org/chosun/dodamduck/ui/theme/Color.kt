@@ -12,6 +12,7 @@ val WhiteOpacity45 = Color(0x73FFFFFF)
 val White9 = Color(0xFFFEFAD9)
 val Gray8 = Color(0xFF8F8F8F)
 val Gray5 = Color(0xFFF1F1F1)
+val Orange = Color(0xFFFFEBCD)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
