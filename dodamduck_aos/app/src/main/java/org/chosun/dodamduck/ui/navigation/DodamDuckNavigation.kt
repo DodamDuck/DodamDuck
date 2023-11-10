@@ -22,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.ChatListScreen
+import org.chosun.dodamduck.ui.ChatScreen
 import org.chosun.dodamduck.ui.PostScreen
 import org.chosun.dodamduck.ui.TradeScreen
 import org.chosun.dodamduck.ui.LibraryScreen
@@ -54,6 +55,8 @@ sealed class BottomNavItem(
     
     object PostDetail: BottomNavItem(R.string.post_detail, R.drawable.ic_board_48, R.string.post_detail.toString())
 
+    object ChatList : BottomNavItem(R.string.chat_list, R.drawable.ic_chat_48, R.string.chat_list.toString())
+
     object Chat : BottomNavItem(R.string.chat, R.drawable.ic_chat_48, R.string.chat.toString())
 
     object User : BottomNavItem(R.string.user, R.drawable.ic_user_48, R.string.user.toString())
@@ -80,8 +83,11 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
         composable(BottomNavItem.Library.screenRoute) {
             LibraryScreen()
         }
+        composable(BottomNavItem.ChatList.screenRoute) {
+            ChatListScreen(navController)
+        }
         composable(BottomNavItem.Chat.screenRoute) {
-            ChatListScreen()
+            ChatScreen(navController)
         }
         composable(BottomNavItem.Post.screenRoute) {
             PostScreen(navController)
@@ -103,7 +109,7 @@ fun DodamDuckBottomNavigation(navController: NavHostController) {
     val items = listOf<BottomNavItem>(
         BottomNavItem.Home,
         BottomNavItem.Library,
-        BottomNavItem.Chat,
+        BottomNavItem.ChatList,
         BottomNavItem.Post,
         BottomNavItem.User
     )
