@@ -45,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.repository.DummyItemFactory
 import org.chosun.dodamduck.ui.component.CommentIcon
+import org.chosun.dodamduck.ui.component.DodamDuckMessageInputFeild
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.component.SpannableText
 import org.chosun.dodamduck.ui.component.lazy_components.PostType
@@ -110,7 +111,7 @@ fun PostDetailScreen(navController: NavController) {
             PostDetailComments()
             Spacer(Modifier.weight(1f))
             Divider()
-            PostDetailBottom()
+            DodamDuckMessageInputFeild()
         }
     }
 }
@@ -162,49 +163,6 @@ fun PostDetailComments() {
                 postContent = postDetailUserInfoStates[it].content
             )
         }
-    }
-}
-
-@Composable
-fun PostDetailBottom() {
-    var rememberText by remember { mutableStateOf("") }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp),
-        verticalAlignment = CenterVertically
-    ) {
-        Icon(
-            modifier = Modifier
-                .size(34.dp)
-                .clickable { },
-            imageVector = Icons.Default.Add,
-            contentDescription = "Add Button",
-        )
-
-        TextField(
-            modifier = Modifier.weight(1f),
-            value = rememberText,
-            onValueChange = { rememberText = it },
-            singleLine = true,
-            label = {
-                Text(text = "메세지를 입력하세요", fontSize = 14.sp)
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            )
-        )
-
-        Icon(
-            modifier = Modifier
-                .size(34.dp)
-                .clickable { },
-            imageVector = Icons.Default.Send,
-            contentDescription = "Send Button",
-        )
     }
 }
 
