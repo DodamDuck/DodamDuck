@@ -6,7 +6,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val OPEN_API_BASE_URL = "https://api.odcloud.kr/api/"
     private var retrofit: Retrofit? = null
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -16,8 +15,8 @@ object RetrofitClient {
         .addInterceptor(loggingInterceptor)
         .build()
 
-    fun getOpenApiRetrofit(): Retrofit = retrofit ?: Retrofit.Builder()
-        .baseUrl(OPEN_API_BASE_URL)
+    fun getRetrofit(url: String): Retrofit = retrofit ?: Retrofit.Builder()
+        .baseUrl(url)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
