@@ -19,15 +19,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
@@ -35,7 +40,16 @@ import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun TradeScreen(navController: NavHostController) {
+fun TradeScreen(
+    navController: NavHostController,
+    tradeViewModel: TradeViewModel = hiltViewModel()
+) {
+    val tradeLists by tradeViewModel.tradeLists.collectAsState(initial = null)
+
+    LaunchedEffect(Unit) {
+        tradeViewModel.getTradeLists()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +57,10 @@ fun TradeScreen(navController: NavHostController) {
     ) {
         Column {
             TradeHeader()
-            ExchangeItemList(modifier = Modifier.padding(top = 24.dp))
+            ExchangeItemList(
+                modifier = Modifier.padding(top = 24.dp),
+                items = tradeLists ?: listOf()
+            )
         }
 
         OutlinedButton(
