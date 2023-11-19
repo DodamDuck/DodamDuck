@@ -1,6 +1,8 @@
 package org.chosun.dodamduck.ui.component.lazy_components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.BackgroundText
 import org.chosun.dodamduck.ui.component.GrayRoundedBox
@@ -29,13 +32,13 @@ import org.chosun.dodamduck.ui.theme.Gray8
 
 @Composable
 fun PhotoThumbnail(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     painter: Painter,
     representative: Boolean = false
 ) {
     GrayRoundedBox(
         modifier = modifier
-    ) {
+    ){
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painter,
@@ -46,7 +49,9 @@ fun PhotoThumbnail(
             if (representative) {
                 BackgroundText(
                     text = "대표 사진",
-                    modifier = Modifier.height(20.dp).align(Alignment.BottomCenter),
+                    modifier = Modifier
+                        .height(20.dp)
+                        .align(Alignment.BottomCenter),
                     backgroundColor = BrownOpacity80,
                     contentAlignment = Alignment.Center,
                     fontSize = 9,
@@ -58,17 +63,21 @@ fun PhotoThumbnail(
 }
 
 @Composable
-fun PhotoSelectionList(modifier: Modifier = Modifier) {
+fun PhotoSelectionList(
+    modifier: Modifier = Modifier,
+    onImageClick: () -> Unit,
+    list: List<Uri?>
+) {
     Row(
         modifier = modifier
     ) {
-        PhotoCountBox(2)
+        PhotoCountBox(list.size, onImageClick)
 
         LazyRow {
-            items(3) {
+            items(list.size) {
                 PhotoThumbnail(
                     modifier = Modifier.padding(start = 8.dp),
-                    painter = painterResource(id = R.drawable.ic_duck),
+                    painter = rememberAsyncImagePainter(model = list[it]),
                     representative = it == 0
                 )
             }
@@ -77,8 +86,10 @@ fun PhotoSelectionList(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PhotoCountBox(count: Int = 0) {
-    GrayRoundedBox {
+fun PhotoCountBox(count: Int = 0, onImageClick: () -> Unit) {
+    GrayRoundedBox(
+        modifier = Modifier.clickable(onClick = onImageClick)
+    ){
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
