@@ -101,7 +101,9 @@ fun OutlineTextField(
     width: Int = DEFAULT_WIDTH,
     height: Int = DEFAULT_HEIGHT,
     borderColor: Color = Color.Black,
-    borderWidth: Int = 2
+    borderWidth: Int = 2,
+    onValueChange: (String) -> Unit = {},
+    value: String = ""
 ) {
     DodamDuckInputSurface(
         modifier = modifier
@@ -111,12 +113,10 @@ fun OutlineTextField(
         borderColor = borderColor,
         borderWidth = borderWidth
     ) {
-        var text by remember { mutableStateOf("") }
-
         Row(modifier = Modifier.fillMaxSize()) {
             TextField(
-                value = text,
-                onValueChange = { text = it },
+                value = value,
+                onValueChange = onValueChange,
                 Modifier.fillMaxSize(),
                 label = {
                     Text(text = label)
@@ -127,7 +127,7 @@ fun OutlineTextField(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
-                )
+                ),
             )
         }
     }
