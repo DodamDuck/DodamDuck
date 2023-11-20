@@ -22,6 +22,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,22 +38,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.dto.ChatInfo
-import org.chosun.dodamduck.ui.component.DodamDuckMessageInputFeild
+import org.chosun.dodamduck.model.viewmodel.ChatViewModel
+import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.LikeButton
 import org.chosun.dodamduck.ui.component.lazy_components.ChatLazyList
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun ChatScreen(navController: NavController) {
-    val list = listOf(
-        ChatInfo("오후 1:21", "봉선동, 직거래만 가능합니다~", false),
-        ChatInfo("오후 1:21", "직접 오시면 네고 해드릴게요~", true)
-    )
+fun ChatScreen(
+    navController: NavController,
+    chatViewModel: ChatViewModel = hiltViewModel()
+) {
+    val chatLists by chatViewModel.chatLists.collectAsState(initial = null)
+
+    LaunchedEffect(Unit) {
+        chatViewModel.getChatLists("seyeong1", "seyeong2")
+    }
+
+    var message by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -67,11 +80,16 @@ fun ChatScreen(navController: NavController) {
                 modifier = Modifier
                     .padding(horizontal = 12.dp, vertical = 12.dp)
                     .weight(1f),
-                list = list
+                list =  chatLists ?: listOf(),
+                currentUser = "seyeong1"
             )
 
             Divider()
-            DodamDuckMessageInputFeild()
+            DodamDuckMessageInputField(
+                onSendButtonClick = { chatViewModel.sendChat("seyeong1", "seyeong2", message) },
+                onTextFieldChange = { message = it },
+                value = message
+            )
         }
     }
 }
@@ -83,7 +101,10 @@ fun ChatScreenHeader(navController: NavController) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = {navController.popBackStack()}, modifier = Modifier.wrapContentSize()) {
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.wrapContentSize()
+        ) {
             Icon(
                 modifier = Modifier.size(30.dp),
                 imageVector = Icons.Default.KeyboardArrowLeft,

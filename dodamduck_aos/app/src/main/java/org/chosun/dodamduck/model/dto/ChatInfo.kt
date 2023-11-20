@@ -1,7 +1,9 @@
 package org.chosun.dodamduck.model.dto
 
 data class ChatInfo(
-    val date: String,
+    val id: String,
+    val senderID: String,
+    val receiverID: String,
     val message: String,
-    val isOther: Boolean = false,
+    val timestamp: String
 )
