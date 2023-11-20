@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -39,7 +41,7 @@ fun ChatUserItem(
             modifier = Modifier
                 .align(Bottom)
                 .padding(end = 6.dp),
-            text = chatInfo.date, color = Color.Gray, fontSize = 9.sp
+            text = chatInfo.timestamp, color = Color.Gray, fontSize = 9.sp
         )
         Surface(
             color = Orange,
@@ -86,7 +88,7 @@ fun ChatPartnerItem(
             modifier = Modifier
                 .align(Bottom)
                 .padding(start = 3.dp, bottom = 6.dp),
-            text = chatInfo.date, color = Color.Gray, fontSize = 9.sp
+            text = chatInfo.timestamp, color = Color.Gray, fontSize = 9.sp
         )
         Spacer(Modifier.weight(1f))
     }
@@ -94,16 +96,26 @@ fun ChatPartnerItem(
 @Composable
 fun ChatLazyList(
     modifier: Modifier = Modifier,
-    list: List<ChatInfo>
+    list: List<ChatInfo>,
+    currentUser: String,
 ) {
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(list) {
+        if (list.isNotEmpty()) {
+            listState.animateScrollToItem(index = list.size - 1)
+        }
+    }
+
     Row(
         modifier = modifier
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxWidth()
         ) {
             items(list.size) { index ->
-                if (!list[index].isOther)
+                if (list[index].senderID != currentUser)
                     ChatPartnerItem(modifier = Modifier.padding(top = 7.dp), chatInfo = list[index])
                 else
                     ChatUserItem(modifier = Modifier.padding(top = 7.dp), list[index])
@@ -115,11 +127,11 @@ fun ChatLazyList(
 @Composable
 @Preview
 fun ChatPartnerItemPreview() {
-    ChatPartnerItem(chatInfo = ChatInfo("오후 1:21", "봉선동, 직거래만 가능합니다~", true))
+    ChatPartnerItem(chatInfo = ChatInfo("1",  "seyeong1", "seyeong2", "봉선동, 직거래만 가능합니다~", "오후 2시 21분"))
 }
 
 @Composable
 @Preview
 fun ChatItemPreview() {
-    ChatUserItem(chatInfo = ChatInfo("오후 1:21", "봉선동, 직거래만 가능합니다~", true))
+    ChatPartnerItem(chatInfo = ChatInfo("1",  "seyeong1", "seyeong2", "봉선동, 직거래만 가능합니다~", "오후 2시 21분"))
 }
