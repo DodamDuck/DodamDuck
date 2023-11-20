@@ -199,8 +199,11 @@ fun PreviewAuthInputTextList() {
 }
 
 @Composable
-fun DodamDuckMessageInputFeild() {
-    var rememberText by remember { mutableStateOf("") }
+fun DodamDuckMessageInputField(
+    onSendButtonClick: () -> Unit = {},
+    onTextFieldChange: (String) -> Unit = {},
+    value: String = ""
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -217,8 +220,8 @@ fun DodamDuckMessageInputFeild() {
 
         TextField(
             modifier = Modifier.weight(1f),
-            value = rememberText,
-            onValueChange = { rememberText = it },
+            value = value,
+            onValueChange = onTextFieldChange,
             singleLine = true,
             label = {
                 androidx.compose.material3.Text(text = "메세지를 입력하세요", fontSize = 14.sp)
@@ -234,7 +237,7 @@ fun DodamDuckMessageInputFeild() {
         Icon(
             modifier = Modifier
                 .size(34.dp)
-                .clickable { },
+                .clickable(onClick = onSendButtonClick),
             imageVector = Icons.Default.Send,
             contentDescription = "Send Button",
         )
