@@ -17,9 +17,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.ChatListScreen
 import org.chosun.dodamduck.ui.ChatScreen
@@ -39,23 +41,30 @@ sealed class BottomNavItem(
 ) {
     object Home : BottomNavItem(R.string.home, R.drawable.ic_home_48, R.string.home.toString())
 
-    object TradeWrite : BottomNavItem(R.string.trade_write, R.drawable.ic_home_48, R.string.trade_write.toString())
+    object TradeWrite :
+        BottomNavItem(R.string.trade_write, R.drawable.ic_home_48, R.string.trade_write.toString())
 
-    object Onboarding : BottomNavItem(R.string.onboarding, R.drawable.ic_home_48, R.string.onboarding.toString())
+    object Onboarding :
+        BottomNavItem(R.string.onboarding, R.drawable.ic_home_48, R.string.onboarding.toString())
 
-    object Register : BottomNavItem(R.string.register, R.drawable.ic_home_48, R.string.register.toString())
+    object Register :
+        BottomNavItem(R.string.register, R.drawable.ic_home_48, R.string.register.toString())
 
     object Login : BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
 
-    object Library : BottomNavItem(R.string.library, R.drawable.ic_toy_48, R.string.library.toString())
+    object Library :
+        BottomNavItem(R.string.library, R.drawable.ic_toy_48, R.string.library.toString())
 
     object Post : BottomNavItem(R.string.board, R.drawable.ic_board_48, R.string.board.toString())
 
-    object PostWrite : BottomNavItem(R.string.post_write, R.drawable.ic_board_48, R.string.post_write.toString())
-    
-    object PostDetail: BottomNavItem(R.string.post_detail, R.drawable.ic_board_48, R.string.post_detail.toString())
+    object PostWrite :
+        BottomNavItem(R.string.post_write, R.drawable.ic_board_48, R.string.post_write.toString())
 
-    object ChatList : BottomNavItem(R.string.chat_list, R.drawable.ic_chat_48, R.string.chat_list.toString())
+    object PostDetail :
+        BottomNavItem(R.string.post_detail, R.drawable.ic_board_48, R.string.post_detail.toString())
+
+    object ChatList :
+        BottomNavItem(R.string.chat_list, R.drawable.ic_chat_48, R.string.chat_list.toString())
 
     object Chat : BottomNavItem(R.string.chat, R.drawable.ic_chat_48, R.string.chat.toString())
 
@@ -64,7 +73,10 @@ sealed class BottomNavItem(
 
 @Composable
 fun daoDamDuckNavigationGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = BottomNavItem.Onboarding.screenRoute) {
+    NavHost(
+        navController = navController,
+        startDestination = BottomNavItem.Onboarding.screenRoute
+    ) {
         composable(BottomNavItem.Home.screenRoute) {
             TradeScreen(navController)
         }
@@ -86,8 +98,30 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
         composable(BottomNavItem.ChatList.screenRoute) {
             ChatListScreen(navController)
         }
-        composable(BottomNavItem.Chat.screenRoute) {
-            ChatScreen(navController)
+        composable(
+            route = "${BottomNavItem.Chat.screenRoute}/{currentUser}/{otherUser}/{postImageUrl}/{postTitle}/{category}",
+            arguments = listOf(
+                navArgument("currentUser") { type = NavType.StringType },
+                navArgument("otherUser") { type = NavType.StringType },
+                navArgument("postImageUrl") { type = NavType.StringType },
+                navArgument("postTitle") { type = NavType.StringType },
+                navArgument("category") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val currentUser = backStackEntry.arguments?.getString("currentUser")
+            val otherUser = backStackEntry.arguments?.getString("otherUser")
+            val postImageUrl = backStackEntry.arguments?.getString("postImageUrl")
+            val postTitle = backStackEntry.arguments?.getString("postTitle")
+            val category = backStackEntry.arguments?.getString("category")
+
+            ChatScreen(
+                navController,
+                currentUser = currentUser ?: "",
+                otherUser = otherUser ?: "",
+                postImageUrl = postImageUrl ?: "",
+                postTitle = postTitle ?: "",
+                category = category ?: ""
+            )
         }
         composable(BottomNavItem.Post.screenRoute) {
             PostScreen(navController)
@@ -117,13 +151,13 @@ fun DodamDuckBottomNavigation(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    if(currentRoute != BottomNavItem.Onboarding.screenRoute
+    if (currentRoute != BottomNavItem.Onboarding.screenRoute
         && currentRoute != BottomNavItem.Register.screenRoute
         && currentRoute != BottomNavItem.Login.screenRoute
         && currentRoute != BottomNavItem.TradeWrite.screenRoute
         && currentRoute != BottomNavItem.PostWrite.screenRoute
         && currentRoute != BottomNavItem.PostDetail.screenRoute
-        ) {
+    ) {
         BottomNavigation(
             backgroundColor = Color.White,
             contentColor = Color(0xFF3F414E)

@@ -30,9 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import org.chosun.dodamduck.R
+import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
@@ -52,12 +52,17 @@ import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 @Composable
 fun ChatScreen(
     navController: NavController,
-    chatViewModel: ChatViewModel = hiltViewModel()
+    chatViewModel: ChatViewModel = hiltViewModel(),
+    currentUser: String = "",
+    otherUser: String = "",
+    postImageUrl: String = "",
+    postTitle: String = "",
+    category: String = ""
 ) {
-    val chatLists by chatViewModel.chatLists.collectAsState(initial = null)
+    val chats by chatViewModel.chats.collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
-        chatViewModel.getChatLists("seyeong1", "seyeong2")
+        chatViewModel.getChats(currentUser, otherUser)
     }
 
     var message by remember { mutableStateOf("") }
@@ -69,7 +74,12 @@ fun ChatScreen(
     ) {
         Column {
             ChatScreenHeader(navController)
-            ChatItemInfo(modifier = Modifier.padding(start = 10.dp, top = 10.dp))
+            ChatItemInfo(
+                modifier = Modifier.padding(start = 10.dp, top = 10.dp),
+                postTitle = postTitle.replace("+", " "),
+                postImageUrl = postImageUrl,
+                category = category
+            )
             Divider(modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -80,13 +90,14 @@ fun ChatScreen(
                 modifier = Modifier
                     .padding(horizontal = 12.dp, vertical = 12.dp)
                     .weight(1f),
-                list =  chatLists ?: listOf(),
-                currentUser = "seyeong1"
+                list = chats ?: listOf(),
+                currentUser = currentUser,
+                otherUser = otherUser
             )
 
             Divider()
             DodamDuckMessageInputField(
-                onSendButtonClick = { chatViewModel.sendChat("seyeong1", "seyeong2", message) },
+                onSendButtonClick = { chatViewModel.sendChat(currentUser, otherUser, message) },
                 onTextFieldChange = { message = it },
                 value = message
             )
@@ -124,7 +135,12 @@ fun ChatScreenHeader(navController: NavController) {
 }
 
 @Composable
-fun ChatItemInfo(modifier: Modifier = Modifier) {
+fun ChatItemInfo(
+    modifier: Modifier = Modifier,
+    postTitle: String,
+    postImageUrl: String,
+    category: String
+) {
     Column {
         Row(
             modifier = modifier
@@ -132,9 +148,10 @@ fun ChatItemInfo(modifier: Modifier = Modifier) {
             Image(
                 modifier = Modifier
                     .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(10.dp))
                     .size(60.dp, 60.dp),
                 contentScale = ContentScale.Crop,
-                painter = painterResource(id = R.drawable.ic_duck),
+                painter = rememberAsyncImagePainter(postImageUrl),
                 contentDescription = "Exchange Item"
             )
 
@@ -146,9 +163,9 @@ fun ChatItemInfo(modifier: Modifier = Modifier) {
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 4.dp),
-                    text = "도담덕 봉제 인형", fontSize = 15.sp
+                    text = postTitle, fontSize = 15.sp
                 )
-                Text("5000원", fontSize = 15.sp)
+                Text(if(category == "1") "교환" else "나눔", fontSize = 15.sp)
             }
         }
 
