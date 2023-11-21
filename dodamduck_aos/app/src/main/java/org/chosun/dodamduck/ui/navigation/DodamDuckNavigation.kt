@@ -72,7 +72,7 @@ sealed class BottomNavItem(
 }
 
 @Composable
-fun daoDamDuckNavigationGraph(navController: NavHostController) {
+fun DoDamDuckNavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = BottomNavItem.Onboarding.screenRoute
@@ -126,8 +126,14 @@ fun daoDamDuckNavigationGraph(navController: NavHostController) {
         composable(BottomNavItem.Post.screenRoute) {
             PostScreen(navController)
         }
-        composable(BottomNavItem.PostDetail.screenRoute) {
-            PostDetailScreen(navController)
+        composable(
+            route = "${BottomNavItem.PostDetail.screenRoute}/{postId}",
+            arguments = listOf(
+                navArgument("postId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId")
+            PostDetailScreen(navController, postId = postId ?: "")
         }
         composable(BottomNavItem.PostWrite.screenRoute) {
             PostWriteScreen(navController)

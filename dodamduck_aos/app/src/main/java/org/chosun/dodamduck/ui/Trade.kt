@@ -59,7 +59,8 @@ fun TradeScreen(
             TradeHeader()
             ExchangeItemList(
                 modifier = Modifier.padding(top = 24.dp),
-                items = tradeLists ?: listOf()
+                items = tradeLists ?: listOf(),
+                navController = navController
             )
         }
 
