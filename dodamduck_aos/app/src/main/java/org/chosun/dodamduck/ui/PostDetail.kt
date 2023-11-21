@@ -19,6 +19,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -96,7 +97,9 @@ fun PostDetailScreen(
                     userName = tradeDetail?.post?.userName ?: "도담덕 유저",
                     userProfile = tradeDetail?.post?.user_id?.getUserProfileUrl()
                         ?: "userProfileUrl",
-                    userInfo = stringResource(id = R.string.dummy_post_info_item)
+                    userInfo = "${tradeDetail?.post?.location?.split(" ")?.get(0)} ·" +
+                            " ${tradeDetail?.post?.verification_count}회 · " +
+                            "${tradeDetail?.post?.created_at?.formatDateDiff()}"
                 )
 
                 SpannableText(
@@ -168,10 +171,11 @@ fun PostDetailUserInfo(
             modifier = Modifier.padding(start = 10.dp)
         ) {
             DodamDuckText(text = userName, fontSize = 15, fontWeight = FontWeight.Bold)
-            DodamDuckText(
+            Text(
                 modifier = Modifier.padding(top = 2.dp),
                 text = userInfo,
-                fontSize = 12,
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 12.sp,
                 color = Color.Gray
             )
             Text(postContent, fontSize = 15.sp)

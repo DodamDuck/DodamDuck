@@ -14,7 +14,9 @@ data class TradeDetail(
     val verification_count: String,
     val image_url: String,
     val category: String,
-    val user_id: String
+    val user_id: String,
+    val created_at: String
+
 )
 
 data class TradeDetailComments(
