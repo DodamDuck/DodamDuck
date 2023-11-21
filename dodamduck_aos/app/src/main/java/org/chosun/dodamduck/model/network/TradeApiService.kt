@@ -3,6 +3,9 @@ package org.chosun.dodamduck.model.network
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.chosun.dodamduck.model.dto.Trade
+import org.chosun.dodamduck.model.dto.TradeDetailResponse
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -22,4 +25,11 @@ interface TradeApiService {
         @Part("location") location: RequestBody,
         @Part image: MultipartBody.Part
     ): DodamDuckResponse
+
+
+    @POST("PostDetail.php")
+    @FormUrlEncoded
+    suspend fun getTradeDetail(
+        @Field("post_id") postId: String
+    ): TradeDetailResponse
 }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.chosun.dodamduck.model.dto.Trade
+import org.chosun.dodamduck.model.dto.TradeDetailResponse
 import org.chosun.dodamduck.model.repository.TradeRepository
 import javax.inject.Inject
 
@@ -19,6 +20,9 @@ class TradeViewModel @Inject constructor(
 
     private val _tradeLists = MutableStateFlow<List<Trade>?>(null)
     val tradeLists: StateFlow<List<Trade>?> = _tradeLists
+
+    private val _tradeDetail = MutableStateFlow<TradeDetailResponse?>(null)
+    val tradeDetail: StateFlow<TradeDetailResponse?> = _tradeDetail
 
     fun getTradeLists() {
         viewModelScope.launch {
@@ -36,6 +40,12 @@ class TradeViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             repository.uploadTrade(userId, categoryId, title, content, location, image)
+        }
+    }
+
+    fun getTradeDetail(postId: String) {
+        viewModelScope.launch {
+            _tradeDetail.value = repository.fetchTradeDetail(postId)
         }
     }
 }
