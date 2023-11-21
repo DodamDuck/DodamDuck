@@ -2,6 +2,8 @@ package org.chosun.dodamduck.ui.component.lazy_components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +19,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.Bottom
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -77,16 +78,22 @@ fun ChatPartnerItem(
             contentDescription = "UserProfile"
         )
 
-        Surface(
-            modifier = Modifier.align(CenterVertically).wrapContentWidth().widthIn(max = 250.dp),
-            color = Color(0xFFEDEDED),
-            shape = RoundedCornerShape(40)
+        Column (
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-                text = chatInfo.message
-            )
+            Text(modifier = Modifier.padding(bottom = 3.dp), text = otherUser)
+            Surface(
+                modifier = Modifier.wrapContentWidth().widthIn(max = 250.dp),
+                color = Color(0xFFEDEDED),
+                shape = RoundedCornerShape(40)
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
+                    text = chatInfo.message
+                )
+            }
         }
+
         Text(
             modifier = Modifier
                 .align(Bottom)
