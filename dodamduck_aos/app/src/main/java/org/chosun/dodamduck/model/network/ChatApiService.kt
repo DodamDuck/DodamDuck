@@ -1,6 +1,7 @@
 package org.chosun.dodamduck.model.network
 
 import org.chosun.dodamduck.model.dto.ChatInfo
+import org.chosun.dodamduck.model.dto.ChatListResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -21,4 +22,10 @@ interface ChatApiService {
         @Field("receiverID") receiver: String,
         @Field("message") message: String
     ): DodamDuckResponse
+
+
+    @GET("get_chat_list.php")
+    suspend fun getChatList(
+        @Query("user_id") user1: String
+    ): ChatListResponse?
 }

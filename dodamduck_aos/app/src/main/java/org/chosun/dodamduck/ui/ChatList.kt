@@ -17,25 +17,44 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.dto.ChatListDTO
+import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
+import org.chosun.dodamduck.utils.Utils.ellipsis
+import java.net.URLEncoder
 
 @Composable
-fun ChatListScreen(navController: NavController) {
+fun ChatListScreen(
+    navController: NavController,
+    chatViewModel: ChatViewModel = hiltViewModel()
+) {
+    val chats by chatViewModel.chatList.collectAsState(initial = null)
+
+    LaunchedEffect(Unit) {
+        chatViewModel.getChatList("seyeong1")
+    }
+
+    val currentUser = "seyeong1"
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,9 +71,17 @@ fun ChatListScreen(navController: NavController) {
             )
 
             LazyColumn {
-                items(12) {
-                    ChatItem(navController = navController)
-                    Divider(modifier = Modifier.padding(top = 15.dp))
+                chats?.let {
+                    items(it.size) { index ->
+                        ChatItem(
+                            navController = navController,
+                            item = it[index], 
+                            seller = if (currentUser != it[index].user1_id) it[index].user1_id else it[index].user2_id,
+                            postTitle = it[index].post_title,
+                            postImageUrl = it[index].post_image_url
+                        )
+                        Divider(modifier = Modifier.padding(top = 15.dp))
+                    }
                 }
             }
         }
@@ -64,13 +91,22 @@ fun ChatListScreen(navController: NavController) {
 @Composable
 fun ChatItem(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    item: ChatListDTO,
+    seller: String,
+    postTitle: String,
+    postImageUrl: String
 ) {
+    val imageUrl = URLEncoder.encode(postImageUrl, "UTF-8")
+    val title = URLEncoder.encode(postTitle, "UTF-8")
+
     Row(
         modifier = modifier
             .padding(top = 15.dp)
             .fillMaxWidth()
-            .clickable { navController.navigate(BottomNavItem.Chat.screenRoute)  }
+            .clickable { navController.navigate(
+                "${BottomNavItem.Chat.screenRoute}/${item.user1_id}/${item.user2_id}/${imageUrl}/${title}/${item.category}")
+            }
     ) {
         Image(
             modifier = Modifier
@@ -78,7 +114,7 @@ fun ChatItem(
                 .size(60.dp, 60.dp)
                 .clip(RoundedCornerShape(25.dp)),
             contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.img_user_profile),
+            painter = rememberAsyncImagePainter(model = item.seller_profile_url),
             contentDescription = "UserProfile"
         )
 
@@ -87,17 +123,18 @@ fun ChatItem(
                 .padding(start = 12.dp)
                 .align(Alignment.CenterVertically),
         ) {
-            Text("새삥", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-            Text(text = "12시는 거래가 힘들것 같네요", fontSize = 14.sp)
+            Text(seller, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+            Text(text = item.last_message.ellipsis(17), fontSize = 14.sp)
         }
 
         Spacer(modifier = Modifier.weight(1f))
         Image(
             modifier = Modifier
                 .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(10.dp))
                 .size(60.dp, 60.dp),
             contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.ic_duck),
+            painter = rememberAsyncImagePainter(model = item.post_image_url),
             contentDescription = "Exchange Item"
         )
     }

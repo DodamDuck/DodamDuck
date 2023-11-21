@@ -47,4 +47,13 @@ object Utils {
         val filePart = MultipartBody.Part.createFormData("image", filename, requestBody!!)
         return filePart
     }
+
+    fun String.getUserProfileUrl(): String
+        = "http://sy2978.dothome.co.kr/userProfile/user_id_${this}.jpg"
+
+    fun String.ellipsis(maxLength: Int): String {
+        return if (this.length > maxLength) this.substring(0, maxLength) + "..."
+        else this
+    }
+
 }
