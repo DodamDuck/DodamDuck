@@ -88,7 +88,7 @@ fun PostDetailScreen(
                     modifier = Modifier.padding(top = 10.dp, start = 10.dp),
                     horizontalPadding = 25.dp,
                     verticalPadding = 8.dp,
-                    text = if(tradeDetail?.post?.category == "1") "교환" else "나눔영", fontSize = 15, fontWeight = FontWeight.SemiBold
+                    text = if(tradeDetail?.post?.category == "1") "교환" else "나눔", fontSize = 15, fontWeight = FontWeight.SemiBold
                 )
 
                 PostDetailUserInfo(
