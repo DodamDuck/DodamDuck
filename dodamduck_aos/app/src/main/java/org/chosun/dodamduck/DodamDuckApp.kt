@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.ui.navigation.DodamDuckBottomNavigation
-import org.chosun.dodamduck.ui.navigation.daoDamDuckNavigationGraph
+import org.chosun.dodamduck.ui.navigation.DoDamDuckNavigationGraph
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
@@ -19,7 +19,7 @@ fun DodamDuckApp () {
             bottomBar = { DodamDuckBottomNavigation(navController = navController) }
         ) {
             Box(Modifier.padding(it)) {
-                daoDamDuckNavigationGraph(navController = navController)
+                DoDamDuckNavigationGraph(navController = navController)
             }
         }
     }
