@@ -200,12 +200,13 @@ fun PreviewAuthInputTextList() {
 
 @Composable
 fun DodamDuckMessageInputField(
+    modifier:Modifier = Modifier,
     onSendButtonClick: () -> Unit = {},
     onTextFieldChange: (String) -> Unit = {},
     value: String = ""
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp),
         verticalAlignment = Alignment.CenterVertically

@@ -7,33 +7,39 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.repository.DummyItemFactory
+import org.chosun.dodamduck.model.dto.TradeDetailComments
+import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckText
@@ -41,9 +47,22 @@ import org.chosun.dodamduck.ui.component.SpannableText
 import org.chosun.dodamduck.ui.component.lazy_components.PostType
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
+import org.chosun.dodamduck.utils.Utils.formatDateDiff
+import org.chosun.dodamduck.utils.Utils.getUserProfileUrl
 
 @Composable
-fun PostDetailScreen(navController: NavController) {
+fun PostDetailScreen(
+    navController: NavController,
+    tradeViewModel: TradeViewModel = hiltViewModel(),
+    postId: String = ""
+) {
+    val tradeDetail by tradeViewModel.tradeDetail.collectAsState(initial = null)
+
+    LaunchedEffect(Unit) {
+        tradeViewModel.getTradeDetail(postId)
+    }
+
+    val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,54 +73,74 @@ fun PostDetailScreen(navController: NavController) {
                 modifier = Modifier
                     .size(40.dp)
                     .padding(top = 8.dp)
-                    .clickable {navController.popBackStack()},
+                    .clickable { navController.popBackStack() },
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "Back Button",
             )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp, vertical = 10.dp)
+                    .weight(1f)
+                    .verticalScroll(scrollState)
+            ) {
 
-            PostType(
-                modifier = Modifier.padding(top = 10.dp, start = 10.dp),
-                horizontalPadding = 25.dp,
-                verticalPadding = 8.dp,
-                text = "질문", fontSize = 15, fontWeight = FontWeight.SemiBold
-            )
+                PostType(
+                    modifier = Modifier.padding(top = 10.dp, start = 10.dp),
+                    horizontalPadding = 25.dp,
+                    verticalPadding = 8.dp,
+                    text = if(tradeDetail?.post?.category == "1") "교환" else "나눔영", fontSize = 15, fontWeight = FontWeight.SemiBold
+                )
 
-            PostDetailUserInfo(
-                modifier = Modifier.padding(start = 10.dp, top = 18.dp),
-                userName = "짱구 맘",
-                userProfile = painterResource(id = R.drawable.img_user_profile),
-                postInfo = stringResource(id = R.string.dummy_post_info_item)
-            )
+                PostDetailUserInfo(
+                    modifier = Modifier.padding(start = 10.dp, top = 18.dp),
+                    userName = tradeDetail?.post?.userName ?: "도담덕 유저",
+                    userProfile = tradeDetail?.post?.user_id?.getUserProfileUrl()
+                        ?: "userProfileUrl",
+                    userInfo = stringResource(id = R.string.dummy_post_info_item)
+                )
 
-            SpannableText(
-                modifier = Modifier.padding(top = 16.dp, start = 10.dp),
-                text = "T. 요새 중2병 애들은 ...",
-                highlightText = "T.",
-                highlightColor = Brown,
-                highlightFontSize = 28.sp,
-                defaultFontSize = 24.sp,
-                highlightFontWeight = FontWeight.SemiBold,
-                defaultFontWeight = FontWeight.Medium
-            )
+                SpannableText(
+                    modifier = Modifier.padding(top = 16.dp, start = 10.dp),
+                    text = "T.${tradeDetail?.post?.title}",
+                    highlightText = "T.",
+                    highlightColor = Brown,
+                    highlightFontSize = 28.sp,
+                    defaultFontSize = 24.sp,
+                    highlightFontWeight = FontWeight.SemiBold,
+                    defaultFontWeight = FontWeight.Medium
+                )
 
-            Text(
-                modifier = Modifier.padding(top = 10.dp, start = 10.dp, end = 10.dp),
-                text = stringResource(R.string.dumy_item_post_detail_content)
-            )
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(vertical = 12.dp),
+                    painter = rememberAsyncImagePainter(model = tradeDetail?.post?.image_url),
+                    contentDescription = "Post Image"
+                )
 
-            Text(
-                modifier = Modifier.padding(top = 10.dp, start = 10.dp),
-                text = "조회 343",
-                color = Color.Gray
-            )
+                Text(
+                    modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                    text = tradeDetail?.post?.content
+                        ?: stringResource(R.string.dumy_item_post_detail_content)
+                )
 
-            Divider(Modifier.padding(top = 10.dp))
-            CommentIcon(Modifier.padding(top = 17.dp, start = 10.dp), size = 30.dp)
+                Text(
+                    modifier = Modifier.padding(top = 10.dp, start = 10.dp),
+                    text = "조회 ${tradeDetail?.post?.verification_count}",
+                    color = Color.Gray
+                )
 
-            PostDetailComments()
-            Spacer(Modifier.weight(1f))
+                Divider(Modifier.padding(top = 10.dp))
+                CommentIcon(
+                    modifier = Modifier.padding(top = 17.dp, start = 10.dp), size = 30.dp,
+                    text = tradeDetail?.comments?.size.toString()
+                )
+
+                PostDetailComments(items = tradeDetail?.comments ?: listOf())
+            }
             Divider()
-            DodamDuckMessageInputField()
+            DodamDuckMessageInputField(modifier = Modifier.height(50.dp))
         }
     }
 }
@@ -110,8 +149,8 @@ fun PostDetailScreen(navController: NavController) {
 fun PostDetailUserInfo(
     modifier: Modifier = Modifier,
     userName: String = "",
-    userProfile: Painter,
-    postInfo: String = "",
+    userProfile: String = "",
+    userInfo: String = "",
     postContent: String = ""
 ) {
     Row(modifier = modifier) {
@@ -121,7 +160,7 @@ fun PostDetailUserInfo(
                 .size(60.dp, 60.dp)
                 .clip(RoundedCornerShape(25.dp)),
             contentScale = ContentScale.Crop,
-            painter = userProfile,
+            painter = rememberAsyncImagePainter(model = userProfile),
             contentDescription = "UserProfile"
         )
 
@@ -131,7 +170,7 @@ fun PostDetailUserInfo(
             DodamDuckText(text = userName, fontSize = 15, fontWeight = FontWeight.Bold)
             DodamDuckText(
                 modifier = Modifier.padding(top = 2.dp),
-                text = postInfo,
+                text = userInfo,
                 fontSize = 12,
                 color = Color.Gray
             )
@@ -141,18 +180,16 @@ fun PostDetailUserInfo(
 }
 
 @Composable
-fun PostDetailComments() {
-    val postDetailUserInfoStates = DummyItemFactory.createPostDetailUserInfoDummyList()
-    LazyColumn {
-        items(postDetailUserInfoStates.size) {
-            PostDetailUserInfo(
-                modifier = Modifier.padding(start = 10.dp, top = 18.dp),
-                userName = postDetailUserInfoStates[it].userName,
-                userProfile = postDetailUserInfoStates[it].userProfile,
-                postInfo = postDetailUserInfoStates[it].info,
-                postContent = postDetailUserInfoStates[it].content
-            )
-        }
+fun PostDetailComments(items: List<TradeDetailComments>) {
+    repeat(items.size) {
+        val item = items[it]
+        PostDetailUserInfo(
+            modifier = Modifier.padding(start = 10.dp, top = 18.dp),
+            userName = item.userName,
+            userProfile = item.user_id.getUserProfileUrl(),
+            userInfo = "${item.location.split(" ")[1]} · ${item.verification_count}회 · ${item.created_at.formatDateDiff()}",
+            postContent = item.content
+        )
     }
 }
 
