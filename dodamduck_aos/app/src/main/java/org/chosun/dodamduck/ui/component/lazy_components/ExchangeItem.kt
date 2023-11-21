@@ -1,6 +1,7 @@
 package org.chosun.dodamduck.ui.component.lazy_components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,38 +24,44 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
+import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
 
 @Composable
 @Preview(showBackground = true)
 fun PreviewExchangeItemList() {
     Box(modifier = Modifier.fillMaxWidth()) {
-        ExchangeItemList()
+        ExchangeItemList(navController = rememberNavController())
     }
 }
 
 @Composable
 fun ExchangeItemList(
     modifier: Modifier = Modifier,
-    items: List<Trade> = listOf()
+    items: List<Trade> = listOf(),
+    navController: NavController
 ) {
     LazyColumn(
         modifier = modifier.padding(horizontal = 10.dp)
     ) {
         items(items.size) {
-            ExchangeItemItem(items[it])
+            ExchangeItem(items[it], navController)
             Divider(modifier = Modifier.padding(top = 6.dp, bottom = 16.dp))
         }
     }
 }
 
 @Composable
-fun ExchangeItemItem(item: Trade) {
-    Row {
+fun ExchangeItem(item: Trade, navController: NavController) {
+    Row(
+        modifier = Modifier.clickable { navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}") }
+    ) {
         AsyncImage(
             modifier = Modifier
                 .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
