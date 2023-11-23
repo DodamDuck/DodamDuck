@@ -57,8 +57,9 @@ fun DodamDuckTextField(
     passwordVisible: Boolean = true,
     onVisibilityChanged: () -> Unit = {},
     iconState: Boolean = false,
-
-) {
+    onValueChange: (String) -> Unit = {},
+    text: String = ""
+    ) {
     DodamDuckInputSurface(
         modifier = modifier
             .width(width = width.dp)
@@ -66,8 +67,8 @@ fun DodamDuckTextField(
         borderColor = borderColor,
         borderWidth = borderWidth
     ) {
-        var text by remember { mutableStateOf("") }
-        val visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+        val visualTransformation =
+            if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
 
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -76,7 +77,7 @@ fun DodamDuckTextField(
         ) {
             TextField(
                 value = text,
-                onValueChange = { text = it },
+                onValueChange = onValueChange,
                 Modifier
                     .wrapContentWidth()
                     .weight(1f)
@@ -181,7 +182,13 @@ fun PreviewOutlineTextField() {
 }
 
 @Composable
-fun AuthInputTextList(labelList: List<String>) {
+fun AuthInputTextList(
+    labelList: List<String>,
+    onUserIDChange: (String) -> Unit = {},
+    onPasswordChange: (String) -> Unit = {},
+    emailText: String = "",
+    passwordText: String = ""
+) {
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordConfirmVisible by remember { mutableStateOf(false) }
 
@@ -195,7 +202,9 @@ fun AuthInputTextList(labelList: List<String>) {
                         if (index == 1) passwordVisible = !passwordVisible
                         else passwordConfirmVisible = !passwordConfirmVisible
                     },
-                    iconState =  if (index == 1) passwordVisible else passwordConfirmVisible
+                    iconState = if (index == 1) passwordVisible else passwordConfirmVisible,
+                    onValueChange = onPasswordChange,
+                    text = passwordText
                 )
             } else {
                 DodamDuckTextField(
@@ -203,7 +212,9 @@ fun AuthInputTextList(labelList: List<String>) {
                     width = 296,
                     height = 55,
                     iconVisible = false,
-                    modifier = Modifier.padding(vertical = 10.dp)
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    onValueChange = onUserIDChange,
+                    text = emailText
                 )
             }
         }
@@ -231,7 +242,7 @@ fun PreviewAuthInputTextList() {
 
 @Composable
 fun DodamDuckMessageInputField(
-    modifier:Modifier = Modifier,
+    modifier: Modifier = Modifier,
     onSendButtonClick: () -> Unit = {},
     onTextFieldChange: (String) -> Unit = {},
     value: String = ""
@@ -277,7 +288,14 @@ fun DodamDuckMessageInputField(
 }
 
 @Composable
-fun PasswordField(label: String, isPasswordVisible: Boolean, onVisibilityChanged: () -> Unit, iconState: Boolean) {
+fun PasswordField(
+    label: String,
+    isPasswordVisible: Boolean,
+    onVisibilityChanged: () -> Unit,
+    iconState: Boolean,
+    onValueChange: (String) -> Unit,
+    text: String
+) {
     DodamDuckTextField(
         label = label,
         width = 296,
@@ -286,6 +304,8 @@ fun PasswordField(label: String, isPasswordVisible: Boolean, onVisibilityChanged
         passwordVisible = isPasswordVisible,
         onVisibilityChanged = onVisibilityChanged,
         modifier = Modifier.padding(vertical = 10.dp),
-        iconState = iconState
+        iconState = iconState,
+        onValueChange = onValueChange,
+        text = text
     )
 }
