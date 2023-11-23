@@ -186,8 +186,10 @@ fun AuthInputTextList(
     labelList: List<String>,
     onUserIDChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
+    onConfirmChange: (String) -> Unit = {},
     emailText: String = "",
-    passwordText: String = ""
+    passwordText: String = "",
+    confirmPasswordText: String = ""
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordConfirmVisible by remember { mutableStateOf(false) }
@@ -203,8 +205,8 @@ fun AuthInputTextList(
                         else passwordConfirmVisible = !passwordConfirmVisible
                     },
                     iconState = if (index == 1) passwordVisible else passwordConfirmVisible,
-                    onValueChange = onPasswordChange,
-                    text = passwordText
+                    onValueChange = if(index == 1) onPasswordChange else onConfirmChange,
+                    text = if (index == 1) passwordText else confirmPasswordText,
                 )
             } else {
                 DodamDuckTextField(

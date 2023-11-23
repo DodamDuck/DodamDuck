@@ -39,8 +39,10 @@ fun AuthBody(
     alreadyText: String,
     onUserIDChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
+    onConfirmChange: (String) -> Unit = {},
     emailText: String = "",
-    passwordText: String = ""
+    passwordText: String = "",
+    confirmPasswordText: String = ""
 ) {
     Box(
         modifier = Modifier
@@ -60,8 +62,10 @@ fun AuthBody(
                 labelList = labelList,
                 onUserIDChange = onUserIDChange,
                 onPasswordChange = onPasswordChange,
+                onConfirmChange = onConfirmChange,
                 emailText = emailText,
-                passwordText = passwordText
+                passwordText = passwordText,
+                confirmPasswordText = confirmPasswordText
             )
 
             DodamDuckCheckBox(
