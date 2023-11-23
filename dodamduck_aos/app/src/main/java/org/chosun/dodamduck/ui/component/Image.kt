@@ -50,10 +50,11 @@ fun GoogleIcon(
 @Composable
 fun VisibleIcon(
     modifier: Modifier = Modifier,
-    size: Int = 20
+    size: Int = 20,
+    isVisible: Boolean = true
 ) {
     Image(
-        painter = painterResource(id = R.drawable.ic_visible),
+        painter = painterResource(id = if(isVisible) R.drawable.ic_visible_48 else R.drawable.ic_invisible_48),
         contentDescription = stringResource(R.string.visible_icon),
         contentScale = ContentScale.Fit,
         modifier = modifier

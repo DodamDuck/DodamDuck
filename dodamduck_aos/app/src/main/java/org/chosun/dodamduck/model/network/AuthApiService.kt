@@ -1,0 +1,17 @@
+package org.chosun.dodamduck.model.network
+
+import org.chosun.dodamduck.model.dto.LoginDTO
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
+
+interface AuthApiService {
+
+    @FormUrlEncoded
+    @POST("Login.php")
+    suspend fun requestLogin(
+        @Field("userID") userID: String,
+        @Field("userPassword") password: String
+    ): LoginDTO
+
+}

@@ -36,7 +36,11 @@ fun AuthBody(
     checkBoxVisible: Boolean = true,
     checkBoxText: String,
     buttonText: String,
-    alreadyText: String
+    alreadyText: String,
+    onUserIDChange: (String) -> Unit = {},
+    onPasswordChange: (String) -> Unit = {},
+    emailText: String = "",
+    passwordText: String = ""
 ) {
     Box(
         modifier = Modifier
@@ -52,7 +56,13 @@ fun AuthBody(
                 modifier = Modifier.padding(vertical = 10.dp)
             )
 
-            AuthInputTextList(labelList = labelList)
+            AuthInputTextList(
+                labelList = labelList,
+                onUserIDChange = onUserIDChange,
+                onPasswordChange = onPasswordChange,
+                emailText = emailText,
+                passwordText = passwordText
+            )
 
             DodamDuckCheckBox(
                 text = checkBoxText,
@@ -76,7 +86,9 @@ fun AuthBody(
                 fontSize = 15,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.DarkGray,
-                modifier = Modifier.padding(top = 25.dp).clickable(onClick = bottomTextAction)
+                modifier = Modifier
+                    .padding(top = 25.dp)
+                    .clickable(onClick = bottomTextAction)
             )
         }
     }
