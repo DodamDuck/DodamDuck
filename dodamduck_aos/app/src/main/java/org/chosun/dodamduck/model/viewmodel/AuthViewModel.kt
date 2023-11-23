@@ -17,6 +17,9 @@ class AuthViewModel @Inject constructor(
 
     private val _isLoginState = MutableStateFlow<Boolean>(false)
     val isLoginState: StateFlow<Boolean> = _isLoginState
+
+    private val _isRegisterState = MutableStateFlow<String>("true")
+    val isRegisterState: StateFlow<String> = _isRegisterState
     suspend fun loginRequest(
         userID: String,
         userPassword: String
@@ -25,6 +28,17 @@ class AuthViewModel @Inject constructor(
             val result = repository.requestLogin(userID, userPassword)
             _isLoginState.value = result?.login_success ?: false
             DodamDuckData.userInfo = result
+        }
+    }
+
+    suspend fun registerRequest(
+        userID: String,
+        userPassword: String,
+        location: String =""
+    ) {
+        viewModelScope.launch {
+            val result = repository.requestRegister(userID, userPassword, location)
+            _isRegisterState.value = result?.error ?: "true"
         }
     }
 }
