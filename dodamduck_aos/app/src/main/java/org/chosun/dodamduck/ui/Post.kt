@@ -21,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,9 +33,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.viewmodel.PostViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.PostItem
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
@@ -42,9 +46,19 @@ import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
 @Composable
-fun PostScreen(navController: NavHostController) {
+fun PostScreen(
+    navController: NavHostController,
+    postViewModel: PostViewModel = hiltViewModel()
+) {
     val tags = listOf("주제", "인기글", "지식공유", "지식유형", "인기글", "인기글", "인기글")
     var selectedTag by remember { mutableStateOf(tags.first()) }
+
+    val postLists by postViewModel.postLists.collectAsState(initial = null)
+
+    LaunchedEffect(Unit) {
+        postViewModel.getPostLists()
+    }
+
 
     Box(
         modifier = Modifier
@@ -63,11 +77,13 @@ fun PostScreen(navController: NavHostController) {
             )
             Divider(modifier = Modifier.padding(top = 10.dp))
 
-            LazyColumn() {
-                items(10) {
+            val posts = postLists ?: listOf()
+            LazyColumn {
+                items(posts.size) {index ->
                     PostItem(modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                        .clickable { navController.navigate(BottomNavItem.PostDetail.screenRoute) }
+                        .clickable { navController.navigate(BottomNavItem.PostDetail.screenRoute) },
+                        item = posts[index]
                     )
                     Divider()
                 }

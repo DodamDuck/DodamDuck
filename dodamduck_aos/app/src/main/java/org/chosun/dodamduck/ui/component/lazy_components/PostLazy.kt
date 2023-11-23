@@ -26,32 +26,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.dto.PostDTO
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.ui.theme.Brown
+import org.chosun.dodamduck.utils.Utils.ellipsis
+import org.chosun.dodamduck.utils.Utils.formatDateDiff
 
 @Composable
-fun PostItem(modifier: Modifier = Modifier) {
+fun PostItem(
+    modifier: Modifier = Modifier,
+    item: PostDTO
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            PostType()
-            DodamDuckTextH3(text = "뽀로로 놀이 기구 어떤가요?")
+        Column(modifier = Modifier.weight(6f)) {
+            PostType(text = item.categoryName)
+            DodamDuckTextH3(text = item.title)
             DodamDuckText(
                 modifier = Modifier.padding(top = 4.dp),
-                text = "뽀로로 놀이 기구를 이벤트로 받았는데 ...",
+                text = item.content.ellipsis(40),
                 fontSize = 9,
                 color = Color.Gray
             )
-            DodamDuckText(
+            Text(
                 modifier = Modifier.padding(top = 2.dp),
-                text = stringResource(id = R.string.dummy_post_info_item),
-                fontSize = 9,
+                text = "${item.location} · ${item.createdAt.formatDateDiff()} · ${item.views}회",
+                fontSize = 9.sp,
                 color = Color.Gray
             )
         }
@@ -61,17 +69,18 @@ fun PostItem(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
                     .align(Alignment.End)
+                    .clip(RoundedCornerShape(10.dp))
                     .size(55.dp, 55.dp),
                 contentScale = ContentScale.Crop,
-                painter = painterResource(id = R.drawable.ic_duck),
+                painter = rememberAsyncImagePainter(item.imageURL),
                 contentDescription = "Exchange Item"
             )
 
             CommentIcon(
-                    modifier = Modifier
+                modifier = Modifier
                     .align(Alignment.End)
                     .padding(top = 2.dp),
-                text = "3"
+                text = item.commentCount
             )
         }
     }
@@ -107,7 +116,15 @@ fun PostItemPreview() {
     Box(Modifier.fillMaxSize()) {
         LazyColumn() {
             items(5) {
-                PostItem()
+                PostItem(
+                    item = PostDTO(
+                        "1", "user1",
+                        "1", "뽀로로 놀이기구 어떤가요?",
+                        "뽀로로 놀이 기구를 이벤트로 받았는데 ...",
+                        "", "2023-11-16 22:59:38","","빛가람동",
+                        "43", "2", "교환"
+                    )
+                )
             }
         }
     }
