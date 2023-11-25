@@ -60,7 +60,7 @@ fun ExchangeItemList(
 @Composable
 fun ExchangeItem(item: Trade, navController: NavController) {
     Row(
-        modifier = Modifier.clickable { navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}") }
+        modifier = Modifier.clickable { navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}/trade") }
     ) {
         AsyncImage(
             modifier = Modifier

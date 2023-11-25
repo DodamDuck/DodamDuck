@@ -2,15 +2,15 @@ package org.chosun.dodamduck.model.repository
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.chosun.dodamduck.model.dto.PostDetailResponse
 import org.chosun.dodamduck.model.dto.Trade
-import org.chosun.dodamduck.model.dto.TradeDetailResponse
 import org.chosun.dodamduck.model.network.TradeApiService
 import javax.inject.Inject
 
 class TradeRepository @Inject constructor(
     private val service: TradeApiService?
-) {
-    suspend fun fetchTradeList(): List<Trade> {
+):  BasePostRepository<Trade>  {
+    override suspend fun fetchList(): List<Trade> {
         return service?.getTradeList() ?: listOf()
     }
 
@@ -25,9 +25,9 @@ class TradeRepository @Inject constructor(
         service?.uploadTrade(userId, categoryId, title, content, location, image)
     }
 
-    suspend fun fetchTradeDetail(
+    override suspend fun fetchDetail(
         postId: String
-    ): TradeDetailResponse? {
+    ): PostDetailResponse? {
         return service?.getTradeDetail(postId)
     }
 }

@@ -20,15 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.dto.PostDTO
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckText
@@ -72,7 +69,7 @@ fun PostItem(
                     .clip(RoundedCornerShape(10.dp))
                     .size(55.dp, 55.dp),
                 contentScale = ContentScale.Crop,
-                painter = rememberAsyncImagePainter(item.imageURL),
+                painter = rememberAsyncImagePainter(item.imageUrl),
                 contentDescription = "Exchange Item"
             )
 
@@ -121,8 +118,7 @@ fun PostItemPreview() {
                         "1", "user1",
                         "1", "뽀로로 놀이기구 어떤가요?",
                         "뽀로로 놀이 기구를 이벤트로 받았는데 ...",
-                        "", "2023-11-16 22:59:38","","빛가람동",
-                        "43", "2", "교환"
+                        "", "2023-11-16 22:59:38","", "1"
                     )
                 )
             }

@@ -39,7 +39,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.dto.TradeDetailComments
+import org.chosun.dodamduck.model.dto.PostCommentDTO
+import org.chosun.dodamduck.model.viewmodel.BasePostViewModel
+import org.chosun.dodamduck.model.viewmodel.PostViewModel
 import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
@@ -49,18 +51,23 @@ import org.chosun.dodamduck.ui.component.lazy_components.PostType
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
-import org.chosun.dodamduck.utils.Utils.getUserProfileUrl
 
 @Composable
 fun PostDetailScreen(
     navController: NavController,
-    tradeViewModel: TradeViewModel = hiltViewModel(),
-    postId: String = ""
+    postId: String = "",
+    postType: String
 ) {
-    val tradeDetail by tradeViewModel.tradeDetail.collectAsState(initial = null)
+    val viewModel: BasePostViewModel<*> = when (postType) {
+        "trade" -> hiltViewModel<TradeViewModel>()
+        "post" -> hiltViewModel<PostViewModel>()
+        else -> throw IllegalArgumentException("Unknown post type")
+    }
+
+    val postDetail by viewModel.postDetail.collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
-        tradeViewModel.getTradeDetail(postId)
+        viewModel.fetchDetail(postId)
     }
 
     val scrollState = rememberScrollState()
@@ -89,22 +96,24 @@ fun PostDetailScreen(
                     modifier = Modifier.padding(top = 10.dp, start = 10.dp),
                     horizontalPadding = 25.dp,
                     verticalPadding = 8.dp,
-                    text = if(tradeDetail?.post?.category == "1") "교환" else "나눔", fontSize = 15, fontWeight = FontWeight.SemiBold
+                    text = "${postDetail?.post?.categoryName}",
+                    fontSize = 15,
+                    fontWeight = FontWeight.SemiBold
                 )
 
                 PostDetailUserInfo(
                     modifier = Modifier.padding(start = 10.dp, top = 18.dp),
-                    userName = tradeDetail?.post?.userName ?: "도담덕 유저",
-                    userProfile = tradeDetail?.post?.user_id?.getUserProfileUrl()
+                    userName = postDetail?.post?.userName ?: "도담덕 유저",
+                    userProfile = postDetail?.post?.profile_url
                         ?: "userProfileUrl",
-                    userInfo = "${tradeDetail?.post?.location?.split(" ")?.get(0)} ·" +
-                            " ${tradeDetail?.post?.verification_count}회 · " +
-                            "${tradeDetail?.post?.created_at?.formatDateDiff()}"
+                    userInfo = "${postDetail?.post?.location?.split(" ")?.get(0)} ·" +
+                            " ${postDetail?.post?.verification_count}회 · " +
+                            "${postDetail?.post?.created_at?.formatDateDiff()}"
                 )
 
                 SpannableText(
                     modifier = Modifier.padding(top = 16.dp, start = 10.dp),
-                    text = "T.${tradeDetail?.post?.title}",
+                    text = "T.${postDetail?.post?.title}",
                     highlightText = "T.",
                     highlightColor = Brown,
                     highlightFontSize = 28.sp,
@@ -118,29 +127,29 @@ fun PostDetailScreen(
                         .fillMaxWidth()
                         .height(200.dp)
                         .padding(vertical = 12.dp),
-                    painter = rememberAsyncImagePainter(model = tradeDetail?.post?.image_url),
+                    painter = rememberAsyncImagePainter(model = postDetail?.post?.image_url),
                     contentDescription = "Post Image"
                 )
 
                 Text(
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                    text = tradeDetail?.post?.content
+                    text = postDetail?.post?.content
                         ?: stringResource(R.string.dumy_item_post_detail_content)
                 )
 
                 Text(
                     modifier = Modifier.padding(top = 10.dp, start = 10.dp),
-                    text = "조회 ${tradeDetail?.post?.verification_count}",
+                    text = "조회 ${postDetail?.post?.verification_count}",
                     color = Color.Gray
                 )
 
                 Divider(Modifier.padding(top = 10.dp))
                 CommentIcon(
                     modifier = Modifier.padding(top = 17.dp, start = 10.dp), size = 30.dp,
-                    text = tradeDetail?.comments?.size.toString()
+                    text = postDetail?.comments?.size.toString()
                 )
 
-                PostDetailComments(items = tradeDetail?.comments ?: listOf())
+                PostDetailComments(items = postDetail?.comments ?: listOf())
             }
             Divider()
             DodamDuckMessageInputField(modifier = Modifier.height(50.dp))
@@ -184,13 +193,13 @@ fun PostDetailUserInfo(
 }
 
 @Composable
-fun PostDetailComments(items: List<TradeDetailComments>) {
+fun PostDetailComments(items: List<PostCommentDTO>) {
     repeat(items.size) {
         val item = items[it]
         PostDetailUserInfo(
             modifier = Modifier.padding(start = 10.dp, top = 18.dp),
             userName = item.userName,
-            userProfile = item.user_id.getUserProfileUrl(),
+            userProfile = item.profile_url,
             userInfo = "${item.location.split(" ")[1]} · ${item.verification_count}회 · ${item.created_at.formatDateDiff()}",
             postContent = item.content
         )
@@ -201,6 +210,6 @@ fun PostDetailComments(items: List<TradeDetailComments>) {
 @Composable
 fun PostDetailPreview() {
     DodamDuckTheme {
-        PostDetailScreen(rememberNavController())
+        PostDetailScreen(rememberNavController(), postType = "post")
     }
 }
