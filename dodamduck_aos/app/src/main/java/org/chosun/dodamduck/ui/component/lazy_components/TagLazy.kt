@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.LightBrown
@@ -26,19 +27,19 @@ import org.chosun.dodamduck.ui.theme.LightBrown
 @Composable
 fun TagLazyRow(
     modifier: Modifier = Modifier,
-    tags: List<String>,
-    selectedTag: String,
-    onTagSelected: (String) -> Unit
+    categories: List<CategoryDTO>,
+    selectedTag: CategoryDTO,
+    onTagSelected: (CategoryDTO) -> Unit
 ) {
     LazyRow(
         modifier = modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(tags) { tag ->
+        items(categories) { category ->
             TagLazyItem(
-                tag = tag,
-                isSelected = tag == selectedTag,
+                tag = category,
+                isSelected = category.name == selectedTag.name,
                 onTagSelected = onTagSelected
             )
         }
@@ -46,7 +47,7 @@ fun TagLazyRow(
 }
 
 @Composable
-fun TagLazyItem(tag: String, isSelected: Boolean, onTagSelected: (String) -> Unit) {
+fun TagLazyItem(tag: CategoryDTO, isSelected: Boolean, onTagSelected: (CategoryDTO) -> Unit) {
     val backgroundColor = if (isSelected) Brown else LightBrown
     val textColor = if (isSelected) Color.White else Brown
     val borderColor = if (isSelected) Brown else Color.LightGray
@@ -61,7 +62,7 @@ fun TagLazyItem(tag: String, isSelected: Boolean, onTagSelected: (String) -> Uni
         shape = shape
     ) {
         DodamDuckText(
-            text = tag,
+            text = tag.name,
             color = textColor,
             fontSize = 12,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -72,11 +73,11 @@ fun TagLazyItem(tag: String, isSelected: Boolean, onTagSelected: (String) -> Uni
 @Preview(showBackground = true)
 @Composable
 fun TagLazyItemPreview() {
-    val tags = listOf("주제", "인기글", "지식공유", "지식유형", "인기글", "인기글", "인기글")
-    var selectedTag by remember { mutableStateOf(tags.first()) }
+    val categories = listOf(CategoryDTO("12", "주제"), CategoryDTO("13", "인기글"), CategoryDTO("14","지식공유"))
+    var selectedTag by remember { mutableStateOf(categories.first()) }
 
     TagLazyRow(
-        tags = tags,
+        categories = categories,
         selectedTag = selectedTag,
         onTagSelected = { selectedTag = it }
     )

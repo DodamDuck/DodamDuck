@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.viewmodel.PostViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.PostItem
@@ -50,13 +51,17 @@ fun PostScreen(
     navController: NavHostController,
     postViewModel: PostViewModel = hiltViewModel()
 ) {
-    val tags = listOf("주제", "인기글", "지식공유", "지식유형", "인기글", "인기글", "인기글")
-    var selectedTag by remember { mutableStateOf(tags.first()) }
-
     val postLists by postViewModel.postLists.collectAsState(initial = null)
+    val categories by postViewModel.categories.collectAsState(initial = null)
+    var selectedTag by remember { mutableStateOf(CategoryDTO("0", "")) }
 
     LaunchedEffect(Unit) {
         postViewModel.getPostLists()
+        postViewModel.getCategories()
+    }
+
+    LaunchedEffect(key1 = selectedTag) {
+        postViewModel.getPostLists(selectedTag.id)
     }
 
     Box(
@@ -70,7 +75,7 @@ fun PostScreen(
 
             TagLazyRow(
                 Modifier.padding(start = 8.dp, top = 10.dp),
-                tags = tags,
+                categories = categories ?: listOf(),
                 selectedTag = selectedTag,
                 onTagSelected = { selectedTag = it }
             )
@@ -84,7 +89,7 @@ fun PostScreen(
                         .clickable {
                             postViewModel.uploadViewCount(posts[index].shareID)
                             navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${posts[index].shareID}/post")
-                                   },
+                        },
                         item = posts[index]
                     )
                     Divider()
