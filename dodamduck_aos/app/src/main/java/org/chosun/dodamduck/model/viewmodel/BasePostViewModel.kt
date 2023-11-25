@@ -37,4 +37,14 @@ abstract class BasePostViewModel<ALL>(
     fun updatePostDetail(post: PostDetailResponse?) {
         _postDetail.value = post
     }
+
+    fun uploadComment(postID: String, userID: String, comment: String) {
+        viewModelScope.launch {
+            val result = repository.uploadComment(postID, userID, comment)
+
+            if(result?.error == "false") {
+                fetchDetail(postID)
+            }
+        }
+    }
 }

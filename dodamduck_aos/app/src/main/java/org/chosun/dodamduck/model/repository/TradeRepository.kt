@@ -4,6 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.chosun.dodamduck.model.dto.PostDetailResponse
 import org.chosun.dodamduck.model.dto.Trade
+import org.chosun.dodamduck.model.network.DodamDuckResponse
 import org.chosun.dodamduck.model.network.TradeApiService
 import javax.inject.Inject
 
@@ -29,5 +30,13 @@ class TradeRepository @Inject constructor(
         postId: String
     ): PostDetailResponse? {
         return service?.getTradeDetail(postId)
+    }
+
+    override suspend fun uploadComment(
+        postID: String,
+        userID: String,
+        comment: String
+    ): DodamDuckResponse? {
+        return service?.uploadComment(postID, userID, comment)
     }
 }

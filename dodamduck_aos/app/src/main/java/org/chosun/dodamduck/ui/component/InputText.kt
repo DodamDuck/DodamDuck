@@ -269,7 +269,7 @@ fun DodamDuckMessageInputField(
             onValueChange = onTextFieldChange,
             singleLine = true,
             label = {
-                androidx.compose.material3.Text(text = "메세지를 입력하세요", fontSize = 14.sp)
+                Text(text = "메세지를 입력하세요", fontSize = 14.sp)
             },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
