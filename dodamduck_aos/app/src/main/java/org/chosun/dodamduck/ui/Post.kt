@@ -59,7 +59,6 @@ fun PostScreen(
         postViewModel.getPostLists()
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -82,7 +81,7 @@ fun PostScreen(
                 items(posts.size) {index ->
                     PostItem(modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                        .clickable { navController.navigate(BottomNavItem.PostDetail.screenRoute) },
+                        .clickable { navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${posts[index].shareID}/post") },
                         item = posts[index]
                     )
                     Divider()
