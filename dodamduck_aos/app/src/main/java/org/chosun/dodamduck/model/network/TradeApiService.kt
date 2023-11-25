@@ -32,4 +32,12 @@ interface TradeApiService {
     suspend fun getTradeDetail(
         @Field("post_id") postId: String
     ): PostDetailResponse
+
+    @POST("upload_comments.php")
+    @FormUrlEncoded
+    suspend fun uploadComment(
+        @Field("post_id") postId: String,
+        @Field("user_id") userId: String,
+        @Field("content") content: String
+    ): DodamDuckResponse
 }

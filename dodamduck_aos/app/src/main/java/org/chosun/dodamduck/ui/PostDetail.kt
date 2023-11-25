@@ -25,6 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -39,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.dto.PostCommentDTO
 import org.chosun.dodamduck.model.viewmodel.BasePostViewModel
 import org.chosun.dodamduck.model.viewmodel.PostViewModel
@@ -66,7 +70,8 @@ fun PostDetailScreen(
 
     val postDetail by viewModel.postDetail.collectAsState(initial = null)
 
-    LaunchedEffect(Unit) {
+    var commentText by remember { mutableStateOf("") }
+    LaunchedEffect(key1 = postDetail) {
         viewModel.fetchDetail(postId)
     }
 
@@ -152,7 +157,18 @@ fun PostDetailScreen(
                 PostDetailComments(items = postDetail?.comments ?: listOf())
             }
             Divider()
-            DodamDuckMessageInputField(modifier = Modifier.height(50.dp))
+            DodamDuckMessageInputField(
+                modifier = Modifier.height(50.dp),
+                onSendButtonClick = {
+                    viewModel.uploadComment(
+                        postId,
+                        DodamDuckData.userInfo!!.userID,
+                        commentText
+                    )
+                },
+                onTextFieldChange = { commentText = it},
+                value = commentText
+            )
         }
     }
 }
