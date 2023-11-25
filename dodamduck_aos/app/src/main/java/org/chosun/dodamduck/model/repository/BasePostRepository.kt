@@ -13,4 +13,8 @@ interface BasePostRepository<ALL> {
         userID: String,
         comment: String
     ): DodamDuckResponse?
+
+    suspend fun uploadViewCount(
+        postID: String
+    ): DodamDuckResponse?
 }
