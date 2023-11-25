@@ -85,7 +85,7 @@ fun ExchangeItem(item: Trade, navController: NavController, tradeViewModel: Trad
             DodamDuckTextH3(text = item.title)
             Text(
                 text = item.location + " \u00B7 " + item.created_at.formatDateDiff() + " \u00B7 조회 " + item.views,
-                fontSize = 9.sp,
+                fontSize = 122.sp,
                 color = Color.Gray
             )
             DodamDuckTextH3(
