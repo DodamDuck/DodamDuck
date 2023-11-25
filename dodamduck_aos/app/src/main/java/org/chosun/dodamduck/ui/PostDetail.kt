@@ -165,6 +165,7 @@ fun PostDetailScreen(
                         DodamDuckData.userInfo!!.userID,
                         commentText
                     )
+                    commentText = ""
                 },
                 onTextFieldChange = { commentText = it},
                 value = commentText
