@@ -127,13 +127,15 @@ fun DoDamDuckNavigationGraph(navController: NavHostController) {
             PostScreen(navController)
         }
         composable(
-            route = "${BottomNavItem.PostDetail.screenRoute}/{postId}",
+            route = "${BottomNavItem.PostDetail.screenRoute}/{postId}/{postType}",
             arguments = listOf(
-                navArgument("postId") { type = NavType.StringType }
+                navArgument("postId") { type = NavType.StringType },
+                navArgument("postType") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val postId = backStackEntry.arguments?.getString("postId")
-            PostDetailScreen(navController, postId = postId ?: "")
+            val postType = backStackEntry.arguments?.getString("postType")
+            PostDetailScreen(navController, postId = postId ?: "", postType = postType ?: "")
         }
         composable(BottomNavItem.PostWrite.screenRoute) {
             PostWriteScreen(navController)
