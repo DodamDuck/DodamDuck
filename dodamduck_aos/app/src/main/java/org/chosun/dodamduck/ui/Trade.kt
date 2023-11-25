@@ -44,7 +44,7 @@ fun TradeScreen(
     navController: NavHostController,
     tradeViewModel: TradeViewModel = hiltViewModel()
 ) {
-    val tradeLists by tradeViewModel.tradeLists.collectAsState(initial = null)
+    val tradeLists by tradeViewModel.postLists.collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
         tradeViewModel.getTradeLists()
