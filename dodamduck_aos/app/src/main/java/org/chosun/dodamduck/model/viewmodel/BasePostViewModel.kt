@@ -47,4 +47,10 @@ abstract class BasePostViewModel<ALL>(
             }
         }
     }
+
+    fun uploadViewCount(postID: String) {
+        viewModelScope.launch {
+            repository.uploadViewCount(postID)
+        }
+    }
 }

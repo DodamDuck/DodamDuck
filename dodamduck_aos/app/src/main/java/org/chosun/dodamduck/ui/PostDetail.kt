@@ -144,7 +144,7 @@ fun PostDetailScreen(
 
                 Text(
                     modifier = Modifier.padding(top = 10.dp, start = 10.dp),
-                    text = "조회 ${postDetail?.post?.verification_count}",
+                    text = "조회 ${postDetail?.post?.views}",
                     color = Color.Gray
                 )
 

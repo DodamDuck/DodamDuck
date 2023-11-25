@@ -25,4 +25,11 @@ interface PostApiService {
         @Field("user_id") userId: String,
         @Field("comment") content: String
     ): DodamDuckResponse
+
+    @POST("content_share_view_up.php")
+    @FormUrlEncoded
+    suspend fun uploadViews(
+        @Field("share_id") shareId: String
+    ): DodamDuckResponse
+
 }

@@ -50,13 +50,13 @@ fun PostItem(
             DodamDuckText(
                 modifier = Modifier.padding(top = 4.dp),
                 text = item.content.ellipsis(40),
-                fontSize = 9,
+                fontSize = 12,
                 color = Color.Gray
             )
             Text(
                 modifier = Modifier.padding(top = 2.dp),
                 text = "${item.location} · ${item.createdAt.formatDateDiff()} · ${item.views}회",
-                fontSize = 9.sp,
+                fontSize = 12.sp,
                 color = Color.Gray
             )
         }

@@ -24,10 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import org.chosun.dodamduck.model.dto.Trade
+import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
@@ -45,22 +47,26 @@ fun PreviewExchangeItemList() {
 fun ExchangeItemList(
     modifier: Modifier = Modifier,
     items: List<Trade> = listOf(),
-    navController: NavController
+    navController: NavController,
+    tradeViewModel: TradeViewModel = hiltViewModel()
 ) {
     LazyColumn(
         modifier = modifier.padding(horizontal = 10.dp)
     ) {
         items(items.size) {
-            ExchangeItem(items[it], navController)
+            ExchangeItem(items[it], navController, tradeViewModel)
             Divider(modifier = Modifier.padding(top = 6.dp, bottom = 16.dp))
         }
     }
 }
 
 @Composable
-fun ExchangeItem(item: Trade, navController: NavController) {
+fun ExchangeItem(item: Trade, navController: NavController, tradeViewModel: TradeViewModel) {
     Row(
-        modifier = Modifier.clickable { navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}/trade") }
+        modifier = Modifier.clickable {
+            tradeViewModel.uploadViewCount(item.post_id)
+            navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}/trade")
+        }
     ) {
         AsyncImage(
             modifier = Modifier
@@ -68,7 +74,7 @@ fun ExchangeItem(item: Trade, navController: NavController) {
                 .size(80.dp)
                 .clip(RoundedCornerShape(10.dp)),
             contentScale = ContentScale.Crop,
-            model = item.image_url ,
+            model = item.image_url,
             contentDescription = "Image"
         )
 
@@ -79,7 +85,7 @@ fun ExchangeItem(item: Trade, navController: NavController) {
             DodamDuckTextH3(text = item.title)
             Text(
                 text = item.location + " \u00B7 " + item.created_at.formatDateDiff() + " \u00B7 조회 " + item.views,
-                fontSize = 9.sp,
+                fontSize = 12.sp,
                 color = Color.Gray
             )
             DodamDuckTextH3(

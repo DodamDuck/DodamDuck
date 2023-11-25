@@ -40,4 +40,11 @@ interface TradeApiService {
         @Field("user_id") userId: String,
         @Field("content") content: String
     ): DodamDuckResponse
+
+    @POST("upload_post_view_up.php")
+    @FormUrlEncoded
+    suspend fun uploadViews(
+        @Field("post_id") postId: String
+    ): DodamDuckResponse
+
 }

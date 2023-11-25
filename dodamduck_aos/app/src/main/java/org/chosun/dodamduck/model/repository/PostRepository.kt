@@ -29,5 +29,9 @@ class PostRepository @Inject constructor(
         return service?.uploadComment(postID, userID, comment)
     }
 
+    override suspend fun uploadViewCount(postID: String): DodamDuckResponse? {
+        return service?.uploadViews(postID)
+    }
+
 
 }
