@@ -1,5 +1,6 @@
 package org.chosun.dodamduck.model.network
 
+import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.PostDTO
 import org.chosun.dodamduck.model.dto.PostDetailResponse
 import retrofit2.http.Field
@@ -12,6 +13,11 @@ interface PostApiService {
 
     @GET("ContentShare.php")
     suspend fun getPostList(): List<PostDTO>?
+
+    @GET("ContentShare.php")
+    suspend fun getPostList(
+        @Query("category_id") categoryID: String
+    ): List<PostDTO>
 
     @GET("ContentShare_Detail.php")
     suspend fun getPostDetail(
@@ -31,5 +37,8 @@ interface PostApiService {
     suspend fun uploadViews(
         @Field("share_id") shareId: String
     ): DodamDuckResponse
+
+    @GET("Categories.php")
+    suspend fun getCategories(): List<CategoryDTO>
 
 }

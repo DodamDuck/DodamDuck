@@ -30,7 +30,7 @@ abstract class BasePostViewModel<ALL>(
         }
     }
 
-    fun updatePostLists(list: List<ALL>) {
+    fun updatePostLists(list: List<ALL>?) {
         _postLists.value = list
     }
 

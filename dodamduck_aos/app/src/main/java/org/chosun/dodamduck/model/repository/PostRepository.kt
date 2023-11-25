@@ -1,7 +1,7 @@
 package org.chosun.dodamduck.model.repository
 
+import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.PostDTO
-import org.chosun.dodamduck.model.dto.PostDetailDTO
 import org.chosun.dodamduck.model.dto.PostDetailResponse
 import org.chosun.dodamduck.model.network.DodamDuckResponse
 import org.chosun.dodamduck.model.network.PostApiService
@@ -13,6 +13,10 @@ class PostRepository @Inject constructor(
 
     override suspend fun fetchList(): List<PostDTO> {
         return service?.getPostList() ?: listOf()
+    }
+
+    suspend fun fetchList(categoryID: String): List<PostDTO> {
+        return service?.getPostList(categoryID) ?: listOf()
     }
 
     override suspend fun fetchDetail(
@@ -33,5 +37,7 @@ class PostRepository @Inject constructor(
         return service?.uploadViews(postID)
     }
 
-
+    suspend fun fetchCategories(): List<CategoryDTO>? {
+        return service?.getCategories()
+    }
 }
