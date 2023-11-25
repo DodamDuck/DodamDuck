@@ -39,23 +39,24 @@ fun LoginScreen(
 
     var userID by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var loginLoading by remember { mutableStateOf(false) }
+    var loginAttempted by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val checkLoginMessage = stringResource(R.string.please_check_your_login_information)
 
-    if (loginLoading) {
+    if (loginAttempted) {
         LaunchedEffect(key1 = Unit) {
-            authViewModel.loginRequest(userID, password)
+            val result = authViewModel.loginRequest(userID, password)
+            if (!result) {
+                Toast.makeText(context, checkLoginMessage, Toast.LENGTH_SHORT).show()
+            }
+            loginAttempted = false
         }
     }
 
-    LaunchedEffect(key1 = isLoginSuccess) {
-        if (isLoginSuccess) {
+    LaunchedEffect(key1 = isLoginSuccess, key2 = loginAttempted) {
+         if (isLoginSuccess) {
             navController.navigate(BottomNavItem.Home.screenRoute)
-        } else if (loginLoading) {
-            Toast.makeText(context, checkLoginMessage, Toast.LENGTH_LONG).show()
-            loginLoading = false
         }
     }
 
@@ -81,7 +82,7 @@ fun LoginScreen(
                 alreadyText = stringResource(R.string.dont_you_have_an_account),
                 checkBoxVisible = false,
                 buttonAction = {
-                    loginLoading = true
+                    loginAttempted = true
                 },
                 bottomTextAction = { navController.navigate(BottomNavItem.Register.screenRoute) },
                 onUserIDChange = { newUserID -> userID = newUserID },
