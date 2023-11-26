@@ -5,8 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,7 +51,10 @@ fun DodamDuckSearchBar(modifier: Modifier = Modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+            modifier = Modifier
+                .background(color = White9,
+                        shape = RoundedCornerShape(32.dp)
+                ).fillMaxSize()
         ) {
             DodamDuckText(
                 modifier = Modifier.weight(1f),
@@ -64,7 +69,7 @@ fun DodamDuckSearchBar(modifier: Modifier = Modifier) {
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search Icon",
                 tint = Color.Gray,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp).offset(x = (-20).dp, y = (2).dp)
             )
         }
     }

@@ -33,7 +33,7 @@
     <string name="dummy_toy_item_name">손목 자연 딸랑이</string>
     <string name="dummy_toy_item_classification">조작/탐색</string>
     <string name="dummy_toy_item_age_limit">1개월 이상</string>
-    <string name="dummy_toy_item_price">500원</string>
+    <string name="dummy_toy_item_price">500</string>
     <string name="ask_rental">대여 문의</string>
     <string name="dummy_post_info_item">빛가람동 \u00B7 1일전 \u00B7 조회 434</string>
     <string name="writing">글 쓰기</string>
