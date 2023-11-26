@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
 import androidx.compose.foundation.Image
@@ -26,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.dto.ToyInfo
 import org.chosun.dodamduck.ui.component.EllipsisText
@@ -80,8 +80,9 @@ fun ToyItem(toyInfo: ToyInfo) {
         ) {
             Text(text = toyInfo.addressStreet.split(" ")[0])
             Text(text = toyInfo.managementAgencyName)
+            val toyName = toyInfo.toyName.replace(" ", "")
             Image(
-                painter = painterResource(id = R.drawable.ic_toy_48),
+                painter = rememberAsyncImagePainter("http://sy2978.dothome.co.kr/library/${toyName}.jpg"),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,7 +93,7 @@ fun ToyItem(toyInfo: ToyInfo) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                EllipsisText(text = toyInfo.toyName, maxLength = 8)
+                EllipsisText(text = toyInfo.toyName, maxLength = 10, fontSize = 10)
                 Text(text = toyInfo.area, fontSize = 10.sp)
             }
 
@@ -102,7 +103,7 @@ fun ToyItem(toyInfo: ToyInfo) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = toyInfo.ageGroup, fontSize = 10.sp)
-                Text(text = toyInfo.rentalFee, fontSize = 10.sp)
+                Text(text = "${toyInfo.rentalFee}원", fontSize = 10.sp)
             }
             OutlinedButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
