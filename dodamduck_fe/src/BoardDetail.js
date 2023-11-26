@@ -83,8 +83,9 @@ function BoardDetail() {
                     <div className="comment-radio">댓글</div>
                     <div className="comment-content">
                         {ContentComments.map((comment, index) => (
-                            <div key={comment.id} style={{ marginLeft: '10px'}}>
+                            <div key={comment.id} style={{ marginLeft: '10px', display: 'flex'}}>
                                 <p className="sharing-comment">{comment.userName}님: {comment.content}</p>
+                                <p className="sharing-comment-created">{comment.created_at}</p>
                             </div>
                         ))}
                     </div>
