@@ -1,6 +1,7 @@
 package org.chosun.dodamduck.ui
 
 import  androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,6 +45,8 @@ import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.dto.PostCommentDTO
+import org.chosun.dodamduck.model.dto.PostDetailResponse
+import org.chosun.dodamduck.model.repository.DummyItemFactory
 import org.chosun.dodamduck.model.viewmodel.BasePostViewModel
 import org.chosun.dodamduck.model.viewmodel.PostViewModel
 import org.chosun.dodamduck.model.viewmodel.TradeViewModel
@@ -76,6 +79,33 @@ fun PostDetailScreen(
     }
 
     val scrollState = rememberScrollState()
+
+    PostDetailContent(
+        navController = navController,
+        postDetail = postDetail,
+        commentText = commentText,
+        scrollState = scrollState,
+        onSendButtonClick = {
+            viewModel.uploadComment(
+                postId,
+                DodamDuckData.userInfo!!.userID,
+                commentText
+            )
+            commentText = ""
+        },
+        onTextFieldChange = { commentText = it }
+    )
+}
+
+@Composable
+fun PostDetailContent(
+    navController: NavController,
+    postDetail: PostDetailResponse?,
+    commentText: String,
+    scrollState: ScrollState,
+    onSendButtonClick: () -> Unit,
+    onTextFieldChange: (String) -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -159,15 +189,8 @@ fun PostDetailScreen(
             Divider()
             DodamDuckMessageInputField(
                 modifier = Modifier.height(50.dp),
-                onSendButtonClick = {
-                    viewModel.uploadComment(
-                        postId,
-                        DodamDuckData.userInfo!!.userID,
-                        commentText
-                    )
-                    commentText = ""
-                },
-                onTextFieldChange = { commentText = it},
+                onSendButtonClick = onSendButtonClick,
+                onTextFieldChange = onTextFieldChange,
                 value = commentText
             )
         }
@@ -227,6 +250,15 @@ fun PostDetailComments(items: List<PostCommentDTO>) {
 @Composable
 fun PostDetailPreview() {
     DodamDuckTheme {
-        PostDetailScreen(rememberNavController(), postType = "post")
+        PostDetailContent(
+            navController = rememberNavController(),
+            postDetail = PostDetailResponse(
+                DummyItemFactory.createPostDetailDto(),
+                listOf(DummyItemFactory.createPostComment())
+            ),
+            commentText = "",
+            scrollState = rememberScrollState(),
+            onSendButtonClick = { /*TODO*/ }
+        )
     }
 }
