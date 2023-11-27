@@ -28,8 +28,8 @@ class AuthViewModel @Inject constructor(
         val result = viewModelScope.async {
             val response = repository.requestLogin(userID, userPassword)
             _isLoginState.value = response?.login_success ?: false
-            DodamDuckData.userInfo = response
-            return@async response?.login_success ?: false
+            DodamDuckData.userInfo = response!!
+            return@async response.login_success ?: false
         }
         return result.await()
     }
