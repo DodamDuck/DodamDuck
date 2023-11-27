@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckRadioButton
 import org.chosun.dodamduck.ui.component.DodamDuckText
@@ -70,8 +71,8 @@ fun TradeWriteScreen(
     val context = LocalContext.current
     var title by remember { mutableStateOf("") }
     var detailDescription by remember { mutableStateOf("") }
-    var tradeLocation by remember { mutableStateOf("") }
-    var transactionType by remember { mutableIntStateOf(0) }
+    var tradeLocation by remember { mutableStateOf(DodamDuckData.userInfo.location) }
+    var transactionType by remember { mutableIntStateOf(1) }
 
     Box(
         modifier = Modifier
@@ -98,7 +99,7 @@ fun TradeWriteScreen(
                     end = 12.dp,
                     top = 17.dp
                 ),
-                onValueChange = { transactionType = it}
+                onValueChange = { transactionType = it+1 }
             )
             TradeWriteInputText(
                 modifier = Modifier
@@ -118,7 +119,7 @@ fun TradeWriteScreen(
                 titleText = stringResource(R.string.desired_trading_location),
                 text = stringResource(R.string.dummy_item_location),
                 value = tradeLocation,
-                onValueChange = { tradeLocation = it+1 }
+                onValueChange = { tradeLocation = it }
             )
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
@@ -130,7 +131,16 @@ fun TradeWriteScreen(
                 shape = RoundedCornerShape(6.dp),
                 height = 80.dp,
                 onClick = {
-                    handleTradeUpload(tradeViewModel, context, imageList, "seyeong2", transactionType.toString(), title, detailDescription, tradeLocation)
+                    handleTradeUpload(
+                        tradeViewModel,
+                        context,
+                        imageList,
+                        DodamDuckData.userInfo.userID,
+                        transactionType.toString(),
+                        title,
+                        detailDescription,
+                        tradeLocation
+                    )
                     navController.popBackStack()
                 }
             )
@@ -220,7 +230,7 @@ fun TradeTransactionType(modifier: Modifier = Modifier, onValueChange: (Int) -> 
                     onSelect = {
                         selectedOption = option
                         onValueChange(index)
-                               },
+                    },
                 )
             }
         }
@@ -258,6 +268,13 @@ fun handleTradeUpload(
     val locationBody = tradeLocation.toRequestBody("text/plain".toMediaTypeOrNull())
     val filePart = imageList[0].uriToMultipartBody(context)
 
-    tradeViewModel.uploadTrade(userIdBody, categoryIdBody, titleBody, contentBody, locationBody, filePart)
+    tradeViewModel.uploadTrade(
+        userIdBody,
+        categoryIdBody,
+        titleBody,
+        contentBody,
+        locationBody,
+        filePart
+    )
 }
 

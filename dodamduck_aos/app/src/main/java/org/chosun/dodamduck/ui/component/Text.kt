@@ -214,16 +214,34 @@ fun SpannableText(
             // 하이라이트되지 않은 텍스트의 시작 부분
             append(text.substring(0, startIndex))
             // 하이라이트 텍스트
-            withStyle(style = SpanStyle(color = highlightColor, fontSize = highlightFontSize, fontWeight = highlightFontWeight)) {
+            withStyle(
+                style = SpanStyle(
+                    color = highlightColor,
+                    fontSize = highlightFontSize,
+                    fontWeight = highlightFontWeight
+                )
+            ) {
                 append(highlightText)
             }
             // 하이라이트 뒤의 텍스트
-            withStyle(style = SpanStyle(color = defaultColor, fontSize = defaultFontSize, fontWeight = highlightFontWeight)) {
+            withStyle(
+                style = SpanStyle(
+                    color = defaultColor,
+                    fontSize = defaultFontSize,
+                    fontWeight = highlightFontWeight
+                )
+            ) {
                 append(text.substring(startIndex + highlightText.length))
             }
         } else {
             // 텍스트에 하이라이트할 부분이 없으면 모두 기본 스타일을 적용
-            withStyle(style = SpanStyle(color = defaultColor, fontSize = defaultFontSize, fontWeight = defaultFontWeight)) {
+            withStyle(
+                style = SpanStyle(
+                    color = defaultColor,
+                    fontSize = defaultFontSize,
+                    fontWeight = defaultFontWeight
+                )
+            ) {
                 append(text)
             }
         }
@@ -241,5 +259,20 @@ fun ExampleUsage() {
         highlightColor = Color(0xFF795548), // 갈색
         highlightFontSize = 20.sp,
         defaultFontSize = 16.sp
+    )
+}
+
+@Composable
+fun BottomSheetText(
+    modifier: Modifier = Modifier,
+    text: String = "",
+    color: Color = Color.Blue
+) {
+    Text(
+        modifier = modifier.fillMaxWidth(),
+        text = text,
+        fontSize = 21.sp,
+        textAlign = TextAlign.Center,
+        color = color
     )
 }

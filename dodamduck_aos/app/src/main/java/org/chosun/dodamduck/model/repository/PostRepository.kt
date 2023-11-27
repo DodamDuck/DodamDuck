@@ -37,6 +37,10 @@ class PostRepository @Inject constructor(
         return service?.uploadViews(postID)
     }
 
+    override suspend fun deletePost(postID: String, userID: String): DodamDuckResponse? {
+        return service?.deletePost(postID, userID)
+    }
+
     suspend fun fetchCategories(): List<CategoryDTO>? {
         return service?.getCategories()
     }

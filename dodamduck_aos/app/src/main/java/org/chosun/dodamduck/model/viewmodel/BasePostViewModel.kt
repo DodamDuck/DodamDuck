@@ -2,6 +2,7 @@ package org.chosun.dodamduck.model.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,6 @@ abstract class BasePostViewModel<ALL>(
 
     private val _postDetail = MutableStateFlow<PostDetailResponse?>(null)
     val postDetail: StateFlow<PostDetailResponse?> = _postDetail
-
     fun fetchLists() {
         viewModelScope.launch {
             _postLists.value = repository.fetchList()
@@ -42,7 +42,7 @@ abstract class BasePostViewModel<ALL>(
         viewModelScope.launch {
             val result = repository.uploadComment(postID, userID, comment)
 
-            if(result?.error == "false") {
+            if (result?.error == "false") {
                 fetchDetail(postID)
             }
         }
@@ -52,5 +52,16 @@ abstract class BasePostViewModel<ALL>(
         viewModelScope.launch {
             repository.uploadViewCount(postID)
         }
+    }
+
+    suspend fun deletePost(
+        postID: String,
+        userID: String
+    ): Boolean {
+        val result = viewModelScope.async() {
+            val error = repository.deletePost(postID, userID)?.error
+            return@async error != "true"
+        }
+        return result.await()
     }
 }
