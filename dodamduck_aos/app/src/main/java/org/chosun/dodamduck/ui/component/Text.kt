@@ -265,13 +265,14 @@ fun ExampleUsage() {
 @Composable
 fun BottomSheetText(
     modifier: Modifier = Modifier,
-    text: String = ""
+    text: String = "",
+    color: Color = Color.Blue
 ) {
     Text(
         modifier = modifier.fillMaxWidth(),
         text = text,
         fontSize = 21.sp,
         textAlign = TextAlign.Center,
-        color = Color.Blue
+        color = color
     )
 }
