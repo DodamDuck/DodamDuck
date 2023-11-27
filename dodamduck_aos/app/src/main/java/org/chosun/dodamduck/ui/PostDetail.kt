@@ -1,24 +1,28 @@
 package org.chosun.dodamduck.ui
 
-import  androidx.compose.foundation.Image
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -50,6 +55,8 @@ import org.chosun.dodamduck.model.repository.DummyItemFactory
 import org.chosun.dodamduck.model.viewmodel.BasePostViewModel
 import org.chosun.dodamduck.model.viewmodel.PostViewModel
 import org.chosun.dodamduck.model.viewmodel.TradeViewModel
+import org.chosun.dodamduck.ui.component.BottomSheet
+import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckText
@@ -106,6 +113,14 @@ fun PostDetailContent(
     onSendButtonClick: () -> Unit,
     onTextFieldChange: (String) -> Unit = {}
 ) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    if (showBottomSheet) {
+        BottomSheet(onDismissRequest = { showBottomSheet = false }) {
+            PostDetailBottomSheetContent()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -126,15 +141,25 @@ fun PostDetailContent(
                     .weight(1f)
                     .verticalScroll(scrollState)
             ) {
-
-                PostType(
-                    modifier = Modifier.padding(top = 10.dp, start = 10.dp),
-                    horizontalPadding = 25.dp,
-                    verticalPadding = 8.dp,
-                    text = "${postDetail?.post?.categoryName}",
-                    fontSize = 15,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    PostType(
+                        modifier = Modifier.padding(top = 10.dp, start = 10.dp),
+                        horizontalPadding = 25.dp,
+                        verticalPadding = 8.dp,
+                        text = "${postDetail?.post?.categoryName}",
+                        fontSize = 15,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        modifier = Modifier
+                            .align(Bottom)
+                            .size(30.dp)
+                            .clickable { showBottomSheet = true },
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More Icon"
+                    )
+                }
 
                 PostDetailUserInfo(
                     modifier = Modifier.padding(start = 10.dp, top = 18.dp),
@@ -243,6 +268,22 @@ fun PostDetailComments(items: List<PostCommentDTO>) {
             userInfo = "${item.location.split(" ")[1]} · ${item.verification_count}회 · ${item.created_at.formatDateDiff()}",
             postContent = item.content
         )
+    }
+}
+
+@Composable
+fun PostDetailBottomSheetContent() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        BottomSheetText(text = "수정")
+        Divider(modifier = Modifier.padding(vertical = 12.dp))
+        BottomSheetText(text = "삭제")
+        Divider(modifier = Modifier.padding(vertical = 12.dp))
+        BottomSheetText(modifier = Modifier.padding(bottom = 12.dp), "닫기")
     }
 }
 
