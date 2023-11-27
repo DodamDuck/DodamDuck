@@ -40,7 +40,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
@@ -70,13 +72,13 @@ fun UserScreen() {
                     .size(120.dp, 120.dp)
                     .clip(RoundedCornerShape(60.dp)),
                 contentScale = ContentScale.Crop,
-                painter = painterResource(id = R.drawable.img_user_profile),
+                painter = rememberAsyncImagePainter(DodamDuckData.userInfo.profile_url),
                 contentDescription = "UserProfile"
             )
 
             Text(
                 modifier = Modifier.padding(top = 20.dp),
-                text = "짱구 맘",
+                text = DodamDuckData.userInfo.userName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold
             )
