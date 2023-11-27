@@ -1,6 +1,5 @@
 package org.chosun.dodamduck.ui
 
-import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +21,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -58,9 +59,11 @@ import org.chosun.dodamduck.utils.Utils.uriToMultipartBody
 
 @Composable
 fun TradeWriteScreen(
-    navController: NavHostController,
+    navController: NavController,
     tradeViewModel: TradeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     var imageList by remember { mutableStateOf<List<Uri>>(listOf()) }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -68,12 +71,67 @@ fun TradeWriteScreen(
         imageList = ((imageList + uri) ?: throw NullPointerException()) as List<Uri>
     }
 
-    val context = LocalContext.current
     var title by remember { mutableStateOf("") }
     var detailDescription by remember { mutableStateOf("") }
     var tradeLocation by remember { mutableStateOf(DodamDuckData.userInfo.location) }
     var transactionType by remember { mutableIntStateOf(1) }
+    val uploadSuccess by tradeViewModel.uploadSuccess.collectAsState(initial = false)
 
+    val handleTradeUpload = {
+        val userIdBody = DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
+        val categoryIdBody = transactionType.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
+        val contentBody = detailDescription.toRequestBody("text/plain".toMediaTypeOrNull())
+        val locationBody = tradeLocation.toRequestBody("text/plain".toMediaTypeOrNull())
+        val filePart = imageList[0].uriToMultipartBody(context)
+
+        tradeViewModel.uploadTrade(
+            userIdBody,
+            categoryIdBody,
+            titleBody,
+            contentBody,
+            locationBody,
+            filePart
+        )
+    }
+
+    val onImageClick = { galleryLauncher.launch("image/*") }
+
+    LaunchedEffect(key1 = uploadSuccess) {
+        if(uploadSuccess)
+            navController.popBackStack()
+    }
+
+    TradeWriteContent(
+        navController = navController,
+        imageList = imageList,
+        onImageClick = onImageClick,
+        handleTradeUpload =  handleTradeUpload,
+        onTitleTextChange = { title = it },
+        onTransactionChange = { transactionType = it + 1 },
+        onDescriptionChange = { detailDescription = it },
+        onTradeLocationChange = { tradeLocation = it },
+        title = title,
+        detailDescription = detailDescription,
+        tradeLocation = tradeLocation
+    )
+}
+
+@Composable
+fun TradeWriteContent(
+    navController: NavController,
+    imageList: List<Uri> = listOf(),
+    onImageClick: () -> Unit,
+    handleTradeUpload: () -> Unit,
+    onTitleTextChange: (String) -> Unit,
+    onTransactionChange: (Int) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onTradeLocationChange: (String) -> Unit,
+    title: String,
+    detailDescription: String,
+    tradeLocation: String
+
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -83,7 +141,7 @@ fun TradeWriteScreen(
             TradeWriteScreenHeader(navController)
             PhotoSelectionList(
                 modifier = Modifier.padding(start = 12.dp, top = 23.dp),
-                onImageClick = { galleryLauncher.launch("image/*") },
+                onImageClick = onImageClick,
                 imageList,
             )
             TradeWriteInputText(
@@ -91,7 +149,7 @@ fun TradeWriteScreen(
                 titleText = stringResource(id = R.string.title),
                 text = stringResource(id = R.string.title),
                 value = title,
-                onValueChange = { title = it }
+                onValueChange = onTitleTextChange
             )
             TradeTransactionType(
                 modifier = Modifier.padding(
@@ -99,7 +157,7 @@ fun TradeWriteScreen(
                     end = 12.dp,
                     top = 17.dp
                 ),
-                onValueChange = { transactionType = it+1 }
+                onValueChange = onTransactionChange
             )
             TradeWriteInputText(
                 modifier = Modifier
@@ -108,7 +166,7 @@ fun TradeWriteScreen(
                 titleText = stringResource(id = R.string.detail_description),
                 text = stringResource(id = R.string.detail_description_content),
                 value = detailDescription,
-                onValueChange = { detailDescription = it }
+                onValueChange = onDescriptionChange
             )
             GrayButton(
                 modifier = Modifier.padding(start = 12.dp, top = 17.dp),
@@ -119,7 +177,7 @@ fun TradeWriteScreen(
                 titleText = stringResource(R.string.desired_trading_location),
                 text = stringResource(R.string.dummy_item_location),
                 value = tradeLocation,
-                onValueChange = { tradeLocation = it }
+                onValueChange = onTradeLocationChange
             )
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
@@ -130,26 +188,14 @@ fun TradeWriteScreen(
                 text = stringResource(R.string.post_completed),
                 shape = RoundedCornerShape(6.dp),
                 height = 80.dp,
-                onClick = {
-                    handleTradeUpload(
-                        tradeViewModel,
-                        context,
-                        imageList,
-                        DodamDuckData.userInfo.userID,
-                        transactionType.toString(),
-                        title,
-                        detailDescription,
-                        tradeLocation
-                    )
-                    navController.popBackStack()
-                }
+                onClick = handleTradeUpload
             )
         }
     }
 }
 
 @Composable
-fun TradeWriteScreenHeader(navController: NavHostController) {
+fun TradeWriteScreenHeader(navController: NavController) {
     Row(
         modifier = Modifier.padding(end = 8.dp),
         horizontalArrangement = Arrangement.Center,
@@ -241,7 +287,18 @@ fun TradeTransactionType(modifier: Modifier = Modifier, onValueChange: (Int) -> 
 @Preview
 fun TradeWritePreview() {
     DodamDuckTheme {
-        TradeWriteScreen(rememberNavController())
+        TradeWriteContent(
+            navController = rememberNavController(),
+            onImageClick = { /*TODO*/ },
+            handleTradeUpload = { /*TODO*/ },
+            onTitleTextChange = {},
+            onTransactionChange = {},
+            onDescriptionChange = {},
+            onTradeLocationChange = {},
+            title = "",
+            detailDescription = "",
+            tradeLocation = ""
+        )
     }
 }
 
@@ -250,31 +307,3 @@ fun TradeWritePreview() {
 fun PhotoCountBoxPreview() {
     PhotoCountBox(onImageClick = {})
 }
-
-fun handleTradeUpload(
-    tradeViewModel: TradeViewModel,
-    context: Context,
-    imageList: List<Uri>,
-    userId: String,
-    categoryId: String,
-    title: String,
-    detailDescription: String,
-    tradeLocation: String
-) {
-    val userIdBody = userId.toRequestBody("text/plain".toMediaTypeOrNull())
-    val categoryIdBody = categoryId.toRequestBody("text/plain".toMediaTypeOrNull())
-    val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
-    val contentBody = detailDescription.toRequestBody("text/plain".toMediaTypeOrNull())
-    val locationBody = tradeLocation.toRequestBody("text/plain".toMediaTypeOrNull())
-    val filePart = imageList[0].uriToMultipartBody(context)
-
-    tradeViewModel.uploadTrade(
-        userIdBody,
-        categoryIdBody,
-        titleBody,
-        contentBody,
-        locationBody,
-        filePart
-    )
-}
-
