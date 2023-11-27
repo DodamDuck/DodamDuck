@@ -17,4 +17,9 @@ interface BasePostRepository<ALL> {
     suspend fun uploadViewCount(
         postID: String
     ): DodamDuckResponse?
+
+    suspend fun deletePost(
+        postID: String,
+        userID: String
+    ): DodamDuckResponse?
 }

@@ -18,6 +18,9 @@ abstract class BasePostViewModel<ALL>(
     private val _postDetail = MutableStateFlow<PostDetailResponse?>(null)
     val postDetail: StateFlow<PostDetailResponse?> = _postDetail
 
+    private val _deletePostError = MutableStateFlow<Boolean>(false)
+    val deletePostError: StateFlow<Boolean> = _deletePostError
+
     fun fetchLists() {
         viewModelScope.launch {
             _postLists.value = repository.fetchList()
@@ -42,7 +45,7 @@ abstract class BasePostViewModel<ALL>(
         viewModelScope.launch {
             val result = repository.uploadComment(postID, userID, comment)
 
-            if(result?.error == "false") {
+            if (result?.error == "false") {
                 fetchDetail(postID)
             }
         }
@@ -51,6 +54,16 @@ abstract class BasePostViewModel<ALL>(
     fun uploadViewCount(postID: String) {
         viewModelScope.launch {
             repository.uploadViewCount(postID)
+        }
+    }
+
+    fun deletePost(
+        postID: String,
+        userID: String
+    ) {
+        viewModelScope.launch {
+            val error = repository.deletePost(postID, userID)?.error
+            _deletePostError.value = error == "true"
         }
     }
 }

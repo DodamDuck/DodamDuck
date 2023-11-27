@@ -43,4 +43,8 @@ class TradeRepository @Inject constructor(
     override suspend fun uploadViewCount(postID: String): DodamDuckResponse? {
         return service?.uploadViews(postID)
     }
+
+    override suspend fun deletePost(postID: String, userID: String): DodamDuckResponse? {
+        return service?.deleteTrade(postID, userID)
+    }
 }
