@@ -8,6 +8,7 @@ class ToyLibraryRepository @Inject constructor(
     private val service: ToyLibraryApiService?
 ) {
     suspend fun fetchToyList(): List<ToyInfo> {
-        return service?.getToyList()?.data ?: listOf()
+        val list = service?.getToyList()?.data ?: listOf()
+        return list.sortedBy { it.toyName }.distinctBy { it.toyName }.take(30)
     }
 }
