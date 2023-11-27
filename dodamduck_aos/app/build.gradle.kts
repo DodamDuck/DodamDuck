@@ -10,6 +10,10 @@ android {
     namespace = "org.chosun.dodamduck"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "org.chosun.dodamduck"
         minSdk = 29
@@ -21,6 +25,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "API_KEY", "\"${properties["MyApiSecretKey"]}\"")
     }
 
     buildTypes {
