@@ -1,5 +1,7 @@
 package org.chosun.dodamduck.ui
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -23,21 +25,25 @@ import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.launch
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.dto.PostCommentDTO
@@ -70,7 +77,8 @@ import org.chosun.dodamduck.utils.Utils.formatDateDiff
 fun PostDetailScreen(
     navController: NavController,
     postId: String = "",
-    postType: String
+    postType: String,
+    context: Context = LocalContext.current
 ) {
     val viewModel: BasePostViewModel<*> = when (postType) {
         "trade" -> hiltViewModel<TradeViewModel>()
@@ -79,10 +87,23 @@ fun PostDetailScreen(
     }
 
     val postDetail by viewModel.postDetail.collectAsState(initial = null)
+    var deleteAttempted by remember { mutableStateOf(false) }
 
     var commentText by remember { mutableStateOf("") }
     LaunchedEffect(key1 = postDetail) {
         viewModel.fetchDetail(postId)
+    }
+
+    if (deleteAttempted) {
+        LaunchedEffect(Unit) {
+            val isDeleteSuccess = viewModel.deletePost(postId, DodamDuckData.userInfo.userID)
+            if (isDeleteSuccess) {
+                Toast.makeText(context, "게시글이 삭제 되었습니다.", Toast.LENGTH_SHORT).show()
+                navController.popBackStack()
+            } else {
+                Toast.makeText(context, "게시글 작성자만 삭제 할 수 있습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     val scrollState = rememberScrollState()
@@ -95,15 +116,19 @@ fun PostDetailScreen(
         onSendButtonClick = {
             viewModel.uploadComment(
                 postId,
-                DodamDuckData.userInfo!!.userID,
+                DodamDuckData.userInfo.userID,
                 commentText
             )
             commentText = ""
         },
-        onTextFieldChange = { commentText = it }
+        onTextFieldChange = { commentText = it },
+        onDelete = {
+            deleteAttempted = true
+        }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostDetailContent(
     navController: NavController,
@@ -111,15 +136,12 @@ fun PostDetailContent(
     commentText: String,
     scrollState: ScrollState,
     onSendButtonClick: () -> Unit,
-    onTextFieldChange: (String) -> Unit = {}
+    onTextFieldChange: (String) -> Unit = {},
+    onDelete: () -> Unit = {}
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-
-    if (showBottomSheet) {
-        BottomSheet(onDismissRequest = { showBottomSheet = false }) {
-            PostDetailBottomSheetContent()
-        }
-    }
+    var sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -220,6 +242,24 @@ fun PostDetailContent(
             )
         }
     }
+
+    if (showBottomSheet) {
+        BottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = { showBottomSheet = false }
+        ) {
+            PostDetailBottomSheetContent(
+                onClose = {
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                },
+                onDelete = onDelete
+            )
+        }
+    }
 }
 
 @Composable
@@ -272,7 +312,10 @@ fun PostDetailComments(items: List<PostCommentDTO>) {
 }
 
 @Composable
-fun PostDetailBottomSheetContent() {
+fun PostDetailBottomSheetContent(
+    onClose: () -> Unit,
+    onDelete: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -281,9 +324,17 @@ fun PostDetailBottomSheetContent() {
     ) {
         BottomSheetText(text = "수정")
         Divider(modifier = Modifier.padding(vertical = 12.dp))
-        BottomSheetText(text = "삭제")
+        BottomSheetText(
+            modifier = Modifier.clickable(onClick = onDelete),
+            text = "삭제", color = Color.Red
+        )
         Divider(modifier = Modifier.padding(vertical = 12.dp))
-        BottomSheetText(modifier = Modifier.padding(bottom = 12.dp), "닫기")
+        BottomSheetText(
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .clickable(onClick = onClose),
+            "닫기"
+        )
     }
 }
 
