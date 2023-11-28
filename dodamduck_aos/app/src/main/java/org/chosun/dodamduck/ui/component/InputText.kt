@@ -127,9 +127,6 @@ fun OutlineTextField(
     onValueChange: (String) -> Unit = {},
     value: String = ""
 ) {
-    val focusRequester = remember { FocusRequester() }
-    val isFocused = remember { mutableStateOf(false) }
-
     DodamDuckInputSurface(
         modifier = modifier
             .width(width = width.dp)
@@ -139,37 +136,53 @@ fun OutlineTextField(
         borderWidth = borderWidth
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            BasicTextField(
+            FocusTextField(
                 value = value,
                 onValueChange = onValueChange,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { focusState ->
-                        isFocused.value = focusState.isFocused
-                    },
-                decorationBox = { innerTextField ->
-                    Box {
-                        if (value.isEmpty() && !isFocused.value) {
-                            Text(
-                                text = label,
-                                color = Brown,
-                                modifier = Modifier
-                                    .align(Alignment.CenterStart)
-                                    .fillMaxSize()
-                            )
-                        }
-                        innerTextField()
-                    }
-                },
-                singleLine = true,
-                textStyle = TextStyle(fontSize = 16.sp)
+                label = label
             )
         }
     }
 }
 
+@Composable
+fun FocusTextField(
+    modifier: Modifier = Modifier,
+    value: String = "",
+    onValueChange: (String) -> Unit = {},
+    label: String = ""
+) {
+    val focusRequester = remember { FocusRequester() }
+    val isFocused = remember { mutableStateOf(false) }
+
+    BasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+            .focusRequester(focusRequester)
+            .onFocusChanged { focusState ->
+                isFocused.value = focusState.isFocused
+            },
+        decorationBox = { innerTextField ->
+            Box {
+                if (value.isEmpty() && !isFocused.value) {
+                    Text(
+                        text = label,
+                        color = Brown,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .fillMaxSize()
+                    )
+                }
+                innerTextField()
+            }
+        },
+        singleLine = true,
+        textStyle = TextStyle(fontSize = 16.sp)
+    )
+}
 
 
 @Composable
