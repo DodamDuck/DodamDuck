@@ -1,14 +1,17 @@
 package org.chosun.dodamduck.model.network
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.PostDTO
 import org.chosun.dodamduck.model.dto.PostDetailResponse
-import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface PostApiService {
@@ -25,6 +28,17 @@ interface PostApiService {
     suspend fun getPostDetail(
         @Query("share_id") shareID: String
     ): PostDetailResponse?
+
+    @Multipart
+    @POST("upload_content_share.php")
+    suspend fun uploadPost(
+        @Part("user_id") userId: RequestBody,
+        @Part("category_id") categoryId: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part image: MultipartBody.Part
+    ): DodamDuckResponse
 
     @POST("upload_share_comment.php")
     @FormUrlEncoded
@@ -43,10 +57,10 @@ interface PostApiService {
     @GET("Categories.php")
     suspend fun getCategories(): List<CategoryDTO>
 
-    @HTTP(method = "DELETE", path = "PostDelete.php", hasBody = true)
+    @HTTP(method = "DELETE", path = "ShareContentDelete.php", hasBody = true)
     @FormUrlEncoded
     suspend fun deletePost(
-        @Field("post_id") postId: String,
+        @Field("share_id") shareId: String,
         @Field("user_id") userId: String
     ): DodamDuckResponse?
 
