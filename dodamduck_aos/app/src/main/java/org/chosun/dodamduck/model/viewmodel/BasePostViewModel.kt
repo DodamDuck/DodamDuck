@@ -60,7 +60,7 @@ abstract class BasePostViewModel<ALL>(
     ): Boolean {
         val result = viewModelScope.async() {
             val error = repository.deletePost(postID, userID)?.error
-            return@async error == "true"
+            return@async error == "false"
         }
         return result.await()
     }

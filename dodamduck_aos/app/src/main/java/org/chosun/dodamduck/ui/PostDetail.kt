@@ -271,7 +271,7 @@ fun PostDetailContent(
             PostDetailBottomSheetContent(
                 onClose = { bottomSheetClose() },
                 onDelete = onDelete,
-                postWriterID = postDetail?.post?.userID,
+                postWriterID = postDetail?.post?.user_id,
                 onChat = { onChat() }
             )
         }

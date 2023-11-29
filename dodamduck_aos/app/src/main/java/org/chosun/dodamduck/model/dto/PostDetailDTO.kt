@@ -8,7 +8,7 @@ data class PostDetailDTO(
     val location: String,
     val views: String,
     val userName: String,
-    val userID: String,
+    val user_id: String,
     val verification_count: String,
     val categoryName: String,
     val profile_url: String
