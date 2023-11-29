@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.model.dto.ChatInfo
 import org.chosun.dodamduck.ui.theme.Orange
+import org.chosun.dodamduck.utils.Utils.convertDateTime
 import org.chosun.dodamduck.utils.Utils.getUserProfileUrl
 
 @Composable
@@ -44,7 +45,7 @@ fun ChatUserItem(
             modifier = Modifier
                 .align(Bottom)
                 .padding(end = 6.dp),
-            text = chatInfo.timestamp, color = Color.Gray, fontSize = 9.sp
+            text = chatInfo.timestamp.convertDateTime(), color = Color.Gray, fontSize = 9.sp
         )
         Surface(
             color = Orange,
@@ -78,12 +79,17 @@ fun ChatPartnerItem(
             contentDescription = "UserProfile"
         )
 
-        Column (
+        Column(
             verticalArrangement = Arrangement.Center
         ) {
-            Text(modifier = Modifier.padding(bottom = 3.dp), text = otherUser)
+            Text(
+                modifier = Modifier.padding(bottom = 3.dp),
+                text = if (otherUser == chatInfo.receiverID) chatInfo.receiverName else chatInfo.senderName
+            )
             Surface(
-                modifier = Modifier.wrapContentWidth().widthIn(max = 250.dp),
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .widthIn(max = 250.dp),
                 color = Color(0xFFEDEDED),
                 shape = RoundedCornerShape(40)
             ) {
@@ -98,11 +104,12 @@ fun ChatPartnerItem(
             modifier = Modifier
                 .align(Bottom)
                 .padding(start = 3.dp, bottom = 6.dp),
-            text = chatInfo.timestamp.split(" ")[0], color = Color.Gray, fontSize = 9.sp
+            text = chatInfo.timestamp.convertDateTime(), color = Color.Gray, fontSize = 9.sp
         )
         Spacer(Modifier.weight(1f))
     }
 }
+
 @Composable
 fun ChatLazyList(
     modifier: Modifier = Modifier,
@@ -127,7 +134,11 @@ fun ChatLazyList(
         ) {
             items(list.size) { index ->
                 if (list[index].senderID != currentUser)
-                    ChatPartnerItem(modifier = Modifier.padding(top = 7.dp), chatInfo = list[index], otherUser = otherUser )
+                    ChatPartnerItem(
+                        modifier = Modifier.padding(top = 7.dp),
+                        chatInfo = list[index],
+                        otherUser = otherUser
+                    )
                 else
                     ChatUserItem(modifier = Modifier.padding(top = 7.dp), list[index])
             }
@@ -138,11 +149,31 @@ fun ChatLazyList(
 @Composable
 @Preview
 fun ChatPartnerItemPreview() {
-    ChatPartnerItem(chatInfo = ChatInfo("1",  "seyeong1", "seyeong2", "봉선동, 직거래만 가능합니다~", "오후 2시 21분"))
+    ChatPartnerItem(
+        chatInfo = ChatInfo(
+            "1",
+            "seyeong1",
+            "seyeong2",
+            "홍길동",
+            "김철수",
+            "봉선동, 직거래만 가능합니다~",
+            "2023-11-29 22:38:22"
+        )
+    )
 }
 
 @Composable
 @Preview
 fun ChatItemPreview() {
-    ChatPartnerItem(chatInfo = ChatInfo("1",  "seyeong1", "seyeong2", "봉선동, 직거래만 가능합니다~", "오후 2시 21분"))
+    ChatPartnerItem(
+        chatInfo = ChatInfo(
+            "1",
+            "seyeong1",
+            "seyeong2",
+            "홍길동",
+            "김철수",
+            "봉선동, 직거래만 가능합니다~",
+            "2023-11-29 22:38:22"
+        )
+    )
 }

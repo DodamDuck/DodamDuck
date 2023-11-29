@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import org.chosun.dodamduck.model.dto.ChatInfo
 import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
@@ -67,13 +68,41 @@ fun ChatScreen(
 
     var message by remember { mutableStateOf("") }
 
+    ChatContent(
+        navController,
+        postTitle = postTitle,
+        postImageUrl = postImageUrl,
+        category = category,
+        chats = chats,
+        currentUser = currentUser,
+        otherUser = otherUser,
+        onSendButtonClick = { chatViewModel.sendChat(currentUser, otherUser, message) },
+        onTextFieldChange = { message = it },
+        message = message
+    )
+
+}
+
+@Composable
+fun ChatContent(
+    navController: NavController,
+    postTitle: String,
+    postImageUrl: String,
+    category: String,
+    chats: List<ChatInfo>?,
+    currentUser: String,
+    otherUser: String,
+    onSendButtonClick: () -> Unit,
+    onTextFieldChange: (String) -> Unit,
+    message: String
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Column {
-            ChatScreenHeader(navController)
+            ChatScreenHeader(navController, otherUser)
             ChatItemInfo(
                 modifier = Modifier.padding(start = 10.dp, top = 10.dp),
                 postTitle = postTitle.replace("+", " "),
@@ -97,8 +126,8 @@ fun ChatScreen(
 
             Divider()
             DodamDuckMessageInputField(
-                onSendButtonClick = { chatViewModel.sendChat(currentUser, otherUser, message) },
-                onTextFieldChange = { message = it },
+                onSendButtonClick = onSendButtonClick,
+                onTextFieldChange = onTextFieldChange,
                 value = message
             )
         }
@@ -106,7 +135,7 @@ fun ChatScreen(
 }
 
 @Composable
-fun ChatScreenHeader(navController: NavController) {
+fun ChatScreenHeader(navController: NavController, otherUser: String) {
     Row(
         modifier = Modifier.padding(end = 8.dp),
         horizontalArrangement = Arrangement.Center,
@@ -125,7 +154,7 @@ fun ChatScreenHeader(navController: NavController) {
         Spacer(Modifier.weight(0.5f))
         DodamDuckTextH2(
             Modifier.weight(2f),
-            text = "짱구 맘",
+            text = otherUser,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center
         )
@@ -187,6 +216,17 @@ fun ChatItemInfo(
 @Composable
 fun ChatScreenPreview() {
     DodamDuckTheme {
-        ChatScreen(rememberNavController())
+        ChatContent(
+            navController = rememberNavController(),
+            postTitle = "라이언 인형 교환 하실분?",
+            postImageUrl = "",
+            category = "1",
+            chats = listOf(ChatInfo("1", "user1", "user2", "김철수", "홍길동", "헬로!", "2023-11-29 22:59:02")),
+            currentUser = "홍길동",
+            otherUser = "김철수",
+            onSendButtonClick = {},
+            onTextFieldChange = {},
+            message =  ""
+        )
     }
 }
