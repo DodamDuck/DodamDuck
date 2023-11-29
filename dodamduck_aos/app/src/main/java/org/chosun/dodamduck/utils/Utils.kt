@@ -7,9 +7,13 @@ import android.net.Uri
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.chosun.dodamduck.utils.Utils.formatDateDiff
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Date
+import java.util.Locale
 
 object Utils {
     fun String.formatDateDiff(): String {
@@ -27,6 +31,14 @@ object Utils {
             minutesDiff > 0 -> "${minutesDiff}분 전"
             else -> "방금 전"
         }
+    }
+
+    fun String.convertDateTime(): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("a hh시 mm분", Locale.KOREAN)
+        val date: Date = inputFormat.parse(this) ?: return "Invalid Date"
+
+        return outputFormat.format(date)
     }
 
     fun Uri.uriToBitmap(context: Context): Bitmap? {

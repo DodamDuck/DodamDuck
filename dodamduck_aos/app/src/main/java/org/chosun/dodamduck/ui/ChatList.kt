@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.dto.ChatListDTO
 import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
@@ -47,14 +48,27 @@ fun ChatListScreen(
     navController: NavController,
     chatViewModel: ChatViewModel = hiltViewModel()
 ) {
+    val currentUser = DodamDuckData.userInfo.userID
     val chats by chatViewModel.chatList.collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
-        chatViewModel.getChatList("seyeong1")
+        chatViewModel.getChatList(currentUser)
     }
 
-    val currentUser = "seyeong1"
+    ChatListContent(
+        navController = navController,
+        chats = chats ?: listOf(),
+        currentUser = currentUser
+    )
 
+}
+
+@Composable
+fun ChatListContent(
+    navController: NavController,
+    chats: List<ChatListDTO>,
+    currentUser: String
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -71,12 +85,12 @@ fun ChatListScreen(
             )
 
             LazyColumn {
-                chats?.let {
+                chats.let {
                     items(it.size) { index ->
                         ChatItem(
                             navController = navController,
-                            item = it[index], 
-                            seller = if (currentUser != it[index].user1_id) it[index].user1_id else it[index].user2_id,
+                            item = it[index],
+                            seller = if (currentUser == it[index].user1_id) it[index].user2_name else it[index].user1_name,
                             postTitle = it[index].post_title,
                             postImageUrl = it[index].post_image_url
                         )
@@ -104,8 +118,10 @@ fun ChatItem(
         modifier = modifier
             .padding(top = 15.dp)
             .fillMaxWidth()
-            .clickable { navController.navigate(
-                "${BottomNavItem.Chat.screenRoute}/${item.user1_id}/${item.user2_id}/${imageUrl}/${title}/${item.category}")
+            .clickable {
+                navController.navigate(
+                    "${BottomNavItem.Chat.screenRoute}/${item.user1_id}/${item.user2_id}/${imageUrl}/${title}/${item.category}"
+                )
             }
     ) {
         Image(
@@ -144,6 +160,24 @@ fun ChatItem(
 @Composable
 fun ChatListPreview() {
     DodamDuckTheme {
-        ChatListScreen(rememberNavController())
+        ChatListContent(
+            navController = rememberNavController(),
+            chats = listOf(
+                ChatListDTO(
+                    "1",
+                    "user1",
+                    "user2",
+                    "홀길동",
+                    "전지현",
+                    "안녕하십니까",
+                    "2023-11-29 22:38:53",
+                    "인형 교환할 분 구합니다",
+                    "",
+                    "",
+                    ""
+                )
+            ),
+            currentUser = "user1"
+        )
     }
 }

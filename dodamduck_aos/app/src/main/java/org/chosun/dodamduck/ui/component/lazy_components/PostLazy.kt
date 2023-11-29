@@ -46,11 +46,11 @@ fun PostItem(
     ) {
         Column(modifier = Modifier.weight(6f)) {
             PostType(text = item.categoryName)
-            DodamDuckTextH3(text = item.title)
-            DodamDuckText(
+            Text(text = item.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            Text(
                 modifier = Modifier.padding(top = 4.dp),
                 text = item.content.ellipsis(40),
-                fontSize = 12,
+                fontSize = 12.sp,
                 color = Color.Gray
             )
             Text(

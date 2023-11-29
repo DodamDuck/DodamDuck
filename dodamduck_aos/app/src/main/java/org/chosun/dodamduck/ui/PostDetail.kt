@@ -70,6 +70,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.component.SpannableText
 import org.chosun.dodamduck.ui.component.lazy_components.PostType
+import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
@@ -93,6 +94,17 @@ fun PostDetailScreen(
     var commentText by remember { mutableStateOf("") }
     LaunchedEffect(key1 = postDetail) {
         viewModel.fetchDetail(postId)
+    }
+
+    var createChat by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = createChat) {
+        postDetail?.let {
+            val result = viewModel.createChat(postId, DodamDuckData.userInfo.userID)
+            if(result)
+                navController.navigate(BottomNavItem.ChatList.screenRoute)
+            else
+                Toast.makeText(context, "채팅방 생성 중 오류가 발생 했습니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     if (deleteAttempted) {
@@ -123,9 +135,8 @@ fun PostDetailScreen(
             commentText = ""
         },
         onTextFieldChange = { commentText = it },
-        onDelete = {
-            deleteAttempted = true
-        }
+        onDelete = { deleteAttempted = true },
+        onChat = { createChat = true }
     )
 }
 
@@ -138,7 +149,8 @@ fun PostDetailContent(
     scrollState: ScrollState,
     onSendButtonClick: () -> Unit,
     onTextFieldChange: (String) -> Unit = {},
-    onDelete: () -> Unit = {}
+    onDelete: () -> Unit = {},
+    onChat:() -> Unit = {},
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var sheetState = rememberModalBottomSheetState()
@@ -245,20 +257,24 @@ fun PostDetailContent(
         }
     }
 
+    val bottomSheetClose = {
+        scope.launch { sheetState.hide() }.invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                showBottomSheet = false
+            }
+        }
+    }
+
     if (showBottomSheet) {
         BottomSheet(
             sheetState = sheetState,
             onDismissRequest = { showBottomSheet = false }
         ) {
             PostDetailBottomSheetContent(
-                onClose = {
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
-                        }
-                    }
-                },
-                onDelete = onDelete
+                onClose = { bottomSheetClose() },
+                onDelete = onDelete,
+                postWriterID = postDetail?.post?.user_id,
+                onChat = { onChat() }
             )
         }
     }
@@ -316,7 +332,9 @@ fun PostDetailComments(items: List<PostCommentDTO>) {
 @Composable
 fun PostDetailBottomSheetContent(
     onClose: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onChat: () -> Unit,
+    postWriterID: String?
 ) {
     Column(
         modifier = Modifier
@@ -324,12 +342,19 @@ fun PostDetailBottomSheetContent(
             .wrapContentHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        BottomSheetText(text = "수정")
-        Divider(modifier = Modifier.padding(vertical = 12.dp))
-        BottomSheetText(
-            modifier = Modifier.clickable(onClick = onDelete),
-            text = "삭제", color = Color.Red
-        )
+        if(postWriterID == DodamDuckData.userInfo.userID) {
+            BottomSheetText(text = "수정")
+            Divider(modifier = Modifier.padding(vertical = 12.dp))
+            BottomSheetText(
+                modifier = Modifier.clickable(onClick = onDelete),
+                text = "삭제", color = Color.Red
+            )
+        } else {
+            BottomSheetText(
+                modifier = Modifier.clickable(onClick = onChat),
+                text = "채팅하기"
+            )
+        }
         Divider(modifier = Modifier.padding(vertical = 12.dp))
         BottomSheetText(
             modifier = Modifier
@@ -337,6 +362,7 @@ fun PostDetailBottomSheetContent(
                 .clickable(onClick = onClose),
             "닫기"
         )
+
     }
 }
 

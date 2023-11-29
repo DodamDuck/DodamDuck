@@ -22,4 +22,9 @@ interface BasePostRepository<ALL> {
         postID: String,
         userID: String
     ): DodamDuckResponse?
+
+    suspend fun createChat(
+        postID: String,
+        userID: String
+    ): DodamDuckResponse?
 }

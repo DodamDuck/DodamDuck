@@ -55,6 +55,10 @@ class PostRepository @Inject constructor(
         return service?.deletePost(postID, userID)
     }
 
+    override suspend fun createChat(postID: String, userID: String): DodamDuckResponse? {
+        return service?.createChat(postID, userID)
+    }
+
     suspend fun fetchCategories(): List<CategoryDTO>? {
         return service?.getCategories()
     }

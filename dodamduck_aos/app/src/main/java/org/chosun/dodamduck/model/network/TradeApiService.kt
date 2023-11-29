@@ -56,4 +56,11 @@ interface TradeApiService {
         @Field("user_id") userId: String
     ): DodamDuckResponse
 
+    @POST("create_chat_room.php")
+    @FormUrlEncoded
+    suspend fun createChat(
+        @Field("post_id") postId: String,
+        @Field("user_id") userId: String
+    ): DodamDuckResponse
+
 }
