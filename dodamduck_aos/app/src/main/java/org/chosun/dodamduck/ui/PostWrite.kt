@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,7 +41,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -66,6 +71,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.LightBrown80
+import org.chosun.dodamduck.utils.Utils.uriToBitmap
 import org.chosun.dodamduck.utils.Utils.uriToMultipartBody
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,6 +117,7 @@ fun PostWriteScreen(
 
     PostWriteContent(
         navController = navController,
+        context = context,
         onSubmit = {
             handlePostUpload(
                 context,
@@ -127,7 +134,8 @@ fun PostWriteScreen(
         detailDescription = detailDescription,
         onImageClick = onImageClick,
         onCategoryListClick = { showBottomSheet = true },
-        selectedCategory = selectedCategoryType
+        selectedCategory = selectedCategoryType,
+        imageList = imageList
     )
 
     if (showBottomSheet) {
@@ -153,6 +161,7 @@ fun PostWriteScreen(
 @Composable
 fun PostWriteContent(
     navController: NavController,
+    context: Context = LocalContext.current,
     onSubmit: () -> Unit,
     onTitleTextChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -163,6 +172,12 @@ fun PostWriteContent(
     selectedCategory: String = "",
     imageList: List<Uri> = listOf(),
 ) {
+    val imageModifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 12.dp, vertical = 8.dp)
+        .clip(RoundedCornerShape(25.dp))
+        .aspectRatio(5f / 5f)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -192,6 +207,16 @@ fun PostWriteContent(
                 onValueChange = onDescriptionChange,
                 label = stringResource(id = R.string.post_information_message),
             )
+
+            if(imageList.isNotEmpty()) {
+                Image(
+                    contentScale = ContentScale.Crop,
+                    modifier = imageModifier,
+                    bitmap = imageList[0].uriToBitmap(context)!!.asImageBitmap(),
+                    contentDescription = "Post Image"
+                )
+            }
+
             Divider()
             PostWriteBottom(onImageClick = onImageClick)
         }
@@ -275,8 +300,7 @@ fun PostWriteMessageCard(modifier: Modifier = Modifier) {
     ) {
         DodamDuckText(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
-            text = "안내 중고거래 관련, 명예훼손, 광고/홍보 목적의 글은\n" +
-                    "작성하실 수 없습니다.",
+            text = stringResource(R.string.post_write_info_message_card),
             color = Color.White,
             fontWeight = FontWeight.Light,
             fontSize = 12
