@@ -60,7 +60,18 @@ abstract class BasePostViewModel<ALL>(
     ): Boolean {
         val result = viewModelScope.async() {
             val error = repository.deletePost(postID, userID)?.error
-            return@async error != "true"
+            return@async error == "true"
+        }
+        return result.await()
+    }
+
+    suspend fun createChat(
+        postID: String,
+        userID: String
+    ): Boolean {
+        val result = viewModelScope.async() {
+            val error = repository.createChat(postID, userID)?.error
+            return@async error == "false"
         }
         return result.await()
     }
