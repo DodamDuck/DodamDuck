@@ -1,5 +1,7 @@
 package org.chosun.dodamduck.model.repository
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.PostDTO
 import org.chosun.dodamduck.model.dto.PostDetailResponse
@@ -11,6 +13,18 @@ class PostRepository @Inject constructor(
     private val service: PostApiService?
 ) : BasePostRepository<PostDTO> {
 
+    suspend fun uploadPost(
+        userId: RequestBody,
+        categoryId: RequestBody,
+        title: RequestBody,
+        content: RequestBody,
+        location: RequestBody,
+        image: MultipartBody.Part
+    ):Boolean {
+        val response = service?.uploadPost(userId, categoryId, title, content, location, image)
+
+        return response?.error == "false"
+    }
     override suspend fun fetchList(): List<PostDTO> {
         return service?.getPostList() ?: listOf()
     }

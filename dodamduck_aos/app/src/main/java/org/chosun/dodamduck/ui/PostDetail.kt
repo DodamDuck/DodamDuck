@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -194,7 +195,7 @@ fun PostDetailContent(
                 )
 
                 SpannableText(
-                    modifier = Modifier.padding(top = 16.dp, start = 10.dp),
+                    modifier = Modifier.padding(top = 16.dp, start = 10.dp, bottom = 12.dp),
                     text = "T.${postDetail?.post?.title}",
                     highlightText = "T.",
                     highlightColor = Brown,
@@ -205,16 +206,17 @@ fun PostDetailContent(
                 )
 
                 Image(
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(vertical = 12.dp),
+                        .clip(RoundedCornerShape(25.dp))
+                        .aspectRatio(5f / 5f),
                     painter = rememberAsyncImagePainter(model = postDetail?.post?.image_url),
                     contentDescription = "Post Image"
                 )
 
                 Text(
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 12.dp),
                     text = postDetail?.post?.content
                         ?: stringResource(R.string.dumy_item_post_detail_content)
                 )

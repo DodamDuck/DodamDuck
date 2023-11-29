@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -32,14 +33,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.Primary
 
 private const val DEFAULT_WIDTH = 200
@@ -59,7 +65,7 @@ fun DodamDuckTextField(
     iconState: Boolean = false,
     onValueChange: (String) -> Unit = {},
     text: String = ""
-    ) {
+) {
     DodamDuckInputSurface(
         modifier = modifier
             .width(width = width.dp)
@@ -130,23 +136,52 @@ fun OutlineTextField(
         borderWidth = borderWidth
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            TextField(
+            FocusTextField(
                 value = value,
                 onValueChange = onValueChange,
-                Modifier.fillMaxSize(),
-                label = {
-                    Text(text = label)
-                },
-                singleLine = true,
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
+                label = label
             )
         }
     }
+}
+
+@Composable
+fun FocusTextField(
+    modifier: Modifier = Modifier,
+    value: String = "",
+    onValueChange: (String) -> Unit = {},
+    label: String = ""
+) {
+    val focusRequester = remember { FocusRequester() }
+    val isFocused = remember { mutableStateOf(false) }
+
+    BasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+            .focusRequester(focusRequester)
+            .onFocusChanged { focusState ->
+                isFocused.value = focusState.isFocused
+            },
+        decorationBox = { innerTextField ->
+            Box {
+                if (value.isEmpty() && !isFocused.value) {
+                    Text(
+                        text = label,
+                        color = Brown,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .fillMaxSize()
+                    )
+                }
+                innerTextField()
+            }
+        },
+        singleLine = true,
+        textStyle = TextStyle(fontSize = 16.sp)
+    )
 }
 
 
@@ -205,7 +240,7 @@ fun AuthInputTextList(
                         else passwordConfirmVisible = !passwordConfirmVisible
                     },
                     iconState = if (index == 1) passwordVisible else passwordConfirmVisible,
-                    onValueChange = if(index == 1) onPasswordChange else onConfirmChange,
+                    onValueChange = if (index == 1) onPasswordChange else onConfirmChange,
                     text = if (index == 1) passwordText else confirmPasswordText,
                 )
             } else {

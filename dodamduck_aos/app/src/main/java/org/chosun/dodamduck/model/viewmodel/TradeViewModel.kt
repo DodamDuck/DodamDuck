@@ -2,10 +2,11 @@ package org.chosun.dodamduck.model.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.chosun.dodamduck.model.dto.PostDetailResponse
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.repository.TradeRepository
 import javax.inject.Inject
@@ -14,6 +15,9 @@ import javax.inject.Inject
 class TradeViewModel @Inject constructor(
     private val repository: TradeRepository
 ) : BasePostViewModel<Trade>(repository) {
+
+    private val _uploadSuccess = MutableStateFlow<Boolean>(false)
+    val uploadSuccess: StateFlow<Boolean> = _uploadSuccess
 
     fun getTradeLists() {
         viewModelScope.launch {
@@ -30,7 +34,8 @@ class TradeViewModel @Inject constructor(
         image: MultipartBody.Part
     ) {
         viewModelScope.launch {
-            repository.uploadTrade(userId, categoryId, title, content, location, image)
+            val isSuccess = repository.uploadTrade(userId, categoryId, title, content, location, image)
+            _uploadSuccess.value = isSuccess
         }
     }
 }

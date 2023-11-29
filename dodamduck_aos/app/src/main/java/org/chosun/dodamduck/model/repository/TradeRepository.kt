@@ -22,8 +22,10 @@ class TradeRepository @Inject constructor(
         content: RequestBody,
         location: RequestBody,
         image: MultipartBody.Part
-    ) {
-        service?.uploadTrade(userId, categoryId, title, content, location, image)
+    ):Boolean {
+        val response = service?.uploadTrade(userId, categoryId, title, content, location, image)
+
+        return response?.error == "false"
     }
 
     override suspend fun fetchDetail(
