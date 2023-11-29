@@ -1,5 +1,6 @@
 package org.chosun.dodamduck.ui
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -102,27 +103,6 @@ fun PostWriteScreen(
 
     val onImageClick = { galleryLauncher.launch("image/*") }
 
-    val handleTradeUpload = {
-        val userIdBody =
-            DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
-        val categoryIdBody =
-            categoryType.id.toRequestBody("text/plain".toMediaTypeOrNull())
-        val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
-        val contentBody = detailDescription.toRequestBody("text/plain".toMediaTypeOrNull())
-        val locationBody =
-            DodamDuckData.userInfo.location.toRequestBody("text/plain".toMediaTypeOrNull())
-        val filePart = imageList[0].uriToMultipartBody(context)
-
-        postViewModel.uploadPost(
-            userIdBody,
-            categoryIdBody,
-            titleBody,
-            contentBody,
-            locationBody,
-            filePart
-        )
-    }
-
     val uploadSuccess by postViewModel.uploadSuccess.collectAsState(initial = false)
     LaunchedEffect(key1 = uploadSuccess) {
         if (uploadSuccess)
@@ -131,7 +111,16 @@ fun PostWriteScreen(
 
     PostWriteContent(
         navController = navController,
-        onSubmit = handleTradeUpload,
+        onSubmit = {
+            handlePostUpload(
+                context,
+                postViewModel,
+                categoryType.id,
+                title,
+                detailDescription,
+                imageList[0]
+            )
+        },
         onTitleTextChange = { title = it },
         onDescriptionChange = { detailDescription = it },
         title = title,
@@ -359,6 +348,33 @@ fun PostWriteBottomSheetContent(
     }
 }
 
+fun handlePostUpload(
+    context: Context,
+    postViewModel: PostViewModel,
+    categoryId: String,
+    title: String,
+    detailDescription: String,
+    image: Uri
+) {
+    val userIdBody =
+        DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
+    val categoryIdBody =
+        categoryId.toRequestBody("text/plain".toMediaTypeOrNull())
+    val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
+    val contentBody = detailDescription.toRequestBody("text/plain".toMediaTypeOrNull())
+    val locationBody =
+        DodamDuckData.userInfo.location.toRequestBody("text/plain".toMediaTypeOrNull())
+    val filePart = image.uriToMultipartBody(context)
+
+    postViewModel.uploadPost(
+        userIdBody,
+        categoryIdBody,
+        titleBody,
+        contentBody,
+        locationBody,
+        filePart
+    )
+}
 
 @Preview
 @Composable
