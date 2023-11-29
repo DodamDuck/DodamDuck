@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -23,7 +24,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -46,11 +50,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.data.DodamDuckData
+import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.viewmodel.PostViewModel
+import org.chosun.dodamduck.ui.component.BottomSheet
+import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
@@ -59,11 +67,13 @@ import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.LightBrown80
 import org.chosun.dodamduck.utils.Utils.uriToMultipartBody
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostWriteScreen(
     navController: NavController,
     postViewModel: PostViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     var imageList by remember { mutableStateOf<List<Uri>>(listOf()) }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -71,12 +81,24 @@ fun PostWriteScreen(
         imageList = ((imageList + uri) ?: throw NullPointerException()) as List<Uri>
     }
 
-    val context = LocalContext.current
+    val categoryList by postViewModel.categories.collectAsState(initial = listOf())
+    LaunchedEffect(Unit) {
+        postViewModel.getCategories()
+    }
+
+    var categoryType by remember { mutableStateOf(CategoryDTO("", "게시글의 주제 선택해주세요.")) }
+    var selectedCategoryType by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = categoryType) {
+        selectedCategoryType = categoryType.name
+    }
 
     var title by remember { mutableStateOf("") }
     var detailDescription by remember { mutableStateOf("") }
-    var transactionType by remember { mutableIntStateOf(1) }
-    val uploadSuccess by postViewModel.uploadSuccess.collectAsState(initial = false)
+
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     val onImageClick = { galleryLauncher.launch("image/*") }
 
@@ -84,7 +106,7 @@ fun PostWriteScreen(
         val userIdBody =
             DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
         val categoryIdBody =
-            "3".toRequestBody("text/plain".toMediaTypeOrNull())
+            categoryType.id.toRequestBody("text/plain".toMediaTypeOrNull())
         val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
         val contentBody = detailDescription.toRequestBody("text/plain".toMediaTypeOrNull())
         val locationBody =
@@ -101,6 +123,7 @@ fun PostWriteScreen(
         )
     }
 
+    val uploadSuccess by postViewModel.uploadSuccess.collectAsState(initial = false)
     LaunchedEffect(key1 = uploadSuccess) {
         if (uploadSuccess)
             navController.popBackStack()
@@ -113,8 +136,29 @@ fun PostWriteScreen(
         onDescriptionChange = { detailDescription = it },
         title = title,
         detailDescription = detailDescription,
-        onImageClick = onImageClick
+        onImageClick = onImageClick,
+        onCategoryListClick = { showBottomSheet = true },
+        selectedCategory = selectedCategoryType
     )
+
+    if (showBottomSheet) {
+        BottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = { showBottomSheet = false }
+        ) {
+            PostWriteBottomSheetContent(
+                categoryList = categoryList,
+                onCategoryClick = {
+                    categoryType = it
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable
@@ -124,8 +168,10 @@ fun PostWriteContent(
     onTitleTextChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onImageClick: () -> Unit,
+    onCategoryListClick: () -> Unit,
     title: String,
     detailDescription: String,
+    selectedCategory: String = "",
     imageList: List<Uri> = listOf(),
 ) {
     Box(
@@ -135,7 +181,11 @@ fun PostWriteContent(
     ) {
         Column {
             PostWriteScreenHeader(navController, onSubmit)
-            PostSubjectSelect(modifier = Modifier.padding(horizontal = 12.dp))
+            PostCategorySelect(
+                modifier = Modifier.padding(horizontal = 12.dp),
+                onCategoryListClick = onCategoryListClick,
+                selectedCategory = selectedCategory
+            )
             PostWriteMessageCard(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -187,7 +237,9 @@ fun PostWriteScreenHeader(
             textAlign = TextAlign.Center
         )
         DodamDuckTextH3(
-            modifier = Modifier.weight(1f).clickable(onClick = onSubmit),
+            modifier = Modifier
+                .weight(1f)
+                .clickable(onClick = onSubmit),
             text = "완료",
             color = Color.Gray,
             textAlign = TextAlign.End
@@ -197,16 +249,20 @@ fun PostWriteScreenHeader(
 }
 
 @Composable
-fun PostSubjectSelect(
-    modifier: Modifier = Modifier
+fun PostCategorySelect(
+    modifier: Modifier = Modifier,
+    onCategoryListClick: () -> Unit,
+    selectedCategory: String = "",
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onCategoryListClick),
         verticalAlignment = CenterVertically
     ) {
         DodamDuckTextH2(
             modifier = Modifier.weight(1f),
-            text = "게시글의 주제 선택해주세요."
+            text = selectedCategory
         )
         IconButton(onClick = {}, modifier = Modifier.wrapContentSize()) {
             Icon(
@@ -279,6 +335,31 @@ fun PostWriteBottom(
     }
 }
 
+@Composable
+fun PostWriteBottomSheetContent(
+    categoryList: List<CategoryDTO>?,
+    onCategoryClick: (CategoryDTO) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        categoryList?.size?.let { size ->
+            repeat(size) { index ->
+                BottomSheetText(
+                    modifier = Modifier.clickable { onCategoryClick(categoryList[index]) },
+                    text = categoryList[index].name
+                )
+                if (index != size - 1)
+                    Divider(modifier = Modifier.padding(vertical = 12.dp))
+            }
+        }
+    }
+}
+
+
 @Preview
 @Composable
 fun PostWritePreview() {
@@ -286,11 +367,12 @@ fun PostWritePreview() {
         PostWriteContent(
             rememberNavController(),
             onSubmit = {},
-            {},
-            {},
-            {},
-            "",
-            ""
+            onTitleTextChange = {},
+            onDescriptionChange = {},
+            onImageClick = {},
+            onCategoryListClick = {},
+            title = "",
+            detailDescription = "",
         )
     }
 }
