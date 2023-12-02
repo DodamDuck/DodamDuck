@@ -45,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -120,6 +121,12 @@ fun PostDetailScreen(
     }
 
     val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(key1 = postDetail) {
+        scrollState.animateScrollTo(scrollState.maxValue)
+    }
 
     PostDetailContent(
         navController = navController,
@@ -127,12 +134,15 @@ fun PostDetailScreen(
         commentText = commentText,
         scrollState = scrollState,
         onSendButtonClick = {
-            viewModel.uploadComment(
-                postId,
-                DodamDuckData.userInfo.userID,
-                commentText
-            )
-            commentText = ""
+            coroutineScope.launch {
+                viewModel.uploadComment(
+                    postId,
+                    DodamDuckData.userInfo.userID,
+                    commentText
+                )
+                commentText = ""
+                focusManager.clearFocus()
+            }
         },
         onTextFieldChange = { commentText = it },
         onDelete = { deleteAttempted = true },
