@@ -119,8 +119,13 @@ fun ChatItem(
             .padding(top = 15.dp)
             .fillMaxWidth()
             .clickable {
+                val currentUserID = if(DodamDuckData.userInfo.userID == item.user1_id) item.user1_id else item.user2_id
+                val otherUserID = if(DodamDuckData.userInfo.userID == item.user1_id) item.user2_id else item.user1_id
+                val otherUserName = if(DodamDuckData.userInfo.userID == item.user1_id) item.user2_id else item.user1_id
+
+
                 navController.navigate(
-                    "${BottomNavItem.Chat.screenRoute}/${item.user1_id}/${item.user2_id}/${imageUrl}/${title}/${item.category}"
+                    "${BottomNavItem.Chat.screenRoute}/${currentUserID}/${otherUserID}/${otherUserName}/${imageUrl}/${title}/${item.category}"
                 )
             }
     ) {
