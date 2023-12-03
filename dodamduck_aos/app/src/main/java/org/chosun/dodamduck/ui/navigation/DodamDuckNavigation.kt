@@ -35,6 +35,7 @@ import org.chosun.dodamduck.ui.PostWriteScreen
 import org.chosun.dodamduck.ui.RegisterScreen
 import org.chosun.dodamduck.ui.TradeWriteScreen
 import org.chosun.dodamduck.ui.UserScreen
+import org.chosun.dodamduck.ui.theme.Brown
 
 sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
@@ -184,8 +185,10 @@ fun DodamDuckBottomNavigation(navController: NavHostController) {
                                 .height(26.dp)
                         )
                     },
-                    label = { Text(stringResource(id = item.title), fontSize = 9.sp) },
-                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                    label = {
+                        Text(stringResource(id = item.title), fontSize = 9.sp, color = Brown)
+                    },
+                    selectedContentColor = Brown,
                     unselectedContentColor = Gray,
                     selected = currentRoute == item.screenRoute,
                     alwaysShowLabel = false,
