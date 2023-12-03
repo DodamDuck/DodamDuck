@@ -44,14 +44,17 @@ fun PreviewToyList() {
                     stringResource(id = R.string.dummy_toy_item_age_limit),
                     stringResource(id = R.string.dummy_toy_item_price),
                     ""
-                )
-            )
+                ),
+            ),
+            ""
         )
     }
 }
 
 @Composable
-fun ToyList(toyInfos: List<ToyInfo>) {
+fun ToyList(toyInfos: List<ToyInfo>, searchText: String) {
+    val filterList = toyInfos.filter { it.toyName.contains(searchText, ignoreCase = true) }
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(8.dp),
@@ -59,8 +62,8 @@ fun ToyList(toyInfos: List<ToyInfo>) {
             .fillMaxSize()
             .padding(vertical = 8.dp)
     ) {
-        items(toyInfos.size) {
-            ToyItem(toyInfos[it])
+        items(filterList.size) {
+            ToyItem(filterList[it])
         }
     }
 }
