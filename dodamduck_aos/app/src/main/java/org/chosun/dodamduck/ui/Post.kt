@@ -91,7 +91,14 @@ fun PostScreen(
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                         .clickable {
                             postViewModel.uploadViewCount(posts[index].shareID)
-                            navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${posts[index].shareID}/post")
+                            navController.navigate(
+                                "${BottomNavItem.PostDetail.screenRoute}/${posts[index].shareID}/post"
+                            ) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                            }
                         },
                         item = posts[index]
                     )

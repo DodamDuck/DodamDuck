@@ -65,7 +65,12 @@ fun ExchangeItem(item: Trade, navController: NavController, tradeViewModel: Trad
     Row(
         modifier = Modifier.clickable {
             tradeViewModel.uploadViewCount(item.post_id)
-            navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}/trade")
+            navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}/trade") {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+            }
         }
     ) {
         AsyncImage(
