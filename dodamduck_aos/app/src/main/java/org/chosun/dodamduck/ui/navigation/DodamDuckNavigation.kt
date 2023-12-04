@@ -33,6 +33,7 @@ import org.chosun.dodamduck.ui.OnboardingScreen
 import org.chosun.dodamduck.ui.PostDetailScreen
 import org.chosun.dodamduck.ui.PostWriteScreen
 import org.chosun.dodamduck.ui.RegisterScreen
+import org.chosun.dodamduck.ui.SearchScreen
 import org.chosun.dodamduck.ui.TradeWriteScreen
 import org.chosun.dodamduck.ui.UserScreen
 import org.chosun.dodamduck.ui.theme.Brown
@@ -70,6 +71,8 @@ sealed class BottomNavItem(
     object Chat : BottomNavItem(R.string.chat, R.drawable.ic_chat_48, R.string.chat.toString())
 
     object User : BottomNavItem(R.string.user, R.drawable.ic_user_48, R.string.user.toString())
+
+    object Search: BottomNavItem(R.string.search, R.drawable.ic_home_48, R.string.search.toString())
 }
 
 @Composable
@@ -146,6 +149,9 @@ fun DoDamDuckNavigationGraph(navController: NavHostController) {
         }
         composable(BottomNavItem.User.screenRoute) {
             UserScreen()
+        }
+        composable(BottomNavItem.Search.screenRoute) {
+            SearchScreen(navController)
         }
     }
 }
