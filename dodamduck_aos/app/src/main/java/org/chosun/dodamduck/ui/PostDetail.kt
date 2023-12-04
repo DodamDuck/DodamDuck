@@ -101,7 +101,7 @@ fun PostDetailScreen(
     LaunchedEffect(key1 = createChat) {
         postDetail?.let {
             val result = viewModel.createChat(postId, DodamDuckData.userInfo.userID)
-            if(result)
+            if (result)
                 navController.navigate(BottomNavItem.ChatList.screenRoute)
             else
                 Toast.makeText(context, "채팅방 생성 중 오류가 발생 했습니다.", Toast.LENGTH_SHORT).show()
@@ -146,7 +146,8 @@ fun PostDetailScreen(
         },
         onTextFieldChange = { commentText = it },
         onDelete = { deleteAttempted = true },
-        onChat = { createChat = true }
+        onChat = { createChat = true },
+        postType = postType
     )
 }
 
@@ -160,7 +161,8 @@ fun PostDetailContent(
     onSendButtonClick: () -> Unit,
     onTextFieldChange: (String) -> Unit = {},
     onDelete: () -> Unit = {},
-    onChat:() -> Unit = {},
+    onChat: () -> Unit = {},
+    postType: String
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var sheetState = rememberModalBottomSheetState()
@@ -176,7 +178,12 @@ fun PostDetailContent(
                 modifier = Modifier
                     .size(40.dp)
                     .padding(top = 8.dp)
-                    .clickable { navController.popBackStack() },
+                    .clickable {
+                        if(postType == "trade")
+                            navController.navigate(BottomNavItem.Home.screenRoute)
+                        else if(postType == "post")
+                            navController.navigate(BottomNavItem.Post.screenRoute)
+                    },
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "Back Button",
             )
@@ -352,7 +359,7 @@ fun PostDetailBottomSheetContent(
             .wrapContentHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        if(postWriterID == DodamDuckData.userInfo.userID) {
+        if (postWriterID == DodamDuckData.userInfo.userID) {
             BottomSheetText(text = "수정")
             Divider(modifier = Modifier.padding(vertical = 12.dp))
             BottomSheetText(
@@ -388,7 +395,8 @@ fun PostDetailPreview() {
             ),
             commentText = "",
             scrollState = rememberScrollState(),
-            onSendButtonClick = { /*TODO*/ }
+            onSendButtonClick = { /*TODO*/ },
+            postType = ""
         )
     }
 }
