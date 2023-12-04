@@ -61,4 +61,5 @@
     <string name="please_check_your_login_information">로그인 정보를 다시 확인해 주세요.</string>
     <string name="passwords_do_not_match_each_other">비밀번호가 서로 일치하지 않습니다.</string>
     <string name="post_write_info_message_card">안내 중고거래 관련, 명예훼손, 광고/홍보 목적의 글은\n작성하실 수 없습니다.</string>
+    <string name="search">검색</string>
 </resources>

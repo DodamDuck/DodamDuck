@@ -2,6 +2,7 @@ package org.chosun.dodamduck.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,7 +57,7 @@ fun TradeScreen(
             .background(Color.White)
     ) {
         Column {
-            TradeHeader()
+            TradeHeader(navController)
             ExchangeItemList(
                 modifier = Modifier.padding(top = 24.dp),
                 items = tradeLists ?: listOf(),
@@ -81,7 +82,7 @@ fun TradeScreen(
 }
 
 @Composable
-fun TradeHeader() {
+fun TradeHeader(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,7 +91,11 @@ fun TradeHeader() {
         DodamDuckTextH2(text = "빛가람동", color = Brown)
         Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "Arrow Icon")
         Spacer(modifier = Modifier.weight(1f))
-        Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon")
+        Icon(
+            modifier = Modifier.clickable { navController.navigate(BottomNavItem.Search.screenRoute) },
+            imageVector = Icons.Default.Search,
+            contentDescription = "Search Icon"
+        )
     }
 }
 
