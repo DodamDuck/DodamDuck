@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -27,12 +28,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.launch
 import org.chosun.dodamduck.model.dto.ChatInfo
 import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
@@ -54,8 +58,9 @@ import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 fun ChatScreen(
     navController: NavController,
     chatViewModel: ChatViewModel = hiltViewModel(),
-    currentUser: String = "",
-    otherUser: String = "",
+    currentUserID: String = "",
+    otherUserID: String = "",
+    otherUserName: String = "",
     postImageUrl: String = "",
     postTitle: String = "",
     category: String = ""
@@ -63,10 +68,13 @@ fun ChatScreen(
     val chats by chatViewModel.chats.collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
-        chatViewModel.getChats(currentUser, otherUser)
+        chatViewModel.getChats(currentUserID, otherUserID)
     }
 
     var message by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
 
     ChatContent(
         navController,
@@ -74,9 +82,17 @@ fun ChatScreen(
         postImageUrl = postImageUrl,
         category = category,
         chats = chats,
-        currentUser = currentUser,
-        otherUser = otherUser,
-        onSendButtonClick = { chatViewModel.sendChat(currentUser, otherUser, message) },
+        currentUserID = currentUserID,
+        otherUserID = otherUserID,
+        otherUserName = otherUserName,
+        onSendButtonClick = {
+            coroutineScope.launch {
+                chatViewModel.sendChat(currentUserID, otherUserID, message)
+                message = ""
+                focusManager.clearFocus()
+                listState.animateScrollToItem(chats?.size ?: 0)
+            }
+        },
         onTextFieldChange = { message = it },
         message = message
     )
@@ -90,8 +106,9 @@ fun ChatContent(
     postImageUrl: String,
     category: String,
     chats: List<ChatInfo>?,
-    currentUser: String,
-    otherUser: String,
+    currentUserID: String,
+    otherUserID: String,
+    otherUserName: String,
     onSendButtonClick: () -> Unit,
     onTextFieldChange: (String) -> Unit,
     message: String
@@ -102,7 +119,7 @@ fun ChatContent(
             .background(Color.White)
     ) {
         Column {
-            ChatScreenHeader(navController, otherUser)
+            ChatScreenHeader(navController, otherUserName)
             ChatItemInfo(
                 modifier = Modifier.padding(start = 10.dp, top = 10.dp),
                 postTitle = postTitle.replace("+", " "),
@@ -120,8 +137,8 @@ fun ChatContent(
                     .padding(horizontal = 12.dp, vertical = 12.dp)
                     .weight(1f),
                 list = chats ?: listOf(),
-                currentUser = currentUser,
-                otherUser = otherUser
+                currentUser = currentUserID,
+                otherUser = otherUserID
             )
 
             Divider()
@@ -135,7 +152,7 @@ fun ChatContent(
 }
 
 @Composable
-fun ChatScreenHeader(navController: NavController, otherUser: String) {
+fun ChatScreenHeader(navController: NavController, otherUserName: String) {
     Row(
         modifier = Modifier.padding(end = 8.dp),
         horizontalArrangement = Arrangement.Center,
@@ -154,7 +171,7 @@ fun ChatScreenHeader(navController: NavController, otherUser: String) {
         Spacer(Modifier.weight(0.5f))
         DodamDuckTextH2(
             Modifier.weight(2f),
-            text = otherUser,
+            text = otherUserName,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center
         )
@@ -194,7 +211,7 @@ fun ChatItemInfo(
                     modifier = Modifier.padding(bottom = 4.dp),
                     text = postTitle, fontSize = 15.sp
                 )
-                Text(if(category == "1") "교환" else "나눔", fontSize = 15.sp)
+                Text(if (category == "1") "교환" else "나눔", fontSize = 15.sp)
             }
         }
 
@@ -221,12 +238,23 @@ fun ChatScreenPreview() {
             postTitle = "라이언 인형 교환 하실분?",
             postImageUrl = "",
             category = "1",
-            chats = listOf(ChatInfo("1", "user1", "user2", "김철수", "홍길동", "헬로!", "2023-11-29 22:59:02")),
-            currentUser = "홍길동",
-            otherUser = "김철수",
+            chats = listOf(
+                ChatInfo(
+                    "1",
+                    "user1",
+                    "user2",
+                    "김철수",
+                    "홍길동",
+                    "헬로!",
+                    "2023-11-29 22:59:02"
+                )
+            ),
+            currentUserID = "",
+            otherUserID = "",
+            otherUserName = "김철수",
             onSendButtonClick = {},
             onTextFieldChange = {},
-            message =  ""
+            message = ""
         )
     }
 }

@@ -18,8 +18,7 @@ interface AuthApiService {
     @POST("Register.php")
     suspend fun requestRegister(
         @Field("userID") userID: String,
-        @Field("userPassword") password: String,
-        @Field("location") location: String
+        @Field("userPassword") password: String
     ): DodamDuckResponse
 
 }

@@ -41,6 +41,7 @@ import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.utils.Utils.ellipsis
+import org.chosun.dodamduck.utils.Utils.getUserProfileUrl
 import java.net.URLEncoder
 
 @Composable
@@ -114,13 +115,16 @@ fun ChatItem(
     val imageUrl = URLEncoder.encode(postImageUrl, "UTF-8")
     val title = URLEncoder.encode(postTitle, "UTF-8")
 
+    val currentUserID = if(DodamDuckData.userInfo.userID == item.user1_id) item.user1_id else item.user2_id
+    val otherUserID = if(DodamDuckData.userInfo.userID == item.user1_id) item.user2_id else item.user1_id
+    val otherUserName = if(DodamDuckData.userInfo.userID == item.user1_id) item.user2_name else item.user1_name
     Row(
         modifier = modifier
             .padding(top = 15.dp)
             .fillMaxWidth()
             .clickable {
                 navController.navigate(
-                    "${BottomNavItem.Chat.screenRoute}/${item.user1_id}/${item.user2_id}/${imageUrl}/${title}/${item.category}"
+                    "${BottomNavItem.Chat.screenRoute}/${currentUserID}/${otherUserID}/${otherUserName}/${imageUrl}/${title}/${item.category}"
                 )
             }
     ) {
@@ -130,7 +134,7 @@ fun ChatItem(
                 .size(60.dp, 60.dp)
                 .clip(RoundedCornerShape(25.dp)),
             contentScale = ContentScale.Crop,
-            painter = rememberAsyncImagePainter(model = item.seller_profile_url),
+            painter = rememberAsyncImagePainter(model = otherUserID.getUserProfileUrl()),
             contentDescription = "UserProfile"
         )
 

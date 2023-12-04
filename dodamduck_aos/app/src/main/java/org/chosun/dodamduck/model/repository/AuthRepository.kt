@@ -18,8 +18,7 @@ class AuthRepository @Inject constructor(
     suspend fun requestRegister(
         userID: String,
         userPassword: String,
-        location: String
     ): DodamDuckResponse? {
-        return service?.requestRegister(userID, userPassword, location)
+        return service?.requestRegister(userID, userPassword)
     }
 }

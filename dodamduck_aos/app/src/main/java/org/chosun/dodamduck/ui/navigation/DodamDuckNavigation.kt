@@ -35,6 +35,7 @@ import org.chosun.dodamduck.ui.PostWriteScreen
 import org.chosun.dodamduck.ui.RegisterScreen
 import org.chosun.dodamduck.ui.TradeWriteScreen
 import org.chosun.dodamduck.ui.UserScreen
+import org.chosun.dodamduck.ui.theme.Brown
 
 sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
@@ -99,25 +100,28 @@ fun DoDamDuckNavigationGraph(navController: NavHostController) {
             ChatListScreen(navController)
         }
         composable(
-            route = "${BottomNavItem.Chat.screenRoute}/{currentUser}/{otherUser}/{postImageUrl}/{postTitle}/{category}",
+            route = "${BottomNavItem.Chat.screenRoute}/{currentUserID}/{otherUserID}/{otherUserName}/{postImageUrl}/{postTitle}/{category}",
             arguments = listOf(
-                navArgument("currentUser") { type = NavType.StringType },
-                navArgument("otherUser") { type = NavType.StringType },
+                navArgument("currentUserID") { type = NavType.StringType },
+                navArgument("otherUserID") { type = NavType.StringType },
+                navArgument("otherUserName") { type = NavType.StringType },
                 navArgument("postImageUrl") { type = NavType.StringType },
                 navArgument("postTitle") { type = NavType.StringType },
                 navArgument("category") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val currentUser = backStackEntry.arguments?.getString("currentUser")
-            val otherUser = backStackEntry.arguments?.getString("otherUser")
+            val currentUserID = backStackEntry.arguments?.getString("currentUserID")
+            val otherUserID = backStackEntry.arguments?.getString("otherUserID")
+            val otherUserName = backStackEntry.arguments?.getString("otherUserName")
             val postImageUrl = backStackEntry.arguments?.getString("postImageUrl")
             val postTitle = backStackEntry.arguments?.getString("postTitle")
             val category = backStackEntry.arguments?.getString("category")
 
             ChatScreen(
                 navController,
-                currentUser = currentUser ?: "",
-                otherUser = otherUser ?: "",
+                currentUserID = currentUserID ?: "",
+                otherUserID = otherUserID ?: "",
+                otherUserName = otherUserName ?: "",
                 postImageUrl = postImageUrl ?: "",
                 postTitle = postTitle ?: "",
                 category = category ?: ""
@@ -181,8 +185,10 @@ fun DodamDuckBottomNavigation(navController: NavHostController) {
                                 .height(26.dp)
                         )
                     },
-                    label = { Text(stringResource(id = item.title), fontSize = 9.sp) },
-                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                    label = {
+                        Text(stringResource(id = item.title), fontSize = 9.sp, color = Brown)
+                    },
+                    selectedContentColor = Brown,
                     unselectedContentColor = Gray,
                     selected = currentRoute == item.screenRoute,
                     alwaysShowLabel = false,

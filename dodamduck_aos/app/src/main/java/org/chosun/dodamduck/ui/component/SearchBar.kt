@@ -21,17 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.theme.Secondary
 import org.chosun.dodamduck.ui.theme.White9
 
 @Composable
-fun DodamDuckSearchBar(modifier: Modifier = Modifier) {
+fun DodamDuckSearchBar(
+    modifier: Modifier = Modifier,
+    value: String,
+    onSearchTextChange: (String) -> Unit
+) {
     Box(
         modifier = modifier
             .padding(horizontal = 50.dp)
@@ -56,13 +56,10 @@ fun DodamDuckSearchBar(modifier: Modifier = Modifier) {
                         shape = RoundedCornerShape(32.dp)
                 ).fillMaxSize()
         ) {
-            DodamDuckText(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.hint_enter_search_query),
-                fontSize = 12,
-                color = Color.Gray,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+            FocusTextField(
+                modifier = Modifier.weight(1f).padding(start = 12.dp),
+                value = value,
+                onValueChange = onSearchTextChange
             )
 
             Icon(
@@ -79,6 +76,9 @@ fun DodamDuckSearchBar(modifier: Modifier = Modifier) {
 @Composable
 fun SearchBarPreview() {
     Surface(color = Secondary) {
-        DodamDuckSearchBar()
+        DodamDuckSearchBar(
+            value = "",
+            onSearchTextChange = {}
+        )
     }
 }

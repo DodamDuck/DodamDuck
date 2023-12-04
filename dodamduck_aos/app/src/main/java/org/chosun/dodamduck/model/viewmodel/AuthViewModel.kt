@@ -36,11 +36,10 @@ class AuthViewModel @Inject constructor(
 
     suspend fun registerRequest(
         userID: String,
-        userPassword: String,
-        location: String =""
+        userPassword: String
     ) {
         viewModelScope.launch {
-            val result = repository.requestRegister(userID, userPassword, location)
+            val result = repository.requestRegister(userID, userPassword)
             _isRegisterState.value = result?.error ?: "true"
         }
     }
