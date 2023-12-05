@@ -4,7 +4,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.chosun.dodamduck.model.dto.PostDetailResponse
 import org.chosun.dodamduck.model.dto.Trade
-import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -49,6 +48,7 @@ interface TradeApiService {
     suspend fun uploadViews(
         @Field("post_id") postId: String
     ): DodamDuckResponse
+
     @HTTP(method = "DELETE", path = "PostDelete.php", hasBody = true)
     @FormUrlEncoded
     suspend fun deleteTrade(
@@ -62,5 +62,10 @@ interface TradeApiService {
         @Field("post_id") postId: String,
         @Field("user_id") userId: String
     ): DodamDuckResponse
+
+    @GET("SearchQuery.php")
+    suspend fun searchPost(
+        @Query("query") query: String
+    ): List<Trade>
 
 }

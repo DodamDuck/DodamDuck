@@ -34,9 +34,9 @@ class PostRepository @Inject constructor(
     }
 
     override suspend fun fetchDetail(
-        shareID: String
+        id: String
     ): PostDetailResponse? {
-        return service?.getPostDetail(shareID)
+        return service?.getPostDetail(id)
     }
 
     override suspend fun uploadComment(
@@ -57,6 +57,10 @@ class PostRepository @Inject constructor(
 
     override suspend fun createChat(postID: String, userID: String): DodamDuckResponse? {
         return service?.createChat(postID, userID)
+    }
+
+    override suspend fun searchPost(query: String): List<PostDTO> {
+        return service?.searchPost(query) ?: listOf()
     }
 
     suspend fun fetchCategories(): List<CategoryDTO>? {

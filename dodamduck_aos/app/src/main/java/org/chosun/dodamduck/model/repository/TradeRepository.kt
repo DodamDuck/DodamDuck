@@ -53,4 +53,8 @@ class TradeRepository @Inject constructor(
     override suspend fun createChat(postID: String, userID: String): DodamDuckResponse? {
         return service?.createChat(postID, userID)
     }
+
+    override suspend fun searchPost(query: String): List<Trade> {
+        return service?.searchPost(query) ?: listOf()
+    }
 }

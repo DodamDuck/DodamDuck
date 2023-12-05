@@ -22,6 +22,7 @@ class PostViewModel @Inject constructor(
 
     private val _uploadSuccess = MutableStateFlow<Boolean>(false)
     val uploadSuccess: StateFlow<Boolean> = _uploadSuccess
+
     fun getPostLists() {
         viewModelScope.launch {
             updatePostLists(repository.fetchList())

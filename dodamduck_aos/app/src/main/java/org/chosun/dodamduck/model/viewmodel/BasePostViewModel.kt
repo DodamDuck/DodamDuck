@@ -1,5 +1,6 @@
 package org.chosun.dodamduck.model.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
@@ -18,6 +19,7 @@ abstract class BasePostViewModel<ALL>(
 
     private val _postDetail = MutableStateFlow<PostDetailResponse?>(null)
     val postDetail: StateFlow<PostDetailResponse?> = _postDetail
+
     fun fetchLists() {
         viewModelScope.launch {
             _postLists.value = repository.fetchList()
@@ -51,6 +53,12 @@ abstract class BasePostViewModel<ALL>(
     fun uploadViewCount(postID: String) {
         viewModelScope.launch {
             repository.uploadViewCount(postID)
+        }
+    }
+
+    fun searchPost(query: String) {
+        viewModelScope.launch {
+            _postLists.value = repository.searchPost(query)
         }
     }
 

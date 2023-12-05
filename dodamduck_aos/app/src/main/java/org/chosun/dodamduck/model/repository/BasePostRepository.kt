@@ -27,4 +27,6 @@ interface BasePostRepository<ALL> {
         postID: String,
         userID: String
     ): DodamDuckResponse?
+
+    suspend fun searchPost(query: String): List<ALL>
 }
