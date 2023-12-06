@@ -46,7 +46,9 @@ import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.database.SearchHistory
 import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.CategoryDTO
+import org.chosun.dodamduck.model.dto.SearchDTO
 import org.chosun.dodamduck.model.dto.Trade
+import org.chosun.dodamduck.model.dto.convertCategoryList
 import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
@@ -63,9 +65,11 @@ fun SearchScreen(
     var searchText by remember { mutableStateOf("") }
     val postLists by tradeViewModel.postLists.collectAsState(initial = null)
     val searchList by tradeViewModel.searchQueryList.collectAsState(initial = null)
+    val popularSearchList by tradeViewModel.popularSearchList.collectAsState(initial = null)
 
     LaunchedEffect(key1 = Unit) {
         tradeViewModel.fetchSearchQuery()
+        tradeViewModel.fetchPopularSearches()
     }
 
     SearchContent(
@@ -80,6 +84,12 @@ fun SearchScreen(
         searchList ?: listOf(),
         onSearchDelete = { query ->
             tradeViewModel.deleteSearchQuery(query)
+        },
+        popularSearchList = popularSearchList ?: listOf(),
+        onSearchDeleteAll = { tradeViewModel.deleteAllSearchQuery() },
+        onTagSelected = {
+            searchText = it
+            tradeViewModel.searchPost(searchText.trim())
         }
     )
 }
@@ -92,7 +102,10 @@ fun SearchContent(
     onSearchTextChange: (String) -> Unit,
     tradeList: List<Trade>,
     searchList: List<SearchHistory>,
-    onSearchDelete: (String) -> Unit
+    onSearchDelete: (String) -> Unit,
+    popularSearchList: List<SearchDTO>,
+    onSearchDeleteAll: () -> Unit,
+    onTagSelected: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -112,8 +125,12 @@ fun SearchContent(
             onSearchTextChange = onSearchTextChange
         )
         if (tradeList.isEmpty()) {
-            SearchTagContent()
-            RecentSearchList(searchList, onSearchDelete = onSearchDelete)
+            SearchTagContent(popularSearchList, onTagSelected)
+            RecentSearchList(
+                searchList,
+                onSearchDelete = onSearchDelete,
+                onSearchDeleteAll = onSearchDeleteAll
+            )
         } else {
             ExchangeItemList(
                 modifier = Modifier.padding(top = 24.dp),
@@ -164,9 +181,12 @@ fun SearchScreenHeader(
 }
 
 @Composable
-fun SearchTagContent() {
-    val categories = listOf(CategoryDTO("1", "뽀로로"), CategoryDTO("2", "블록놀이"))
-    var selectedTag by remember { mutableStateOf(CategoryDTO("1", "뽀로로")) }
+fun SearchTagContent(
+    popularSearchList: List<SearchDTO>,
+    onTagSelected: (String) -> Unit
+) {
+    val categories = popularSearchList.convertCategoryList()
+    var selectedTag by remember { mutableStateOf(CategoryDTO("0", "")) }
 
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 12.dp)
@@ -176,7 +196,10 @@ fun SearchTagContent() {
             modifier = Modifier.padding(top = 12.dp),
             categories = categories,
             selectedTag = selectedTag,
-            onTagSelected = { selectedTag = it }
+            onTagSelected = {
+                selectedTag = it
+                onTagSelected(selectedTag.name)
+            }
         )
     }
 }
@@ -184,7 +207,8 @@ fun SearchTagContent() {
 @Composable
 fun RecentSearchList(
     searchList: List<SearchHistory>,
-    onSearchDelete: (String) -> Unit
+    onSearchDelete: (String) -> Unit,
+    onSearchDeleteAll: () -> Unit
 ) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)
@@ -192,7 +216,11 @@ fun RecentSearchList(
         Row {
             Text("최근 검색", fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.weight(1f))
-            Text("전체 삭제", color = Color.Gray)
+            Text(
+                modifier = Modifier.clickable(onClick = onSearchDeleteAll),
+                text = "전체 삭제",
+                color = Color.Gray
+            )
         }
 
         LazyColumn(
@@ -230,7 +258,7 @@ fun RecentSearchListItem(
             text = searchText
         )
         Icon(
-            modifier = Modifier.clickable{ onSearchDelete(searchText) },
+            modifier = Modifier.clickable { onSearchDelete(searchText) },
             imageVector = Icons.Default.Close,
             tint = Color.Gray,
             contentDescription = "Close Icon"
@@ -253,7 +281,13 @@ fun SearchScreenPreview() {
                 SearchHistory(query = "붕어"),
                 SearchHistory(query = "붕어")
             ),
-            onSearchDelete = {}
+            onSearchDelete = {},
+            popularSearchList = listOf(
+                SearchDTO("1", "뽀로로", "", ""),
+                SearchDTO("2", "블록놀이", "", "")
+            ),
+            onSearchDeleteAll = {},
+            onTagSelected = {}
         )
     }
 }
