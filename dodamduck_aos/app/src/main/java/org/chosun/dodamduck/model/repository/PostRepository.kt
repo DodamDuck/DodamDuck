@@ -2,6 +2,8 @@ package org.chosun.dodamduck.model.repository
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.chosun.dodamduck.model.database.SearchHistory
+import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.PostDTO
 import org.chosun.dodamduck.model.dto.PostDetailResponse
@@ -10,7 +12,8 @@ import org.chosun.dodamduck.model.network.PostApiService
 import javax.inject.Inject
 
 class PostRepository @Inject constructor(
-    private val service: PostApiService?
+    private val service: PostApiService?,
+    private val searchHistoryDao: SearchHistoryDao
 ) : BasePostRepository<PostDTO> {
 
     suspend fun uploadPost(
@@ -65,5 +68,17 @@ class PostRepository @Inject constructor(
 
     suspend fun fetchCategories(): List<CategoryDTO>? {
         return service?.getCategories()
+    }
+
+    suspend fun getAllSearchHistory(): List<SearchHistory> {
+        return searchHistoryDao.getAllSearchHistory()
+    }
+
+    suspend fun insertSearchQuery(searchHistory: SearchHistory) {
+        searchHistoryDao.insertSearchQuery(searchHistory)
+    }
+
+    suspend fun deleteAll() {
+        searchHistoryDao.deleteAll()
     }
 }

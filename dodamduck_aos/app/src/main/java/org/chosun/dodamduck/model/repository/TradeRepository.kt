@@ -2,6 +2,8 @@ package org.chosun.dodamduck.model.repository
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.chosun.dodamduck.model.database.SearchHistory
+import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.PostDetailResponse
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.network.DodamDuckResponse
@@ -9,7 +11,8 @@ import org.chosun.dodamduck.model.network.TradeApiService
 import javax.inject.Inject
 
 class TradeRepository @Inject constructor(
-    private val service: TradeApiService?
+    private val service: TradeApiService?,
+    private val searchHistoryDao: SearchHistoryDao
 ):  BasePostRepository<Trade>  {
     override suspend fun fetchList(): List<Trade> {
         return service?.getTradeList() ?: listOf()
@@ -56,5 +59,21 @@ class TradeRepository @Inject constructor(
 
     override suspend fun searchPost(query: String): List<Trade> {
         return service?.searchPost(query) ?: listOf()
+    }
+
+    suspend fun getAllSearchHistory(): List<SearchHistory> {
+        return searchHistoryDao.getAllSearchHistory()
+    }
+
+    suspend fun insertSearchQuery(query: String) {
+        searchHistoryDao.insertSearchQuery(SearchHistory(query = query))
+    }
+
+    suspend fun deleteAll() {
+        searchHistoryDao.deleteAll()
+    }
+
+    suspend fun deleteSearchQuery(query: String) {
+        searchHistoryDao.deleteSearchQuery(query)
     }
 }

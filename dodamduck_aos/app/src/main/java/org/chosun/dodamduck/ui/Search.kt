@@ -19,6 +19,7 @@ import androidx.compose.material.icons.sharp.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Query
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.database.SearchHistory
+import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.viewmodel.TradeViewModel
@@ -58,13 +62,25 @@ fun SearchScreen(
 ) {
     var searchText by remember { mutableStateOf("") }
     val postLists by tradeViewModel.postLists.collectAsState(initial = null)
+    val searchList by tradeViewModel.searchQueryList.collectAsState(initial = null)
+
+    LaunchedEffect(key1 = Unit) {
+        tradeViewModel.fetchSearchQuery()
+    }
 
     SearchContent(
         navController = navController,
         searchText = searchText,
-        searchEvent = { tradeViewModel.searchPost(searchText.trim()) },
+        searchEvent = {
+            tradeViewModel.searchPost(searchText.trim())
+            tradeViewModel.insertSearchQuery(searchText.trim())
+        },
         onSearchTextChange = { searchText = it },
-        postLists ?: listOf()
+        postLists ?: listOf(),
+        searchList ?: listOf(),
+        onSearchDelete = { query ->
+            tradeViewModel.deleteSearchQuery(query)
+        }
     )
 }
 
@@ -74,7 +90,9 @@ fun SearchContent(
     searchText: String,
     searchEvent: () -> Unit,
     onSearchTextChange: (String) -> Unit,
-    tradeList: List<Trade>
+    tradeList: List<Trade>,
+    searchList: List<SearchHistory>,
+    onSearchDelete: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -95,7 +113,7 @@ fun SearchContent(
         )
         if (tradeList.isEmpty()) {
             SearchTagContent()
-            RecentSearchList()
+            RecentSearchList(searchList, onSearchDelete = onSearchDelete)
         } else {
             ExchangeItemList(
                 modifier = Modifier.padding(top = 24.dp),
@@ -164,7 +182,10 @@ fun SearchTagContent() {
 }
 
 @Composable
-fun RecentSearchList() {
+fun RecentSearchList(
+    searchList: List<SearchHistory>,
+    onSearchDelete: (String) -> Unit
+) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)
     ) {
@@ -177,17 +198,25 @@ fun RecentSearchList() {
         LazyColumn(
             modifier = Modifier.padding(top = 20.dp)
         ) {
-            item {
-                RecentSearchListItem()
+            items(searchList.size) { index ->
+                RecentSearchListItem(
+                    searchList[index].query,
+                    onSearchDelete = onSearchDelete
+                )
             }
         }
     }
 }
 
 @Composable
-fun RecentSearchListItem() {
+fun RecentSearchListItem(
+    searchText: String,
+    onSearchDelete: (String) -> Unit
+) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_clock),
@@ -198,9 +227,10 @@ fun RecentSearchListItem() {
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 16.dp),
-            text = "주저리 주저리"
+            text = searchText
         )
         Icon(
+            modifier = Modifier.clickable{ onSearchDelete(searchText) },
             imageVector = Icons.Default.Close,
             tint = Color.Gray,
             contentDescription = "Close Icon"
@@ -217,7 +247,13 @@ fun SearchScreenPreview() {
             searchText = "",
             searchEvent = {},
             onSearchTextChange = {},
-            listOf()
+            listOf(),
+            listOf(
+                SearchHistory(query = "붕어"),
+                SearchHistory(query = "붕어"),
+                SearchHistory(query = "붕어")
+            ),
+            onSearchDelete = {}
         )
     }
 }

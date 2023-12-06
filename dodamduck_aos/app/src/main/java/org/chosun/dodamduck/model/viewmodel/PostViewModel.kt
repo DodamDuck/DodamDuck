@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val repository: PostRepository
+    private val repository: PostRepository,
 ) : BasePostViewModel<PostDTO>(repository) {
 
     private val _categories = MutableStateFlow<List<CategoryDTO>?>(null)
