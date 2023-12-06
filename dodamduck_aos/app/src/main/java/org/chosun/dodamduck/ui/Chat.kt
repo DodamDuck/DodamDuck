@@ -53,6 +53,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.LikeButton
 import org.chosun.dodamduck.ui.component.lazy_components.ChatLazyList
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
+import org.chosun.dodamduck.utils.Utils
 
 @Composable
 fun ChatScreen(
@@ -129,7 +130,8 @@ fun ChatContent(
             Divider(modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "2023년 9월 24일", color = Color.Gray
+                text = Utils.getCurrentDateTimeFormatted(),
+                color = Color.Gray
             )
 
             ChatLazyList(

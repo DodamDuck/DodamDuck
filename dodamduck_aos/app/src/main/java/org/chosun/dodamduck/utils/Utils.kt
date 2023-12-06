@@ -41,6 +41,12 @@ object Utils {
         return outputFormat.format(date)
     }
 
+    fun getCurrentDateTimeFormatted(): String {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        return current.format(formatter)
+    }
+
     fun Uri.uriToBitmap(context: Context): Bitmap? {
         return try {
             context.contentResolver.openInputStream(this)?.use { inputStream ->
