@@ -73,7 +73,7 @@ fun PostScreen(
             .background(Color.White)
     ) {
         Column {
-            PostHeader()
+            PostHeader(navController)
             Divider(modifier = Modifier.padding(top = 12.dp))
 
             TagLazyRow(
@@ -133,7 +133,9 @@ fun PostScreen(
 }
 
 @Composable
-fun PostHeader() {
+fun PostHeader(
+    navController: NavHostController
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,6 +144,7 @@ fun PostHeader() {
         DodamDuckTextH2(text = "빛가람동", color = Brown)
         Spacer(modifier = Modifier.weight(1f))
         Icon(
+            modifier = Modifier.clickable { navController.navigate(BottomNavItem.Search.screenRoute) },
             imageVector = Icons.Default.Search,
             contentDescription = "Search Icon"
         )

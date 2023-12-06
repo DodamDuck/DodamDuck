@@ -19,6 +19,8 @@ import androidx.compose.material.icons.sharp.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,16 +28,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Query
 import org.chosun.dodamduck.R
+import org.chosun.dodamduck.model.database.SearchHistory
+import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.CategoryDTO
+import org.chosun.dodamduck.model.dto.Trade
+import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.FocusTextField
+import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
 import org.chosun.dodamduck.ui.modifier.addFocusCleaner
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
@@ -43,32 +57,70 @@ import org.chosun.dodamduck.ui.theme.Gray5
 
 @Composable
 fun SearchScreen(
-    navController: NavController
+    navController: NavController,
+    tradeViewModel: TradeViewModel = hiltViewModel()
 ) {
-    
-    SearchContent(navController = navController)
+    var searchText by remember { mutableStateOf("") }
+    val postLists by tradeViewModel.postLists.collectAsState(initial = null)
+    val searchList by tradeViewModel.searchQueryList.collectAsState(initial = null)
 
+    LaunchedEffect(key1 = Unit) {
+        tradeViewModel.fetchSearchQuery()
+    }
+
+    SearchContent(
+        navController = navController,
+        searchText = searchText,
+        searchEvent = {
+            tradeViewModel.searchPost(searchText.trim())
+            tradeViewModel.insertSearchQuery(searchText.trim())
+        },
+        onSearchTextChange = { searchText = it },
+        postLists ?: listOf(),
+        searchList ?: listOf(),
+        onSearchDelete = { query ->
+            tradeViewModel.deleteSearchQuery(query)
+        }
+    )
 }
 
 @Composable
 fun SearchContent(
-    navController: NavController
+    navController: NavController,
+    searchText: String,
+    searchEvent: () -> Unit,
+    onSearchTextChange: (String) -> Unit,
+    tradeList: List<Trade>,
+    searchList: List<SearchHistory>,
+    onSearchDelete: (String) -> Unit
 ) {
-    var searchText by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .addFocusCleaner(LocalFocusManager.current)
+            .onKeyEvent { keyEvent ->
+                if (keyEvent.key == Key.Enter && keyEvent.type == KeyEventType.KeyUp) {
+                    searchEvent()
+                    true
+                } else false
+            }
     ) {
         SearchScreenHeader(
             navController,
             searchText = searchText,
-            onSearchTextChange = { searchText = it }
+            onSearchTextChange = onSearchTextChange
         )
-        SearchTagContent()
-        RecentSearchList()
+        if (tradeList.isEmpty()) {
+            SearchTagContent()
+            RecentSearchList(searchList, onSearchDelete = onSearchDelete)
+        } else {
+            ExchangeItemList(
+                modifier = Modifier.padding(top = 24.dp),
+                items = tradeList,
+                navController = navController
+            )
+        }
     }
 }
 
@@ -80,11 +132,13 @@ fun SearchScreenHeader(
 ) {
     Row(
         modifier = Modifier
-            .height(48.dp)
+            .height(56.dp)
             .padding(top = 10.dp)
     ) {
         Icon(
-            modifier = Modifier.size(48.dp).clickable { navController.popBackStack() },
+            modifier = Modifier
+                .size(48.dp)
+                .clickable { navController.popBackStack() },
             imageVector = Icons.Sharp.KeyboardArrowLeft,
             contentDescription = "Left Arrow Icon"
         )
@@ -100,6 +154,7 @@ fun SearchScreenHeader(
                 Text(text = "검색어를 입력하세요", color = Color.Gray)
 
             FocusTextField(
+                modifier = Modifier.fillMaxSize(),
                 value = searchText,
                 onValueChange = onSearchTextChange
             )
@@ -127,10 +182,13 @@ fun SearchTagContent() {
 }
 
 @Composable
-fun RecentSearchList() {
-    Column (
+fun RecentSearchList(
+    searchList: List<SearchHistory>,
+    onSearchDelete: (String) -> Unit
+) {
+    Column(
         modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)
-    ){
+    ) {
         Row {
             Text("최근 검색", fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.weight(1f))
@@ -140,29 +198,39 @@ fun RecentSearchList() {
         LazyColumn(
             modifier = Modifier.padding(top = 20.dp)
         ) {
-            item {
-                RecentSearchListItem()
+            items(searchList.size) { index ->
+                RecentSearchListItem(
+                    searchList[index].query,
+                    onSearchDelete = onSearchDelete
+                )
             }
         }
     }
 }
 
 @Composable
-fun RecentSearchListItem() {
-    Row (
-        modifier = Modifier.fillMaxWidth()
+fun RecentSearchListItem(
+    searchText: String,
+    onSearchDelete: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_clock),
-            tint  = Color.Gray,
+            tint = Color.Gray,
             contentDescription = "Clock Icon"
         )
-        Text(modifier = Modifier
-            .weight(1f)
-            .padding(start = 16.dp),
-            text = "주저리 주저리"
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp),
+            text = searchText
         )
         Icon(
+            modifier = Modifier.clickable{ onSearchDelete(searchText) },
             imageVector = Icons.Default.Close,
             tint = Color.Gray,
             contentDescription = "Close Icon"
@@ -174,6 +242,18 @@ fun RecentSearchListItem() {
 @Composable
 fun SearchScreenPreview() {
     DodamDuckTheme {
-        SearchContent(rememberNavController())
+        SearchContent(
+            navController = rememberNavController(),
+            searchText = "",
+            searchEvent = {},
+            onSearchTextChange = {},
+            listOf(),
+            listOf(
+                SearchHistory(query = "붕어"),
+                SearchHistory(query = "붕어"),
+                SearchHistory(query = "붕어")
+            ),
+            onSearchDelete = {}
+        )
     }
 }

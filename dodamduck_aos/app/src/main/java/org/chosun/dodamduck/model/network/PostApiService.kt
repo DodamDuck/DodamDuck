@@ -71,4 +71,9 @@ interface PostApiService {
         @Field("user_id") userId: String
     ): DodamDuckResponse
 
+    @GET("SearchQuery.php")
+    suspend fun searchPost(
+        @Query("query") query: String
+    ): List<PostDTO>
+
 }

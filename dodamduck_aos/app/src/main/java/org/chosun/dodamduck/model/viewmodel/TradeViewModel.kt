@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.chosun.dodamduck.model.database.SearchHistory
+import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.repository.TradeRepository
 import javax.inject.Inject
@@ -18,6 +20,9 @@ class TradeViewModel @Inject constructor(
 
     private val _uploadSuccess = MutableStateFlow<Boolean>(false)
     val uploadSuccess: StateFlow<Boolean> = _uploadSuccess
+
+    private val _searchQueryList = MutableStateFlow<List<SearchHistory>?>(null)
+    val searchQueryList: StateFlow<List<SearchHistory>?> = _searchQueryList
 
     fun getTradeLists() {
         viewModelScope.launch {
@@ -36,6 +41,26 @@ class TradeViewModel @Inject constructor(
         viewModelScope.launch {
             val isSuccess = repository.uploadTrade(userId, categoryId, title, content, location, image)
             _uploadSuccess.value = isSuccess
+        }
+    }
+
+    fun insertSearchQuery(query: String) {
+        viewModelScope.launch {
+            repository.insertSearchQuery(query)
+            fetchSearchQuery()
+        }
+    }
+
+    fun fetchSearchQuery() {
+        viewModelScope.launch {
+            _searchQueryList.value = repository.getAllSearchHistory()
+        }
+    }
+
+    fun deleteSearchQuery(query: String) {
+        viewModelScope.launch {
+            repository.deleteSearchQuery(query)
+            fetchSearchQuery()
         }
     }
 }

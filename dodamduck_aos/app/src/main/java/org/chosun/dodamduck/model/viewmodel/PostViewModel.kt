@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val repository: PostRepository
+    private val repository: PostRepository,
 ) : BasePostViewModel<PostDTO>(repository) {
 
     private val _categories = MutableStateFlow<List<CategoryDTO>?>(null)
@@ -22,6 +22,7 @@ class PostViewModel @Inject constructor(
 
     private val _uploadSuccess = MutableStateFlow<Boolean>(false)
     val uploadSuccess: StateFlow<Boolean> = _uploadSuccess
+
     fun getPostLists() {
         viewModelScope.launch {
             updatePostLists(repository.fetchList())
