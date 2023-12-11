@@ -43,7 +43,7 @@ object Utils {
 
     fun getCurrentDateTimeFormatted(): String {
         val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일시")
         return current.format(formatter)
     }
 
