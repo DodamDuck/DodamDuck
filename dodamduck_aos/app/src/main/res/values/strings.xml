@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">DodamDuck</string>
+    <string name="dodam_duck">도담덕</string>
     <string name="home">홈</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
@@ -8,4 +9,57 @@
     <string name="board">게시판</string>
     <string name="user">유저</string>
     <string name="duck_icon">DuckIcon</string>
+    <string name="welcome">Welcome</string>
+    <string name="please_register">앱을 사용 하시려면\n회원가입을 해주세요.</string>
+    <string name="google_icon">googleIcon</string>
+    <string name="sign_up_for_google_account">구글 계정으로 회원가입</string>
+    <string name="visible_icon">visibleIcon</string>
+    <string name="create_password">Create-Password</string>
+    <string name="confirm_password">Confirm-Password</string>
+    <string name="email">Email</string>
+    <string name="confirmed_the_terms_and_conditions">약관을 확인 했습니다.</string>
+    <string name="or">or</string>
+    <string name="already_account">이미 계정이 있으신가요?</string>
+    <string name="please_login">앱을 사용 하시려면\n로그인을 해주세요.</string>
+    <string name="log_in_with_google_account">구글 계정으로 로그인</string>
+    <string name="password">Password</string>
+    <string name="dont_you_have_an_account">계정이 없으신가요?</string>
+    <string name="did_you_forget_your_password">패스워드를 잊으셨나요?</string>
+    <string name="onboarding">온보딩</string>
+    <string name="hint_enter_search_query">검색어를 입력하세요</string>
+    <string name="ask_for_toy_search">찾으시는 장난감이 있으신가요?</string>
+    <string name="dummy_toy_item_metropolitan_city">서울 특별시</string>
+    <string name="dummy_toy_item_district_office">성북구청</string>
+    <string name="dummy_toy_item_name">손목 자연 딸랑이</string>
+    <string name="dummy_toy_item_classification">조작/탐색</string>
+    <string name="dummy_toy_item_age_limit">1개월 이상</string>
+    <string name="dummy_toy_item_price">500</string>
+    <string name="ask_rental">대여 문의</string>
+    <string name="dummy_post_info_item">빛가람동 \u00B7 1일전 \u00B7 조회 434</string>
+    <string name="writing">글 쓰기</string>
+    <string name="selling_my_stuff">내 물건 팔기</string>
+    <string name="save_temporarily">임시 저장</string>
+    <string name="title">제목</string>
+    <string name="transaction_method">거래 방식</string>
+    <string name="exchange">교환하기</string>
+    <string name="donation">나눔하기</string>
+    <string name="detail_description">자세한 설명</string>
+    <string name="detail_description_content">빛가람동에 올릴 게시글 내용을 작성해 주세요.\n(교환 금지 물픔은 게시가 제한될 수 있어요.)\n\n신뢰할 수 있는 거래를 위해 자세히 적어주세요.</string>
+    <string name="frequently_used_button">자주 쓰는 문구</string>
+    <string name="desired_trading_location">거래 희망 장소</string>
+    <string name="dummy_item_location">ex) 이노시티 애시앙 1단지</string>
+    <string name="post_completed">작성 완료</string>
+    <string name="trade_write">교환 작성</string>
+    <string name="post_write">게시물 작성하기</string>
+    <string name="photo">사진</string>
+    <string name="post_information_message">도담덕 게시판은 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 커뮤니티 이용규칙을 제정하여 운영하고 있습니다.\n
+                        위반 시 게시물이 삭제되고 서비스 이용이 일정 기간 제한될 수 있습니다.\n\n
+                        아래는 이 게시판에 해당하는 핵심 내용에 대한 요약 사항이며, 게시물 작성 전 커뮤니티 이용규칙 전문을 반드시 확인하시기 바랍니다.</string>
+    <string name="dumy_item_post_detail_content">제 아들이 중2병인 것 같습니다. 예전에는 말도 싹싹하니 잘 들었는데 요새 들어서  반항심이 심해진것 같네요...  어떻게 극복하면 좋을까요?</string>
+    <string name="post_detail">게시물 상세</string>
+    <string name="chat_list">채팅 기록</string>
+    <string name="please_check_your_login_information">로그인 정보를 다시 확인해 주세요.</string>
+    <string name="passwords_do_not_match_each_other">비밀번호가 서로 일치하지 않습니다.</string>
+    <string name="post_write_info_message_card">안내 중고거래 관련, 명예훼손, 광고/홍보 목적의 글은\n작성하실 수 없습니다.</string>
+    <string name="search">검색</string>
 </resources>

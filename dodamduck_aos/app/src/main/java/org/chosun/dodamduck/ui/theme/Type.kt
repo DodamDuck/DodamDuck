@@ -38,3 +38,11 @@ val Typography = Typography(
 val Krona = FontFamily(
     Font(R.font.krona)
 )
+
+val KadwaBold = FontFamily(
+    Font(R.font.kadwa_bold)
+)
+
+val Gugi = FontFamily(
+    Font(R.font.gugi)
+)
