@@ -5,6 +5,7 @@ import okhttp3.RequestBody
 import org.chosun.dodamduck.model.database.SearchHistory
 import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.PostDetailResponse
+import org.chosun.dodamduck.model.dto.SearchDTO
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.network.DodamDuckResponse
 import org.chosun.dodamduck.model.network.TradeApiService
@@ -75,5 +76,9 @@ class TradeRepository @Inject constructor(
 
     suspend fun deleteSearchQuery(query: String) {
         searchHistoryDao.deleteSearchQuery(query)
+    }
+
+    suspend fun fetchPopularSearch(): List<SearchDTO> {
+        return service?.popularSearch() ?: listOf()
     }
 }

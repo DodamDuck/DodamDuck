@@ -9,6 +9,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.chosun.dodamduck.model.database.SearchHistory
 import org.chosun.dodamduck.model.database.SearchHistoryDao
+import org.chosun.dodamduck.model.dto.SearchDTO
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.repository.TradeRepository
 import javax.inject.Inject
@@ -23,6 +24,9 @@ class TradeViewModel @Inject constructor(
 
     private val _searchQueryList = MutableStateFlow<List<SearchHistory>?>(null)
     val searchQueryList: StateFlow<List<SearchHistory>?> = _searchQueryList
+
+    private val _popularSearchList = MutableStateFlow<List<SearchDTO>?>(null)
+    val popularSearchList: StateFlow<List<SearchDTO>?> = _popularSearchList
 
     fun getTradeLists() {
         viewModelScope.launch {
@@ -60,6 +64,19 @@ class TradeViewModel @Inject constructor(
     fun deleteSearchQuery(query: String) {
         viewModelScope.launch {
             repository.deleteSearchQuery(query)
+            fetchSearchQuery()
+        }
+    }
+
+    fun fetchPopularSearches() {
+        viewModelScope.launch {
+            _popularSearchList.value = repository.fetchPopularSearch()
+        }
+    }
+
+    fun deleteAllSearchQuery() {
+        viewModelScope.launch {
+            repository.deleteAll()
             fetchSearchQuery()
         }
     }

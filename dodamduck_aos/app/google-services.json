@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1023627446923",
+    "project_id": "dodamduck-1872b",
+    "storage_bucket": "dodamduck-1872b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023627446923:android:d4c2d7e885d00d1160e28e",
+        "android_client_info": {
+          "package_name": "org.chosun.dodamduck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtAgIfTjPsMt6xcC6fwitZVgx4nC6fZo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
