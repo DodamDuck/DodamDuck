@@ -14,7 +14,7 @@ object DummyItemFactory {
         return listOf(
             PostDetailUserInfoState(
                 userName = "짱구 맘",
-                userProfile = painterResource(id = R.drawable.img_user_profile),
+                userProfile = painterResource(id = R.drawable.img_user_profile_2),
                 info = "1일전",
                 content = "요새 걱정이 너무 많네요.. 도와주세요"
             ),
