@@ -1,103 +1,78 @@
 package org.chosun.dodamduck.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.viewmodel.AuthViewModel
-import org.chosun.dodamduck.ui.component.AuthBody
-import org.chosun.dodamduck.ui.component.AuthTopSurface
+import org.chosun.dodamduck.ui.component.BottomRoundedBox
+import org.chosun.dodamduck.ui.component.DodamDuckIcon
+import org.chosun.dodamduck.ui.component.PrimaryButton
+import org.chosun.dodamduck.ui.component.WelcomeText
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
 
 @Composable
-fun LoginScreen(
-    navController: NavHostController,
-    authViewModel: AuthViewModel = hiltViewModel()
-) {
-    val isLoginSuccess by authViewModel.isLoginState.collectAsState(initial = false)
-
-    var userID by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var loginAttempted by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
-    val checkLoginMessage = stringResource(R.string.please_check_your_login_information)
-
-    if (loginAttempted) {
-        LaunchedEffect(key1 = Unit) {
-            val result = authViewModel.loginRequest(userID, password)
-            if (!result) {
-                Toast.makeText(context, checkLoginMessage, Toast.LENGTH_SHORT).show()
-            }
-            loginAttempted = false
-        }
-    }
-
-    LaunchedEffect(key1 = isLoginSuccess, key2 = loginAttempted) {
-         if (isLoginSuccess) {
-            navController.navigate(BottomNavItem.Home.screenRoute)
-        }
-    }
-
+fun OnboardingScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Primary)
     ) {
-        Column {
-            AuthTopSurface(
-                stringResource(R.string.login),
-                stringResource(R.string.please_login)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            BottomRoundedBox(
+                modifier = Modifier.height(400.dp),
+                startRound = 200
             )
-            Spacer(Modifier.height(30.dp))
-            AuthBody(
-                googleButtonText = stringResource(R.string.log_in_with_google_account),
-                labelList = listOf(
-                    stringResource(R.string.email),
-                    stringResource(R.string.password),
-                ),
-                checkBoxText = stringResource(R.string.did_you_forget_your_password),
-                buttonText = stringResource(id = R.string.login),
-                alreadyText = stringResource(R.string.dont_you_have_an_account),
-                checkBoxVisible = false,
-                buttonAction = {
-                    loginAttempted = true
-                },
-                bottomTextAction = { navController.navigate(BottomNavItem.Register.screenRoute) },
-                onUserIDChange = { newUserID -> userID = newUserID },
-                onPasswordChange = { newPassword -> password = newPassword },
-                emailText = userID,
-                passwordText = password
+            Spacer(modifier = Modifier.height(82.dp))
+
+            WelcomeText()
+            Spacer(modifier = Modifier.height(32.dp))
+
+            PrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.login),
+                onClick = { navController.navigate(BottomNavItem.Login.screenRoute) }
+            )
+            Spacer(modifier = Modifier.height(27.dp))
+            PrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.register),
+                onClick = { navController.navigate(BottomNavItem.Register.screenRoute) }
             )
         }
+
+        DodamDuckIcon(
+            modifier = Modifier
+                .offset(y = 60.dp)
+                .align(Alignment.TopCenter),
+            size = 300
+        )
     }
 }
 
 @Preview
 @Composable
-fun LoginPreview() {
+fun OnboardingPreview() {
     DodamDuckTheme {
-        LoginScreen(rememberNavController())
+        OnboardingScreen(rememberNavController())
     }
 }
