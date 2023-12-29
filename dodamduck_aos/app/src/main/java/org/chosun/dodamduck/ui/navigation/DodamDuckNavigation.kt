@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +40,8 @@ import org.chosun.dodamduck.ui.theme.Brown
 sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
 ) {
-    object Home : BottomNavItem(R.string.home, R.drawable.ic_home_48, R.string.home.toString())
+    object Home :
+        BottomNavItem(R.string.home, R.drawable.ic_home_48, R.string.home.toString())
 
     object TradeWrite :
         BottomNavItem(R.string.trade_write, R.drawable.ic_home_48, R.string.trade_write.toString())
@@ -52,12 +52,14 @@ sealed class BottomNavItem(
     object Register :
         BottomNavItem(R.string.register, R.drawable.ic_home_48, R.string.register.toString())
 
-    object Login : BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
+    object Login :
+        BottomNavItem(R.string.login, R.drawable.ic_home_48, R.string.login.toString())
 
     object Library :
         BottomNavItem(R.string.library, R.drawable.ic_toy_48, R.string.library.toString())
 
-    object Post : BottomNavItem(R.string.board, R.drawable.ic_board_48, R.string.board.toString())
+    object Post :
+        BottomNavItem(R.string.board, R.drawable.ic_board_48, R.string.board.toString())
 
     object PostWrite :
         BottomNavItem(R.string.post_write, R.drawable.ic_board_48, R.string.post_write.toString())
@@ -68,11 +70,14 @@ sealed class BottomNavItem(
     object ChatList :
         BottomNavItem(R.string.chat_list, R.drawable.ic_chat_48, R.string.chat_list.toString())
 
-    object Chat : BottomNavItem(R.string.chat, R.drawable.ic_chat_48, R.string.chat.toString())
+    object Chat :
+        BottomNavItem(R.string.chat, R.drawable.ic_chat_48, R.string.chat.toString())
 
-    object User : BottomNavItem(R.string.user, R.drawable.ic_user_48, R.string.user.toString())
+    object User :
+        BottomNavItem(R.string.user, R.drawable.ic_user_48, R.string.user.toString())
 
-    object Search: BottomNavItem(R.string.search, R.drawable.ic_home_48, R.string.search.toString())
+    object Search :
+        BottomNavItem(R.string.search, R.drawable.ic_home_48, R.string.search.toString())
 }
 
 @Composable
