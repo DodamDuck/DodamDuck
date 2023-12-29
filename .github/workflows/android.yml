@@ -30,3 +30,8 @@ jobs:
       run: |
         cd dodamduck_aos
         ./gradlew test
+    - name: Run Instrumented Tests
+      run: |
+        cd dodamduck_aos
+        ./gradlew connectedCheck
+
