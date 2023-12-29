@@ -79,7 +79,7 @@
 
 ### ⭐️ Architecture 
 
-<img width="794" alt="Architecture" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/55ed3321-83e3-4e58-bf5a-82520c2e419c">
+<img width="794" alt="Architecture" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/33ee4f69-22e5-4613-8828-e572c5b25399">
 
 ---
 
