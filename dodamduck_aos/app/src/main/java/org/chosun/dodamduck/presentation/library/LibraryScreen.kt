@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.library
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.dto.ToyInfo
-import org.chosun.dodamduck.model.viewmodel.ToyLibraryViewModel
 import org.chosun.dodamduck.ui.component.BottomRoundedBox
 import org.chosun.dodamduck.ui.component.DodamDuckIcon
 import org.chosun.dodamduck.ui.component.DodamDuckSearchBar

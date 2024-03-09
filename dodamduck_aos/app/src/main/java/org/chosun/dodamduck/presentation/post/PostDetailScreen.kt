@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.post
 
 import android.content.Context
 import android.widget.Toast
@@ -61,9 +61,8 @@ import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.dto.PostCommentDTO
 import org.chosun.dodamduck.model.dto.PostDetailResponse
 import org.chosun.dodamduck.model.repository.DummyItemFactory
-import org.chosun.dodamduck.model.viewmodel.BasePostViewModel
-import org.chosun.dodamduck.model.viewmodel.PostViewModel
-import org.chosun.dodamduck.model.viewmodel.TradeViewModel
+import org.chosun.dodamduck.presentation.base.BasePostViewModel
+import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.BottomSheet
 import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.CommentIcon

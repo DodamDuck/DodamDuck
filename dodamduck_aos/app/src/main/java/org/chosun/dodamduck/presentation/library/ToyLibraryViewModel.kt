@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.model.viewmodel
+package org.chosun.dodamduck.presentation.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

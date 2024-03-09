@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

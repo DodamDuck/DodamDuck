@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.model.viewmodel
+package org.chosun.dodamduck.presentation.post
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +10,7 @@ import okhttp3.RequestBody
 import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.PostDTO
 import org.chosun.dodamduck.model.repository.PostRepository
+import org.chosun.dodamduck.presentation.base.BasePostViewModel
 import javax.inject.Inject
 
 @HiltViewModel

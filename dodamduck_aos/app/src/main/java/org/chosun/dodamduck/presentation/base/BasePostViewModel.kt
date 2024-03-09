@@ -1,6 +1,5 @@
-package org.chosun.dodamduck.model.viewmodel
+package org.chosun.dodamduck.presentation.base
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
