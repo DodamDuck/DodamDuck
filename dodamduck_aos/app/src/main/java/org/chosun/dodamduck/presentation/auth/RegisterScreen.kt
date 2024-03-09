@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
@@ -34,7 +34,7 @@ fun RegisterScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val isRegisterError by authViewModel.isRegisterState.collectAsState(initial = "true")
+    val registerUiState by authViewModel.registerUiState.collectAsStateWithLifecycle()
 
     var userID by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -51,11 +51,21 @@ fun RegisterScreen(
         }
     }
 
-    LaunchedEffect(key1 = isRegisterError) {
-        if (isRegisterError == "false") {
+    when (registerUiState) {
+        RegisterUiState.LOADING -> {
+            // todo
+        }
+
+        RegisterUiState.SUCCESS -> {
             navController.navigate(BottomNavItem.Login.screenRoute)
-        } else if (registerLoading) {
+        }
+
+        RegisterUiState.FAIL -> {
             registerLoading = false
+        }
+
+        RegisterUiState.ERROR -> {
+            // todo
         }
     }
 

@@ -14,6 +14,6 @@ interface AuthRepository {
     suspend fun requestRegister(
         userID: String,
         userPassword: String,
-    ): DodamDuckResponse?
+    ): Flow<ApiResult<DodamDuckResponse>>
 
 }

@@ -20,10 +20,25 @@ class NetworkModule {
     @Singleton
     @Provides
     @Named(NetworkType.DODAMDUCK)
-    fun provideRetrofit(): Retrofit =
+    fun provideDodamDuckRetrofit(): Retrofit =
         Retrofit
             .Builder()
             .baseUrl("http://sy2978.dothome.co.kr/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(
+                provideOkHttpClient(
+                    httpLoggingInterceptor
+                )
+            )
+            .build()
+
+    @Singleton
+    @Provides
+    @Named(NetworkType.OPEN_API)
+    fun provideOpenApiRetrofit(): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl("https://api.odcloud.kr/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(
                 provideOkHttpClient(
@@ -46,4 +61,5 @@ var httpLoggingInterceptor = HttpLoggingInterceptor {log ->
 }
 object NetworkType {
     const val DODAMDUCK = "dodamDuck"
+    const val OPEN_API = "openApi"
 }

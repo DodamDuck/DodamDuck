@@ -9,11 +9,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.auth.RequestLogin
+import org.chosun.dodamduck.domain.usecase.remote.auth.RequestRegister
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val requestLogin: RequestLogin
+    private val requestLogin: RequestLogin,
+    private val requestRegister: RequestRegister
 ) : ViewModel() {
 
     private val _loginState: MutableStateFlow<Boolean> =
@@ -24,8 +26,13 @@ class AuthViewModel @Inject constructor(
         MutableStateFlow(LoginUiState.LOADING)
     val loginUiState: StateFlow<LoginUiState> = _loginUiState
 
-    private val _isRegisterState = MutableStateFlow("true")
-    val isRegisterState: StateFlow<String> = _isRegisterState
+    private val _registerState = MutableStateFlow("true")
+    val registerState: StateFlow<String> = _registerState
+
+    private val _registerUiState: MutableStateFlow<RegisterUiState> =
+        MutableStateFlow(RegisterUiState.LOADING)
+    val registerUiState: StateFlow<RegisterUiState> = _registerUiState
+
     suspend fun loginRequest(
         userID: String,
         userPassword: String
@@ -50,13 +57,29 @@ class AuthViewModel @Inject constructor(
         userPassword: String
     ) {
         viewModelScope.launch {
-//            val result = repository.requestRegister(userID, userPassword)
-//            _isRegisterState.value = result?.error ?: "true"
+            requestRegister(userID, userPassword).collectLatest { apiResult ->
+                when(apiResult) {
+                    is ApiResult.Success -> {
+                        _registerState.value = apiResult.value.error
+                        _registerUiState.value = if(registerState.value == "false") RegisterUiState.SUCCESS else RegisterUiState.FAIL
+                    }
+                    else -> {
+                        _registerUiState.value = RegisterUiState.ERROR
+                    }
+                }
+            }
         }
     }
 }
 
 enum class LoginUiState {
+    LOADING,
+    SUCCESS,
+    FAIL,
+    ERROR
+}
+
+enum class RegisterUiState {
     LOADING,
     SUCCESS,
     FAIL,

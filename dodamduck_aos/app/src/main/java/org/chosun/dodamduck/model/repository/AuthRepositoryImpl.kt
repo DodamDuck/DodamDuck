@@ -22,8 +22,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun requestRegister(
         userID: String,
         userPassword: String,
-    ): DodamDuckResponse? {
-//        return service?.requestRegister(userID, userPassword)
-        return null
+    ): Flow<ApiResult<DodamDuckResponse>> = safeFlow {
+        authRemoteSource.requestRegister(userID, userPassword)
     }
 }
