@@ -18,7 +18,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+object ServiceModule {
 
     private const val OPEN_API_BASE_URL = "https://api.odcloud.kr/api/"
     private const val DODAM_DUCK_API_BASE_URL = "http://sy2978.dothome.co.kr/"
@@ -29,6 +29,7 @@ object NetworkModule {
         return RetrofitClient.getRetrofit(OPEN_API_BASE_URL)
     }
 
+    @Singleton
     @Provides
     @Named("DodamDuckRetrofit")
     fun provideDodamDuckRetrofit(): Retrofit {

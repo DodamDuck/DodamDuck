@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
@@ -34,7 +35,7 @@ fun LoginScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val isLoginSuccess by authViewModel.isLoginState.collectAsState(initial = false)
+    val loginUiState by authViewModel.loginUiState.collectAsStateWithLifecycle()
 
     var userID by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -45,17 +46,26 @@ fun LoginScreen(
 
     if (loginAttempted) {
         LaunchedEffect(key1 = Unit) {
-            val result = authViewModel.loginRequest(userID, password)
-            if (!result) {
-                Toast.makeText(context, checkLoginMessage, Toast.LENGTH_SHORT).show()
-            }
+            authViewModel.loginRequest(userID, password)
             loginAttempted = false
         }
     }
 
-    LaunchedEffect(key1 = isLoginSuccess, key2 = loginAttempted) {
-         if (isLoginSuccess) {
+    when (loginUiState) {
+        LoginUiState.LOADING -> {
+            // todo
+        }
+
+        LoginUiState.SUCCESS -> {
             navController.navigate(BottomNavItem.Home.screenRoute)
+        }
+
+        LoginUiState.FAIL -> {
+            Toast.makeText(context, checkLoginMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        LoginUiState.ERROR -> {
+            // todo
         }
     }
 
