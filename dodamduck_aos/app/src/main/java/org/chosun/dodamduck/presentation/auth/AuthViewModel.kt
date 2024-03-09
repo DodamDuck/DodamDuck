@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.chosun.dodamduck.model.data.DodamDuckData
-import org.chosun.dodamduck.model.repository.AuthRepository
+import org.chosun.dodamduck.model.repository.AuthRepositoryImpl
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepositoryImpl
 ) : ViewModel() {
 
     private val _isLoginState = MutableStateFlow(false)

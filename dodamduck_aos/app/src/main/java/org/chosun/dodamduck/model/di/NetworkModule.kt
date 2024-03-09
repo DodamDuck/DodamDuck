@@ -6,12 +6,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.chosun.dodamduck.model.network.AuthApiService
 import org.chosun.dodamduck.model.network.ChatApiService
+import org.chosun.dodamduck.model.network.NetworkType
 import org.chosun.dodamduck.model.network.PostApiService
 import org.chosun.dodamduck.model.network.RetrofitClient
 import org.chosun.dodamduck.model.network.ToyLibraryApiService
 import org.chosun.dodamduck.model.network.TradeApiService
 import retrofit2.Retrofit
+import retrofit2.create
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,6 +36,12 @@ object NetworkModule {
     }
 
     @Provides
+    @Singleton
+    fun provideAuthApiService(
+        @Named(NetworkType.DODAMDUCK) retrofit: Retrofit
+    ) = retrofit.create<AuthApiService>()
+
+    @Provides
     fun provideToyLibraryApiService(@Named("OpenApiRetrofit") retrofit: Retrofit): ToyLibraryApiService {
         return retrofit.create(ToyLibraryApiService::class.java)
     }
@@ -45,11 +54,6 @@ object NetworkModule {
     @Provides
     fun provideChatApiService(@Named("DodamDuckRetrofit") retrofit: Retrofit): ChatApiService {
         return retrofit.create(ChatApiService::class.java)
-    }
-
-    @Provides
-    fun provideAuthApiService(@Named("DodamDuckRetrofit") retrofit: Retrofit): AuthApiService {
-        return retrofit.create(AuthApiService::class.java)
     }
 
     @Provides
