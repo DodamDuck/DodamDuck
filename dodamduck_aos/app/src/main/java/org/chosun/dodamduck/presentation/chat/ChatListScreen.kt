@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,7 +37,6 @@ import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.dto.ChatListDTO
-import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.utils.Utils.ellipsis

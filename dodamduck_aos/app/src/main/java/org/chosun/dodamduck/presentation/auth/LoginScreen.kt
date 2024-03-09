@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -23,7 +23,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.viewmodel.AuthViewModel
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
 import org.chosun.dodamduck.ui.navigation.BottomNavItem

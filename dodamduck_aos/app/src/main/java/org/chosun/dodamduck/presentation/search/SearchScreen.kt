@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,15 +41,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Query
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.database.SearchHistory
-import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.CategoryDTO
 import org.chosun.dodamduck.model.dto.SearchDTO
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.dto.convertCategoryList
-import org.chosun.dodamduck.model.viewmodel.TradeViewModel
+import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow

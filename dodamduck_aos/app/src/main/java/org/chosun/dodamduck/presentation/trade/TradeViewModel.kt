@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.model.viewmodel
+package org.chosun.dodamduck.presentation.trade
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,10 +8,10 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.chosun.dodamduck.model.database.SearchHistory
-import org.chosun.dodamduck.model.database.SearchHistoryDao
 import org.chosun.dodamduck.model.dto.SearchDTO
 import org.chosun.dodamduck.model.dto.Trade
 import org.chosun.dodamduck.model.repository.TradeRepository
+import org.chosun.dodamduck.presentation.base.BasePostViewModel
 import javax.inject.Inject
 
 @HiltViewModel

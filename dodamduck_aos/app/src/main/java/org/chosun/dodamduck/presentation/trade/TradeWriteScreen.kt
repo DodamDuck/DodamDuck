@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.trade
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -44,7 +44,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.data.DodamDuckData
-import org.chosun.dodamduck.model.viewmodel.TradeViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckRadioButton
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2

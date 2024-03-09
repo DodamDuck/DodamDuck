@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,7 +47,6 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import org.chosun.dodamduck.model.dto.ChatInfo
-import org.chosun.dodamduck.model.viewmodel.ChatViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.LikeButton

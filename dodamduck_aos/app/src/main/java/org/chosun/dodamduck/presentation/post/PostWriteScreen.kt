@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.post
 
 import android.content.Context
 import android.net.Uri
@@ -55,14 +55,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.model.data.DodamDuckData
 import org.chosun.dodamduck.model.dto.CategoryDTO
-import org.chosun.dodamduck.model.viewmodel.PostViewModel
 import org.chosun.dodamduck.ui.component.BottomSheet
 import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.DodamDuckText
