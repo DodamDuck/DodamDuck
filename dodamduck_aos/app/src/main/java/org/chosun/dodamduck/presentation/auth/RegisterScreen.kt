@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,40 +33,46 @@ fun RegisterScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val registerUiState by authViewModel.registerUiState.collectAsStateWithLifecycle()
-
-    var userID by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPass by remember { mutableStateOf("") }
-    var registerLoading by remember { mutableStateOf(false) }
+    val state by authViewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val checkPasswordMessage = stringResource(R.string.passwords_do_not_match_each_other)
 
-
-    if (registerLoading) {
-        LaunchedEffect(key1 = Unit) {
-            authViewModel.registerRequest(userID, password)
-        }
-    }
-
-    when (registerUiState) {
-        RegisterUiState.LOADING -> {
+    when {
+        state.isRegisterLoading -> {
             // todo
         }
 
-        RegisterUiState.SUCCESS -> {
+        state.registerResult -> {
             navController.navigate(BottomNavItem.Login.screenRoute)
         }
 
-        RegisterUiState.FAIL -> {
-            registerLoading = false
-        }
-
-        RegisterUiState.ERROR -> {
+        state.registerError != null -> {
             // todo
         }
     }
+
+    RegisterContent(
+        onBottomTextAction = { navController.navigate(BottomNavItem.Login.screenRoute) },
+        onButtonAction = { check, userID, password ->
+            if (check)
+                Toast.makeText(context, checkPasswordMessage, Toast.LENGTH_LONG).show()
+            else {
+                if (!state.isRegisterLoading)
+                    authViewModel.registerRequest(userID, password)
+            }
+        },
+    )
+}
+
+@Composable
+fun RegisterContent(
+    onBottomTextAction: () -> Unit,
+    onButtonAction: (Boolean, String, String) -> Unit
+) {
+    var userID by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPass by rememberSaveable { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -90,12 +95,8 @@ fun RegisterScreen(
                 checkBoxText = stringResource(id = R.string.confirmed_the_terms_and_conditions),
                 buttonText = stringResource(id = R.string.register),
                 alreadyText = stringResource(id = R.string.already_account),
-                bottomTextAction = { navController.navigate(BottomNavItem.Login.screenRoute) },
-                buttonAction = {
-                    if(password != confirmPass)
-                        Toast.makeText(context, checkPasswordMessage, Toast.LENGTH_LONG ).show()
-                    else registerLoading = true
-                               },
+                bottomTextAction = { onBottomTextAction() },
+                buttonAction = { onButtonAction(password != confirmPass, userID, password) },
                 onUserIDChange = { newUserID -> userID = newUserID },
                 onPasswordChange = { newPassword -> password = newPassword },
                 onConfirmChange = { newConfirm -> confirmPass = newConfirm },
