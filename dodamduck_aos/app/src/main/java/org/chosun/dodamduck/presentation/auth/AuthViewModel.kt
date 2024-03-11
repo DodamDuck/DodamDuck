@@ -2,8 +2,6 @@ package org.chosun.dodamduck.presentation.auth
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.chosun.dodamduck.domain.model.ApiResult
@@ -19,16 +17,7 @@ class AuthViewModel @Inject constructor(
 ) : BaseViewModel<AuthState, AuthEvent, AuthSideEffect>(
     AuthReducer(AuthState.init())
 ) {
-
-    private val _loginState: MutableStateFlow<Boolean> =
-        MutableStateFlow(false)
-    val loginState: StateFlow<Boolean> = _loginState
-
-    private val _loginUiState: MutableStateFlow<LoginUiState> =
-        MutableStateFlow(LoginUiState.LOADING)
-    val loginUiState: StateFlow<LoginUiState> = _loginUiState
-
-    suspend fun loginRequest(
+    fun loginRequest(
         userID: String,
         userPassword: String
     ) {
@@ -36,14 +25,13 @@ class AuthViewModel @Inject constructor(
             requestLogin(userID, userPassword).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
-                        _loginState.value = apiResult.value.login_success
-                        _loginUiState.value =
-                            if (loginState.value) LoginUiState.SUCCESS else LoginUiState.FAIL
+                            if (apiResult.value.login_success) sendEvent(AuthEvent.onSuccessLogin)
+                            else sendEvent(AuthEvent.onFailLogin)
                     }
 
-                    else -> {
-                        _loginUiState.value = LoginUiState.ERROR
-                    }
+                    is ApiResult.Error-> sendEvent(AuthEvent.onErrorLogin(error = apiResult.message ?: "error"))
+
+                    is ApiResult.Exception -> { }
                 }
             }
         }
@@ -69,11 +57,4 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
-}
-
-enum class LoginUiState {
-    LOADING,
-    SUCCESS,
-    FAIL,
-    ERROR
 }

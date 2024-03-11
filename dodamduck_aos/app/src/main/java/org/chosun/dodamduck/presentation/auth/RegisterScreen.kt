@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
@@ -112,6 +111,6 @@ fun RegisterContent(
 @Composable
 fun RegisterPreview() {
     DodamDuckTheme {
-        RegisterScreen(rememberNavController())
+        RegisterContent(onBottomTextAction = {}, onButtonAction = { _, _, _ -> })
     }
 }

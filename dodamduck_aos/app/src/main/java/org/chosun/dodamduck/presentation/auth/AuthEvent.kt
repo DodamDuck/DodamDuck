@@ -10,4 +10,12 @@ sealed class AuthEvent: Event {
     object onSuccessRegister : AuthEvent()
 
     object onFailRegister : AuthEvent()
+
+    data class onRequestLogin(val userId: String, val userPassword: String) : AuthEvent()
+
+    data class onErrorLogin(val error: String) : AuthEvent()
+
+    object onSuccessLogin : AuthEvent()
+
+    object onFailLogin : AuthEvent()
 }
