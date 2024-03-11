@@ -17,6 +17,11 @@ class AuthViewModel @Inject constructor(
 ) : BaseViewModel<AuthState, AuthEvent, AuthSideEffect>(
     AuthReducer(AuthState.init())
 ) {
+
+    fun sendSideEffect(effect: AuthSideEffect) {
+        setEffect(effect)
+    }
+
     fun loginRequest(
         userID: String,
         userPassword: String
@@ -25,8 +30,8 @@ class AuthViewModel @Inject constructor(
             requestLogin(userID, userPassword).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
-                            if (apiResult.value.login_success) sendEvent(AuthEvent.onSuccessLogin)
-                            else sendEvent(AuthEvent.onFailLogin)
+                        if (apiResult.value.login_success) sendEvent(AuthEvent.onSuccessLogin)
+                        else sendEvent(AuthEvent.onFailLogin("error"))
                     }
 
                     is ApiResult.Error-> sendEvent(AuthEvent.onErrorLogin(error = apiResult.message ?: "error"))

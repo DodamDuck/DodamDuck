@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,9 +34,22 @@ fun RegisterScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val state by authViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by authViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
     val context = LocalContext.current
     val checkPasswordMessage = stringResource(R.string.passwords_do_not_match_each_other)
+
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is AuthSideEffect.NavigateToLoginScreen
+                -> navController.navigate(BottomNavItem.Login.screenRoute)
+
+            is AuthSideEffect.Toast
+                -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG).show()
+
+            else -> {}
+        }
+    }
 
     when {
         state.isRegisterLoading -> {
@@ -43,7 +57,7 @@ fun RegisterScreen(
         }
 
         state.registerResult -> {
-            navController.navigate(BottomNavItem.Login.screenRoute)
+            authViewModel.sendSideEffect(AuthSideEffect.NavigateToLoginScreen)
         }
 
         state.registerError != null -> {
@@ -55,7 +69,7 @@ fun RegisterScreen(
         onBottomTextAction = { navController.navigate(BottomNavItem.Login.screenRoute) },
         onButtonAction = { check, userID, password ->
             if (check)
-                Toast.makeText(context, checkPasswordMessage, Toast.LENGTH_LONG).show()
+                authViewModel.sendSideEffect(AuthSideEffect.Toast(checkPasswordMessage))
             else {
                 if (!state.isRegisterLoading)
                     authViewModel.registerRequest(userID, password)

@@ -17,5 +17,5 @@ sealed class AuthEvent: Event {
 
     object onSuccessLogin : AuthEvent()
 
-    object onFailLogin : AuthEvent()
+    data class onFailLogin(val error: String) : AuthEvent()
 }

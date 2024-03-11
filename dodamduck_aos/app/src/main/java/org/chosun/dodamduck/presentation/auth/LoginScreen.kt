@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,8 +34,24 @@ fun LoginScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val state by authViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by authViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
     val context = LocalContext.current
+
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is AuthSideEffect.NavigateToHomeScreen
+                 -> navController.navigate(BottomNavItem.Home.screenRoute)
+
+            is AuthSideEffect.NavigateToRegisterScreen
+                 -> navController.navigate(BottomNavItem.Register.screenRoute)
+
+            is AuthSideEffect.Toast
+                 -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG).show()
+
+            else -> {}
+        }
+    }
 
     when {
         state.isLoginLoading -> {
@@ -42,11 +59,11 @@ fun LoginScreen(
         }
 
         state.loginResult -> {
-            navController.navigate(BottomNavItem.Home.screenRoute)
+            authViewModel.sendSideEffect(AuthSideEffect.NavigateToHomeScreen)
         }
 
         state.loginError != null -> {
-            Toast.makeText(context, stringResource(R.string.please_check_your_login_information), Toast.LENGTH_LONG).show()
+            authViewModel.sendSideEffect(AuthSideEffect.Toast(stringResource(R.string.please_check_your_login_information)))
         }
     }
 
@@ -54,7 +71,7 @@ fun LoginScreen(
         onButtonAction = { userId, userPassword ->
             authViewModel.loginRequest(userId, userPassword)
         },
-        onBottomTextAction = { navController.navigate(BottomNavItem.Register.screenRoute) }
+        onBottomTextAction = { authViewModel.sendSideEffect(AuthSideEffect.NavigateToRegisterScreen) }
     )
 
 }
