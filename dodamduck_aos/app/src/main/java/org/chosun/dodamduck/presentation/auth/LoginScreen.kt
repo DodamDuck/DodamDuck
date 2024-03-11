@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
@@ -34,30 +33,56 @@ fun LoginScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val isLoginSuccess by authViewModel.isLoginState.collectAsState(initial = false)
-
-    var userID by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var loginAttempted by remember { mutableStateOf(false) }
+    val state by authViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by authViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
     val context = LocalContext.current
-    val checkLoginMessage = stringResource(R.string.please_check_your_login_information)
 
-    if (loginAttempted) {
-        LaunchedEffect(key1 = Unit) {
-            val result = authViewModel.loginRequest(userID, password)
-            if (!result) {
-                Toast.makeText(context, checkLoginMessage, Toast.LENGTH_SHORT).show()
-            }
-            loginAttempted = false
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is AuthSideEffect.NavigateToHomeScreen
+                 -> navController.navigate(BottomNavItem.Home.screenRoute)
+
+            is AuthSideEffect.NavigateToRegisterScreen
+                 -> navController.navigate(BottomNavItem.Register.screenRoute)
+
+            is AuthSideEffect.Toast
+                 -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG).show()
+
+            else -> {}
         }
     }
 
-    LaunchedEffect(key1 = isLoginSuccess, key2 = loginAttempted) {
-         if (isLoginSuccess) {
-            navController.navigate(BottomNavItem.Home.screenRoute)
+    when {
+        state.isLoginLoading -> {
+            // todo
+        }
+
+        state.loginResult -> {
+            authViewModel.sendSideEffect(AuthSideEffect.NavigateToHomeScreen)
+        }
+
+        state.loginError != null -> {
+            authViewModel.sendSideEffect(AuthSideEffect.Toast(stringResource(R.string.please_check_your_login_information)))
         }
     }
+
+    LoginContent(
+        onButtonAction = { userId, userPassword ->
+            authViewModel.loginRequest(userId, userPassword)
+        },
+        onBottomTextAction = { authViewModel.sendSideEffect(AuthSideEffect.NavigateToRegisterScreen) }
+    )
+
+}
+
+@Composable
+fun LoginContent(
+    onButtonAction: (String, String) -> Unit,
+    onBottomTextAction: () -> Unit
+) {
+    var userId by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -80,13 +105,11 @@ fun LoginScreen(
                 buttonText = stringResource(id = R.string.login),
                 alreadyText = stringResource(R.string.dont_you_have_an_account),
                 checkBoxVisible = false,
-                buttonAction = {
-                    loginAttempted = true
-                },
-                bottomTextAction = { navController.navigate(BottomNavItem.Register.screenRoute) },
-                onUserIDChange = { newUserID -> userID = newUserID },
+                buttonAction = { onButtonAction(userId, password) },
+                bottomTextAction = { onBottomTextAction() },
+                onUserIDChange = { newUserID -> userId = newUserID },
                 onPasswordChange = { newPassword -> password = newPassword },
-                emailText = userID,
+                emailText = userId,
                 passwordText = password
             )
         }
@@ -97,6 +120,6 @@ fun LoginScreen(
 @Composable
 fun LoginPreview() {
     DodamDuckTheme {
-        LoginScreen(rememberNavController())
+        LoginContent(onButtonAction = { _, _ -> }, onBottomTextAction = {})
     }
 }

@@ -9,10 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
@@ -34,30 +33,59 @@ fun RegisterScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val isRegisterError by authViewModel.isRegisterState.collectAsState(initial = "true")
-
-    var userID by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPass by remember { mutableStateOf("") }
-    var registerLoading by remember { mutableStateOf(false) }
+    val state by authViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by authViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
     val context = LocalContext.current
     val checkPasswordMessage = stringResource(R.string.passwords_do_not_match_each_other)
 
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is AuthSideEffect.NavigateToLoginScreen
+                -> navController.navigate(BottomNavItem.Login.screenRoute)
 
-    if (registerLoading) {
-        LaunchedEffect(key1 = Unit) {
-            authViewModel.registerRequest(userID, password)
+            is AuthSideEffect.Toast
+                -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG).show()
+
+            else -> {}
         }
     }
 
-    LaunchedEffect(key1 = isRegisterError) {
-        if (isRegisterError == "false") {
-            navController.navigate(BottomNavItem.Login.screenRoute)
-        } else if (registerLoading) {
-            registerLoading = false
+    when {
+        state.isRegisterLoading -> {
+            // todo
+        }
+
+        state.registerResult -> {
+            authViewModel.sendSideEffect(AuthSideEffect.NavigateToLoginScreen)
+        }
+
+        state.registerError != null -> {
+            // todo
         }
     }
+
+    RegisterContent(
+        onBottomTextAction = { navController.navigate(BottomNavItem.Login.screenRoute) },
+        onButtonAction = { check, userID, password ->
+            if (check)
+                authViewModel.sendSideEffect(AuthSideEffect.Toast(checkPasswordMessage))
+            else {
+                if (!state.isRegisterLoading)
+                    authViewModel.registerRequest(userID, password)
+            }
+        },
+    )
+}
+
+@Composable
+fun RegisterContent(
+    onBottomTextAction: () -> Unit,
+    onButtonAction: (Boolean, String, String) -> Unit
+) {
+    var userID by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPass by rememberSaveable { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -80,12 +108,8 @@ fun RegisterScreen(
                 checkBoxText = stringResource(id = R.string.confirmed_the_terms_and_conditions),
                 buttonText = stringResource(id = R.string.register),
                 alreadyText = stringResource(id = R.string.already_account),
-                bottomTextAction = { navController.navigate(BottomNavItem.Login.screenRoute) },
-                buttonAction = {
-                    if(password != confirmPass)
-                        Toast.makeText(context, checkPasswordMessage, Toast.LENGTH_LONG ).show()
-                    else registerLoading = true
-                               },
+                bottomTextAction = { onBottomTextAction() },
+                buttonAction = { onButtonAction(password != confirmPass, userID, password) },
                 onUserIDChange = { newUserID -> userID = newUserID },
                 onPasswordChange = { newPassword -> password = newPassword },
                 onConfirmChange = { newConfirm -> confirmPass = newConfirm },
@@ -101,6 +125,6 @@ fun RegisterScreen(
 @Composable
 fun RegisterPreview() {
     DodamDuckTheme {
-        RegisterScreen(rememberNavController())
+        RegisterContent(onBottomTextAction = {}, onButtonAction = { _, _, _ -> })
     }
 }
