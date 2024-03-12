@@ -27,5 +27,5 @@ interface ChatApiService {
     @GET("get_chat_list.php")
     suspend fun getChatList(
         @Query("user_id") user1: String
-    ): ChatListResponse?
+    ): ChatListResponse
 }
