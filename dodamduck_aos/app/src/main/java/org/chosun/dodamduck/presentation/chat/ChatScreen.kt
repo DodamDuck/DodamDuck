@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
-import org.chosun.dodamduck.model.dto.ChatInfo
+import org.chosun.dodamduck.data.dto.ChatInfo
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.LikeButton

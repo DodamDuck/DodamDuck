@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import org.chosun.dodamduck.model.dto.Trade
+import org.chosun.dodamduck.data.dto.Trade
 import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3

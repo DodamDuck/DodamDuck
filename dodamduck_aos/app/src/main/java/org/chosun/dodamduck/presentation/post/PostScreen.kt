@@ -40,7 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.dto.CategoryDTO
+import org.chosun.dodamduck.data.dto.CategoryDTO
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.PostItem
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow

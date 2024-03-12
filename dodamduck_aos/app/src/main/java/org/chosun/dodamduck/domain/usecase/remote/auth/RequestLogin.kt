@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.repository.AuthRepository
-import org.chosun.dodamduck.model.dto.LoginDTO
+import org.chosun.dodamduck.data.dto.LoginDTO
 import javax.inject.Inject
 
 class RequestLogin @Inject constructor(
