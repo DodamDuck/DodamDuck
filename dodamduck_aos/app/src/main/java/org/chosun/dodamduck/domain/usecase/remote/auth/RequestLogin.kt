@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.repository.AuthRepository
 import org.chosun.dodamduck.data.dto.LoginDTO
+import org.chosun.dodamduck.data.model.DodamDuckData
 import javax.inject.Inject
 
 class RequestLogin @Inject constructor(
@@ -17,6 +18,7 @@ class RequestLogin @Inject constructor(
     ): Flow<ApiResult<LoginDTO>> = channelFlow {
         authRepo.requestLogin(userID, password).collectLatest { apiResult ->
             if(apiResult is ApiResult.Success) {
+                DodamDuckData.userInfo = apiResult.value
                 send(ApiResult.Success(apiResult.value))
             } else {
                 if (apiResult is ApiResult.Error) {

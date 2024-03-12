@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
@@ -49,15 +50,15 @@ fun ChatListScreen(
     chatViewModel: ChatViewModel = hiltViewModel()
 ) {
     val currentUser = DodamDuckData.userInfo.userID
-    val chats by chatViewModel.chatList.collectAsState(initial = null)
+    val state by chatViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        chatViewModel.getChatList(currentUser)
+        chatViewModel.fetchChatList(currentUser)
     }
 
     ChatListContent(
         navController = navController,
-        chats = chats ?: listOf(),
+        chats = state.chatList,
         currentUser = currentUser
     )
 
