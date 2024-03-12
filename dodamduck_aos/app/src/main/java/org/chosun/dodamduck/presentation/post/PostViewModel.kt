@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.chosun.dodamduck.model.dto.CategoryDTO
-import org.chosun.dodamduck.model.dto.PostDTO
-import org.chosun.dodamduck.model.repository.PostRepository
+import org.chosun.dodamduck.data.dto.CategoryDTO
+import org.chosun.dodamduck.data.dto.PostDTO
+import org.chosun.dodamduck.data.repository.PostRepository
 import org.chosun.dodamduck.presentation.base.BasePostViewModel
 import javax.inject.Inject
 

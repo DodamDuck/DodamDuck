@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.chosun.dodamduck.model.dto.CategoryDTO
+import org.chosun.dodamduck.data.dto.CategoryDTO
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.LightBrown

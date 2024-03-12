@@ -6,8 +6,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.chosun.dodamduck.model.dto.PostDetailResponse
-import org.chosun.dodamduck.model.repository.BasePostRepository
+import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.data.repository.BasePostRepository
 
 abstract class BasePostViewModel<ALL>(
     private val repository: BasePostRepository<ALL>

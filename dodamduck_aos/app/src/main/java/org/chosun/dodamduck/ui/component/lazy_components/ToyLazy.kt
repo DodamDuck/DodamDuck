@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.dto.ToyInfo
+import org.chosun.dodamduck.data.dto.ToyInfo
 import org.chosun.dodamduck.ui.component.EllipsisText
 
 @Composable

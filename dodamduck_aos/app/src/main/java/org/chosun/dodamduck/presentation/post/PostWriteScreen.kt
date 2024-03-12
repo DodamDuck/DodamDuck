@@ -59,8 +59,8 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.data.DodamDuckData
-import org.chosun.dodamduck.model.dto.CategoryDTO
+import org.chosun.dodamduck.data.model.DodamDuckData
+import org.chosun.dodamduck.data.dto.CategoryDTO
 import org.chosun.dodamduck.ui.component.BottomSheet
 import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.DodamDuckText

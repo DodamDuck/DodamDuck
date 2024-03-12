@@ -42,11 +42,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.database.SearchHistory
-import org.chosun.dodamduck.model.dto.CategoryDTO
-import org.chosun.dodamduck.model.dto.SearchDTO
-import org.chosun.dodamduck.model.dto.Trade
-import org.chosun.dodamduck.model.dto.convertCategoryList
+import org.chosun.dodamduck.data.database.SearchHistory
+import org.chosun.dodamduck.data.dto.CategoryDTO
+import org.chosun.dodamduck.data.dto.SearchDTO
+import org.chosun.dodamduck.data.dto.Trade
+import org.chosun.dodamduck.data.dto.convertCategoryList
 import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList

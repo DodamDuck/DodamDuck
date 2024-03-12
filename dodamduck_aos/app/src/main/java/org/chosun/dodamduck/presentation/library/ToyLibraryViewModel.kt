@@ -1,26 +1,40 @@
 package org.chosun.dodamduck.presentation.library
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.chosun.dodamduck.model.dto.ToyInfo
-import org.chosun.dodamduck.model.repository.ToyLibraryRepository
+import org.chosun.dodamduck.domain.model.ApiResult
+import org.chosun.dodamduck.domain.usecase.remote.toylibrary.GetToys
+import org.chosun.dodamduck.presentation.base.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ToyLibraryViewModel @Inject constructor(
-    private val repository: ToyLibraryRepository
-): ViewModel() {
+    private val getToys: GetToys
+):  BaseViewModel<ToyLibraryState, ToyLibraryEvent, ToyLibrarySideEffect>(
+    ToyLibraryReducer(ToyLibraryState.init())
+) {
 
-    private val _toyInfos = MutableStateFlow<List<ToyInfo>?>(null)
-    val toyInfos: StateFlow<List<ToyInfo>?> = _toyInfos
+    fun sendSideEffect(effect: ToyLibrarySideEffect) {
+        setEffect(effect)
+    }
 
     fun getToyInfos() {
+        sendEvent(ToyLibraryEvent.OnRequestData)
         viewModelScope.launch {
-            _toyInfos.value = repository.fetchToyList()
+            getToys().collectLatest { apiResult ->
+                when(apiResult) {
+                    is ApiResult.Success -> {
+                       sendEvent(ToyLibraryEvent.OnFetchToyList(apiResult.value))
+                    }
+
+                    is ApiResult.Error-> sendEvent(ToyLibraryEvent.OnError)
+
+                    is ApiResult.Exception -> { }
+                }
+            }
+            sendEvent(ToyLibraryEvent.OnCompleteData)
         }
     }
 }

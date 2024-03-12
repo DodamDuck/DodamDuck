@@ -6,9 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.chosun.dodamduck.model.dto.ChatInfo
-import org.chosun.dodamduck.model.dto.ChatListDTO
-import org.chosun.dodamduck.model.repository.ChatRepository
+import org.chosun.dodamduck.data.dto.ChatInfo
+import org.chosun.dodamduck.data.dto.ChatListDTO
+import org.chosun.dodamduck.data.repository.ChatRepository
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

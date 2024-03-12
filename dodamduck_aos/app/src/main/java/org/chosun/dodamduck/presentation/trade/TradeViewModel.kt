@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.chosun.dodamduck.model.database.SearchHistory
-import org.chosun.dodamduck.model.dto.SearchDTO
-import org.chosun.dodamduck.model.dto.Trade
-import org.chosun.dodamduck.model.repository.TradeRepository
+import org.chosun.dodamduck.data.database.SearchHistory
+import org.chosun.dodamduck.data.dto.SearchDTO
+import org.chosun.dodamduck.data.dto.Trade
+import org.chosun.dodamduck.data.repository.TradeRepository
 import org.chosun.dodamduck.presentation.base.BasePostViewModel
 import javax.inject.Inject
 

@@ -57,10 +57,10 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.model.data.DodamDuckData
-import org.chosun.dodamduck.model.dto.PostCommentDTO
-import org.chosun.dodamduck.model.dto.PostDetailResponse
-import org.chosun.dodamduck.model.repository.DummyItemFactory
+import org.chosun.dodamduck.data.model.DodamDuckData
+import org.chosun.dodamduck.data.dto.PostCommentDTO
+import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.data.repository.DummyItemFactory
 import org.chosun.dodamduck.presentation.base.BasePostViewModel
 import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.BottomSheet

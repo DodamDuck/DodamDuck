@@ -26,10 +26,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import org.chosun.dodamduck.model.dto.PostDTO
+import org.chosun.dodamduck.data.dto.PostDTO
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckText
-import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.utils.Utils.ellipsis
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
