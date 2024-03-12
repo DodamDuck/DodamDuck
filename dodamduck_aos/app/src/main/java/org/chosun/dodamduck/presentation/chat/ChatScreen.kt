@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
@@ -65,10 +66,10 @@ fun ChatScreen(
     postTitle: String = "",
     category: String = ""
 ) {
-    val chats by chatViewModel.chats.collectAsState(initial = null)
+    val state by chatViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        chatViewModel.getChats(currentUserID, otherUserID)
+        chatViewModel.fetchChats(currentUserID, otherUserID)
     }
 
     var message by remember { mutableStateOf("") }
@@ -81,7 +82,7 @@ fun ChatScreen(
         postTitle = postTitle,
         postImageUrl = postImageUrl,
         category = category,
-        chats = chats,
+        chats = state.chats,
         currentUserID = currentUserID,
         otherUserID = otherUserID,
         otherUserName = otherUserName,
@@ -90,7 +91,7 @@ fun ChatScreen(
                 chatViewModel.sendChat(currentUserID, otherUserID, message)
                 message = ""
                 focusManager.clearFocus()
-                listState.animateScrollToItem(chats?.size ?: 0)
+                listState.animateScrollToItem(state.chats.size)
             }
         },
         onTextFieldChange = { message = it },

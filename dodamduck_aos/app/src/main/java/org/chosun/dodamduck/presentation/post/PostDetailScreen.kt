@@ -33,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
@@ -61,8 +60,7 @@ import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.dto.PostCommentDTO
 import org.chosun.dodamduck.data.dto.PostDetailResponse
 import org.chosun.dodamduck.data.repository.DummyItemFactory
-import org.chosun.dodamduck.presentation.base.BasePostViewModel
-import org.chosun.dodamduck.presentation.trade.TradeViewModel
+import org.chosun.dodamduck.presentation.post.detail.PostDetailViewModel
 import org.chosun.dodamduck.ui.component.BottomSheet
 import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.CommentIcon
@@ -78,44 +76,32 @@ import org.chosun.dodamduck.utils.Utils.formatDateDiff
 @Composable
 fun PostDetailScreen(
     navController: NavController,
+    postDetailViewModel: PostDetailViewModel,
     postId: String = "",
     postType: String,
     context: Context = LocalContext.current
 ) {
-    val viewModel: BasePostViewModel<*> = when (postType) {
-        "trade" -> hiltViewModel<TradeViewModel>()
-        "post" -> hiltViewModel<PostViewModel>()
-        else -> throw IllegalArgumentException("Unknown post type")
-    }
-
-    val postDetail by viewModel.postDetail.collectAsState(initial = null)
-    var deleteAttempted by remember { mutableStateOf(false) }
+    val state by postDetailViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by postDetailViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
     var commentText by remember { mutableStateOf("") }
-    LaunchedEffect(key1 = postDetail) {
-        viewModel.fetchDetail(postId)
+
+    LaunchedEffect(key1 = Unit) {
+        postDetailViewModel.fetchDetail(postId)
     }
 
-    var createChat by remember { mutableStateOf(false) }
-    LaunchedEffect(key1 = createChat) {
-        postDetail?.let {
-            val result = viewModel.createChat(postId, DodamDuckData.userInfo.userID)
-            if (result)
-                navController.navigate(BottomNavItem.ChatList.screenRoute)
-            else
-                Toast.makeText(context, "채팅방 생성 중 오류가 발생 했습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is PostSideEffect.NavigateToChatList
+            -> navController.navigate(BottomNavItem.ChatList.screenRoute)
 
-    if (deleteAttempted) {
-        LaunchedEffect(Unit) {
-            val isDeleteSuccess = viewModel.deletePost(postId, DodamDuckData.userInfo.userID)
-            if (isDeleteSuccess) {
-                Toast.makeText(context, "게시글이 삭제 되었습니다.", Toast.LENGTH_SHORT).show()
-                navController.popBackStack()
-            } else {
-                Toast.makeText(context, "게시글 작성자만 삭제 할 수 있습니다.", Toast.LENGTH_SHORT).show()
-            }
+            is PostSideEffect.Toast
+            -> Toast.makeText(context, (effect as PostSideEffect.Toast).text, Toast.LENGTH_SHORT).show()
+
+            is PostSideEffect.NavigatePopBackStack
+            -> navController.popBackStack()
+
+            else -> {}
         }
     }
 
@@ -123,18 +109,18 @@ fun PostDetailScreen(
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(key1 = postDetail) {
+    LaunchedEffect(key1 = state.postDetail) {
         scrollState.animateScrollTo(scrollState.maxValue)
     }
 
     PostDetailContent(
         navController = navController,
-        postDetail = postDetail,
+        postDetail = state.postDetail,
         commentText = commentText,
         scrollState = scrollState,
         onSendButtonClick = {
             coroutineScope.launch {
-                viewModel.uploadComment(
+                postDetailViewModel.uploadComment(
                     postId,
                     DodamDuckData.userInfo.userID,
                     commentText
@@ -144,8 +130,8 @@ fun PostDetailScreen(
             }
         },
         onTextFieldChange = { commentText = it },
-        onDelete = { deleteAttempted = true },
-        onChat = { createChat = true },
+        onDelete = { postDetailViewModel.deletePost(postId, DodamDuckData.userInfo.userID) },
+        onChat = { postDetailViewModel.createChat(postId, DodamDuckData.userInfo.userID) },
         postType = postType
     )
 }
@@ -164,7 +150,7 @@ fun PostDetailContent(
     postType: String
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    var sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     Box(
@@ -178,9 +164,9 @@ fun PostDetailContent(
                     .size(40.dp)
                     .padding(top = 8.dp)
                     .clickable {
-                        if(postType == "trade")
+                        if (postType == "trade")
                             navController.navigate(BottomNavItem.Home.screenRoute)
-                        else if(postType == "post")
+                        else if (postType == "post")
                             navController.navigate(BottomNavItem.Post.screenRoute)
                     },
                 imageVector = Icons.Default.KeyboardArrowLeft,
