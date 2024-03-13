@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.presentation.post
+package org.chosun.dodamduck.presentation.post.detail
 
 import android.content.Context
 import android.widget.Toast
@@ -50,6 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -60,7 +61,7 @@ import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.dto.PostCommentDTO
 import org.chosun.dodamduck.data.dto.PostDetailResponse
 import org.chosun.dodamduck.data.repository.DummyItemFactory
-import org.chosun.dodamduck.presentation.post.detail.PostDetailViewModel
+import org.chosun.dodamduck.presentation.post.PostSideEffect
 import org.chosun.dodamduck.ui.component.BottomSheet
 import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.CommentIcon
@@ -76,7 +77,7 @@ import org.chosun.dodamduck.utils.Utils.formatDateDiff
 @Composable
 fun PostDetailScreen(
     navController: NavController,
-    postDetailViewModel: PostDetailViewModel,
+    postDetailViewModel: PostDetailViewModel = hiltViewModel(),
     postId: String = "",
     postType: String,
     context: Context = LocalContext.current
