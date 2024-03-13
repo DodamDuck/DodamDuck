@@ -1,7 +1,8 @@
-package org.chosun.dodamduck.presentation.post
+package org.chosun.dodamduck.presentation.post.write
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -32,13 +33,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
@@ -61,6 +61,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.dto.CategoryDTO
+import org.chosun.dodamduck.presentation.post.PostSideEffect
+import org.chosun.dodamduck.presentation.post.PostViewModel
 import org.chosun.dodamduck.ui.component.BottomSheet
 import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.DodamDuckText
@@ -78,15 +80,29 @@ fun PostWriteScreen(
     navController: NavController,
     postViewModel: PostViewModel = hiltViewModel()
 ) {
+    val state by postViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by postViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
+
     val context = LocalContext.current
     var imageList by remember { mutableStateOf<List<Uri>>(listOf()) }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageList = ((imageList + uri) ?: throw NullPointerException()) as List<Uri>
+        imageList = (imageList + uri) as List<Uri>
     }
 
-    val categoryList by postViewModel.categories.collectAsState(initial = listOf())
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is PostSideEffect.Toast
+            -> Toast.makeText(context, (effect as PostSideEffect.Toast).text, Toast.LENGTH_SHORT).show()
+
+            is PostSideEffect.NavigatePopBackStack
+            -> navController.popBackStack()
+
+            else -> {}
+        }
+    }
+
     LaunchedEffect(Unit) {
         postViewModel.getCategories()
     }
@@ -102,16 +118,10 @@ fun PostWriteScreen(
     var detailDescription by remember { mutableStateOf("") }
 
     var showBottomSheet by remember { mutableStateOf(false) }
-    var sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     val onImageClick = { galleryLauncher.launch("image/*") }
-
-    val uploadSuccess by postViewModel.uploadSuccess.collectAsState(initial = false)
-    LaunchedEffect(key1 = uploadSuccess) {
-        if (uploadSuccess)
-            navController.popBackStack()
-    }
 
     PostWriteContent(
         navController = navController,
@@ -142,7 +152,7 @@ fun PostWriteScreen(
             onDismissRequest = { showBottomSheet = false }
         ) {
             PostWriteBottomSheetContent(
-                categoryList = categoryList,
+                categoryList = state.categories,
                 onCategoryClick = {
                     categoryType = it
                     scope.launch { sheetState.hide() }.invokeOnCompletion {
@@ -229,7 +239,7 @@ fun PostWriteScreenHeader(
     Row(
         modifier = Modifier.padding(end = 8.dp),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = CenterVertically
     ) {
         IconButton(
             onClick = { navController.popBackStack() },

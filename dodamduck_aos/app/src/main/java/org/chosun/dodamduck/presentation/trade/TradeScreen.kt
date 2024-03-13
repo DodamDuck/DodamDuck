@@ -21,7 +21,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
@@ -44,11 +44,28 @@ fun TradeScreen(
     navController: NavHostController,
     tradeViewModel: TradeViewModel = hiltViewModel()
 ) {
-    val tradeLists by tradeViewModel.postLists.collectAsState(initial = null)
+    val state by tradeViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by tradeViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
     LaunchedEffect(Unit) {
         tradeViewModel.getTradeLists()
     }
+
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is TradeSideEffect.NavigatePopBackStack
+            -> navController.popBackStack()
+
+            is TradeSideEffect.NavigateToTradeWrite
+            -> navController.navigate(BottomNavItem.TradeWrite.screenRoute)
+
+            is TradeSideEffect.NavigateToSearch
+            -> navController.navigate(BottomNavItem.Search.screenRoute)
+
+            else -> {}
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -56,10 +73,12 @@ fun TradeScreen(
             .background(Color.White)
     ) {
         Column {
-            TradeHeader(navController)
+            TradeHeader(
+                onSearchIconClick = { tradeViewModel.sendSideEffect(TradeSideEffect.NavigateToSearch) }
+            )
             ExchangeItemList(
                 modifier = Modifier.padding(top = 24.dp),
-                items = tradeLists ?: listOf(),
+                items = state.tradeList,
                 navController = navController
             )
         }
@@ -69,7 +88,7 @@ fun TradeScreen(
                 .align(Alignment.BottomEnd)
                 .height(60.dp)
                 .padding(end = 8.dp, bottom = 8.dp),
-            onClick = { navController.navigate(BottomNavItem.TradeWrite.screenRoute) },
+            onClick = { tradeViewModel.sendSideEffect(TradeSideEffect.NavigateToTradeWrite) },
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Brown),
             border = BorderStroke(width = 1.dp, color = Brown)
         ) {
@@ -81,7 +100,9 @@ fun TradeScreen(
 }
 
 @Composable
-fun TradeHeader(navController: NavHostController) {
+fun TradeHeader(
+    onSearchIconClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,7 +112,7 @@ fun TradeHeader(navController: NavHostController) {
         Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = "Arrow Icon")
         Spacer(modifier = Modifier.weight(1f))
         Icon(
-            modifier = Modifier.clickable { navController.navigate(BottomNavItem.Search.screenRoute) },
+            modifier = Modifier.clickable { onSearchIconClick() },
             imageVector = Icons.Default.Search,
             contentDescription = "Search Icon"
         )

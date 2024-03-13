@@ -75,6 +75,7 @@ class PostViewModel @Inject constructor(
                     when (apiResult) {
                         is ApiResult.Success -> {
                             sendEvent(PostEvent.OnSuccess)
+                            setEffect(PostSideEffect.NavigatePopBackStack)
                         }
 
                         is ApiResult.Error -> sendEvent(PostEvent.OnError)

@@ -3,7 +3,6 @@ package org.chosun.dodamduck.data.repository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.chosun.dodamduck.data.database.SearchHistory
 import org.chosun.dodamduck.data.dto.CategoryDTO
 import org.chosun.dodamduck.data.dto.PostDTO
 import org.chosun.dodamduck.data.dto.PostDetailResponse
@@ -11,12 +10,11 @@ import org.chosun.dodamduck.data.safeFlow
 import org.chosun.dodamduck.data.source.local.PostLocalSource
 import org.chosun.dodamduck.data.source.remote.PostRemoteSource
 import org.chosun.dodamduck.domain.model.ApiResult
-import org.chosun.dodamduck.domain.repository.BasePostRepository
 import org.chosun.dodamduck.domain.repository.PostRepository
 import org.chosun.dodamduck.network.DodamDuckResponse
 import javax.inject.Inject
 
-class PostRepositoryImpl @Inject constructor(
+class PostRepositoryImpl<T> @Inject constructor(
     private val postRemoteSource: PostRemoteSource,
     private val postLocalSource: PostLocalSource
 ) : PostRepository<PostDTO> {
