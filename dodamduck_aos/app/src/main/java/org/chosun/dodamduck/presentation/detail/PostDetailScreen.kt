@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.presentation.post.detail
+package org.chosun.dodamduck.presentation.detail
 
 import android.content.Context
 import android.widget.Toast
@@ -61,7 +61,10 @@ import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.dto.PostCommentDTO
 import org.chosun.dodamduck.data.dto.PostDetailResponse
 import org.chosun.dodamduck.data.repository.DummyItemFactory
-import org.chosun.dodamduck.presentation.post.PostSideEffect
+import org.chosun.dodamduck.presentation.detail.base.BasePostDetailViewModel
+import org.chosun.dodamduck.presentation.detail.base.PostDetailSideEffect
+import org.chosun.dodamduck.presentation.detail.post.PostDetailViewModel
+import org.chosun.dodamduck.presentation.detail.trade.TradeDetailViewModel
 import org.chosun.dodamduck.ui.component.BottomSheet
 import org.chosun.dodamduck.ui.component.BottomSheetText
 import org.chosun.dodamduck.ui.component.CommentIcon
@@ -77,11 +80,16 @@ import org.chosun.dodamduck.utils.Utils.formatDateDiff
 @Composable
 fun PostDetailScreen(
     navController: NavController,
-    postDetailViewModel: PostDetailViewModel = hiltViewModel(),
     postId: String = "",
     postType: String,
     context: Context = LocalContext.current
 ) {
+    val postDetailViewModel: BasePostDetailViewModel<*> = when (postType) {
+        "trade" -> hiltViewModel<TradeDetailViewModel>()
+        "post" -> hiltViewModel<PostDetailViewModel>()
+        else -> throw IllegalArgumentException("Unknown post type")
+    }
+
     val state by postDetailViewModel.uiState.collectAsStateWithLifecycle()
     val effect by postDetailViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
@@ -93,13 +101,13 @@ fun PostDetailScreen(
 
     LaunchedEffect(key1 = effect) {
         when(effect) {
-            is PostSideEffect.NavigateToChatList
+            is PostDetailSideEffect.NavigateToChatList
             -> navController.navigate(BottomNavItem.ChatList.screenRoute)
 
-            is PostSideEffect.Toast
-            -> Toast.makeText(context, (effect as PostSideEffect.Toast).text, Toast.LENGTH_SHORT).show()
+            is PostDetailSideEffect.Toast
+            -> Toast.makeText(context, (effect as PostDetailSideEffect.Toast).text, Toast.LENGTH_SHORT).show()
 
-            is PostSideEffect.NavigatePopBackStack
+            is PostDetailSideEffect.NavigatePopBackStack
             -> navController.popBackStack()
 
             else -> {}

@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.data.dto.PostDetailResponse
 import org.chosun.dodamduck.domain.model.ApiResult
-import org.chosun.dodamduck.domain.repository.PostRepository
+import org.chosun.dodamduck.domain.repository.BasePostRepository
 import javax.inject.Inject
 
 class GetPostDetail<T> @Inject constructor(
-    private val postRepo: PostRepository<T>
+    private val postRepo: BasePostRepository<T>
 ) {
     operator fun invoke(id: String): Flow<ApiResult<PostDetailResponse?>> = channelFlow {
         postRepo.fetchDetail(id).collectLatest { apiResult ->

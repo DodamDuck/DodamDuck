@@ -14,6 +14,10 @@ import org.chosun.dodamduck.domain.repository.PostRepository
 import org.chosun.dodamduck.network.DodamDuckResponse
 import javax.inject.Inject
 
+/**
+ * The generic in this interface is intended for injecting a specific implementation of the BasePostRepository
+ */
+
 class PostRepositoryImpl<T> @Inject constructor(
     private val postRemoteSource: PostRemoteSource,
     private val postLocalSource: PostLocalSource

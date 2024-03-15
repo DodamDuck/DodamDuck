@@ -15,6 +15,10 @@ import org.chosun.dodamduck.domain.repository.TradeRepository
 import org.chosun.dodamduck.network.DodamDuckResponse
 import javax.inject.Inject
 
+/**
+ * The generic in this interface is intended for injecting a specific implementation of the BasePostRepository
+ */
+
 class TradeRepositoryImpl<T> @Inject constructor(
     private val tradeRemoteSource: TradeRemoteSource,
     private val searchHistoryDao: SearchHistoryDao
