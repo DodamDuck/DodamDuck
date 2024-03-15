@@ -4,6 +4,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.chosun.dodamduck.data.dto.PostDTO
+import org.chosun.dodamduck.data.dto.Trade
+import org.chosun.dodamduck.data.repository.PostRepositoryImpl
+import org.chosun.dodamduck.data.repository.TradeRepositoryImpl
+import org.chosun.dodamduck.domain.repository.BasePostRepository
+import org.chosun.dodamduck.domain.repository.PostRepository
+import org.chosun.dodamduck.domain.repository.TradeRepository
 import org.chosun.dodamduck.network.AuthApiService
 import org.chosun.dodamduck.network.ChatApiService
 import org.chosun.dodamduck.network.NetworkType
@@ -48,4 +55,16 @@ object ServiceModule {
     fun providePostApiService(
         @Named(NetworkType.DODAMDUCK) retrofit: Retrofit)
             = retrofit.create<PostApiService>()
+
+    @Provides
+    fun providePostRepository(impl: PostRepositoryImpl<PostDTO>): PostRepository<PostDTO> = impl
+
+    @Provides
+    fun provideTradeRepository(impl: TradeRepositoryImpl<Trade>): TradeRepository<Trade> = impl
+
+    @Provides
+    fun provideBasePostRepository(impl: PostRepositoryImpl<PostDTO>): BasePostRepository<PostDTO> = impl
+
+    @Provides
+    fun provideBaseTradeRepository(impl: TradeRepositoryImpl<Trade>): BasePostRepository<Trade> = impl
 }

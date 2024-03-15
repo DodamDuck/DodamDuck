@@ -23,7 +23,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
@@ -53,8 +53,7 @@ fun PostScreen(
     navController: NavHostController,
     postViewModel: PostViewModel = hiltViewModel()
 ) {
-    val postLists by postViewModel.postLists.collectAsState(initial = null)
-    val categories by postViewModel.categories.collectAsState(initial = null)
+    val state by postViewModel.uiState.collectAsStateWithLifecycle()
     var selectedTag by remember { mutableStateOf(CategoryDTO("0", "")) }
 
     LaunchedEffect(Unit) {
@@ -77,21 +76,20 @@ fun PostScreen(
 
             TagLazyRow(
                 Modifier.padding(start = 8.dp, top = 10.dp),
-                categories = categories ?: listOf(),
+                categories = state.categories,
                 selectedTag = selectedTag,
                 onTagSelected = { selectedTag = it }
             )
             Divider(modifier = Modifier.padding(top = 10.dp))
 
-            val posts = postLists ?: listOf()
             LazyColumn {
-                items(posts.size) {index ->
+                items(state.postList.size) {index ->
                     PostItem(modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                         .clickable {
-                            postViewModel.uploadViewCount(posts[index].shareID)
+                            postViewModel.uploadViewCount(state.postList[index].shareID)
                             navController.navigate(
-                                "${BottomNavItem.PostDetail.screenRoute}/${posts[index].shareID}/post"
+                                "${BottomNavItem.PostDetail.screenRoute}/${state.postList[index].shareID}/post"
                             ) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true
@@ -99,13 +97,13 @@ fun PostScreen(
                                 launchSingleTop = true
                             }
                         },
-                        item = posts[index]
+                        item = state.postList[index]
                     )
                     Divider()
                 }
             }
 
-            if(posts.isEmpty()) {
+            if(state.postList.isEmpty()) {
                 Image(
                     modifier = Modifier.fillMaxSize(),
                     painter = painterResource(id = R.drawable.img_no_post),

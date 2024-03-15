@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
@@ -61,7 +62,7 @@ fun SearchScreen(
     tradeViewModel: TradeViewModel = hiltViewModel()
 ) {
     var searchText by remember { mutableStateOf("") }
-    val postLists by tradeViewModel.postLists.collectAsState(initial = null)
+    val state by tradeViewModel.uiState.collectAsStateWithLifecycle()
     val searchList by tradeViewModel.searchQueryList.collectAsState(initial = null)
     val popularSearchList by tradeViewModel.popularSearchList.collectAsState(initial = null)
 
@@ -74,11 +75,11 @@ fun SearchScreen(
         navController = navController,
         searchText = searchText,
         searchEvent = {
-            tradeViewModel.searchPost(searchText.trim())
+            tradeViewModel.searchTrade(searchText.trim())
             tradeViewModel.insertSearchQuery(searchText.trim())
         },
         onSearchTextChange = { searchText = it },
-        postLists ?: listOf(),
+        state.tradeList,
         searchList ?: listOf(),
         onSearchDelete = { query ->
             tradeViewModel.deleteSearchQuery(query)
@@ -87,7 +88,7 @@ fun SearchScreen(
         onSearchDeleteAll = { tradeViewModel.deleteAllSearchQuery() },
         onTagSelected = {
             searchText = it
-            tradeViewModel.searchPost(searchText.trim())
+            tradeViewModel.searchTrade(searchText.trim())
         }
     )
 }
