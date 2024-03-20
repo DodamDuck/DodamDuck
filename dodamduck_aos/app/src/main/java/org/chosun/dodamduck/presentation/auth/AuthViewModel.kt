@@ -53,7 +53,7 @@ class AuthViewModel @Inject constructor(
     ) {
         sendEvent(AuthEvent.onRequestRegister(userID, userPassword))
         viewModelScope.launch {
-            requestRegister(userID, userPassword).collectLatest { apiResult ->
+            requestRegister(AuthDto(userID, userPassword)).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
                         if (apiResult.value.error == "false") sendEvent(AuthEvent.onSuccessRegister)

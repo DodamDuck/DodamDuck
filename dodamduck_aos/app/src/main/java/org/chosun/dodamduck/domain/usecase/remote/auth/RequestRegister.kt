@@ -17,16 +17,4 @@ class RequestRegister @Inject constructor(
     override suspend fun execute(authDto: AuthDto): Flow<ApiResult<DodamDuckResponse>> {
         return authRepo.requestRegister(authDto.userID, authDto.password)
     }
-
-    operator fun invoke(id: String, pass: String): Flow<ApiResult<DodamDuckResponse>> = channelFlow {
-        authRepo.requestRegister(id, pass).collectLatest { apiResult ->
-            when (apiResult) {
-                is ApiResult.Success -> send(ApiResult.Success(apiResult.value))
-
-                is ApiResult.Error -> send(apiResult)
-
-                is ApiResult.Exception -> send(apiResult)
-            }
-        }
-    }
 }
