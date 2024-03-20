@@ -39,15 +39,20 @@ fun LoginScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = effect) {
-        when(effect) {
+        when (effect) {
             is AuthSideEffect.NavigateToHomeScreen
-                 -> navController.navigate(BottomNavItem.Home.screenRoute)
+            -> navController.navigate(BottomNavItem.Home.screenRoute) {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
 
             is AuthSideEffect.NavigateToRegisterScreen
-                 -> navController.navigate(BottomNavItem.Register.screenRoute)
+            -> navController.navigate(BottomNavItem.Register.screenRoute) {
+                popUpTo(navController.graph.startDestinationId)
+            }
 
             is AuthSideEffect.Toast
-                 -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG).show()
+            -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG)
+                .show()
 
             else -> {}
         }
