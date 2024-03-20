@@ -27,7 +27,7 @@ interface PostApiService {
     @GET("ContentShare_Detail.php")
     suspend fun getPostDetail(
         @Query("share_id") shareID: String
-    ): PostDetailResponse?
+    ): PostDetailResponse
 
     @Multipart
     @POST("upload_content_share.php")
@@ -62,7 +62,7 @@ interface PostApiService {
     suspend fun deletePost(
         @Field("share_id") shareId: String,
         @Field("user_id") userId: String
-    ): DodamDuckResponse?
+    ): DodamDuckResponse
 
     @POST("create_chat_room.php")
     @FormUrlEncoded

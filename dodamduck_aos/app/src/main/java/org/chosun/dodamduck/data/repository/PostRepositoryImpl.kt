@@ -52,7 +52,7 @@ class PostRepositoryImpl<T> @Inject constructor(
 
     override suspend fun fetchDetail(
         id: String
-    ): Flow<ApiResult<PostDetailResponse?>> = safeFlow {
+    ): Flow<ApiResult<PostDetailResponse>> = safeFlow {
         postRemoteSource.fetchDetail(id)
     }
 
@@ -60,7 +60,7 @@ class PostRepositoryImpl<T> @Inject constructor(
         postID: String,
         userID: String,
         comment: String
-    ): Flow<ApiResult<DodamDuckResponse?>> = safeFlow {
+    ): Flow<ApiResult<DodamDuckResponse>> = safeFlow {
         postRemoteSource.uploadComment(postID, userID, comment)
     }
 
@@ -73,7 +73,7 @@ class PostRepositoryImpl<T> @Inject constructor(
     override suspend fun deletePost(
         postID: String,
         userID: String
-    ): Flow<ApiResult<DodamDuckResponse?>> = safeFlow {
+    ): Flow<ApiResult<DodamDuckResponse>> = safeFlow {
         postRemoteSource.deletePost(postID, userID)
     }
 

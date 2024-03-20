@@ -50,7 +50,7 @@ class TradeRepositoryImpl<T> @Inject constructor(
 
     override suspend fun fetchDetail(
         id: String
-    ): Flow<ApiResult<PostDetailResponse?>> = safeFlow {
+    ): Flow<ApiResult<PostDetailResponse>> = safeFlow {
         tradeRemoteSource.fetchDetail(id)
     }
 
@@ -58,7 +58,7 @@ class TradeRepositoryImpl<T> @Inject constructor(
         postID: String,
         userID: String,
         comment: String
-    ): Flow<ApiResult<DodamDuckResponse?>> = safeFlow {
+    ): Flow<ApiResult<DodamDuckResponse>> = safeFlow {
         tradeRemoteSource.uploadComment(postID, userID, comment)
     }
 
@@ -70,7 +70,7 @@ class TradeRepositoryImpl<T> @Inject constructor(
 
     override suspend fun deletePost(
         postID: String, userID: String
-    ): Flow<ApiResult<DodamDuckResponse?>> = safeFlow {
+    ): Flow<ApiResult<DodamDuckResponse>> = safeFlow {
         tradeRemoteSource.deleteTrade(postID, userID)
     }
 

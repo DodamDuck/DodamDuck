@@ -11,7 +11,7 @@ import org.chosun.dodamduck.network.DodamDuckResponse
 interface BasePostRepository<ALL> {
     suspend fun fetchList(): Flow<ApiResult<List<ALL>>>
 
-    suspend fun fetchDetail(id: String): Flow<ApiResult<PostDetailResponse?>>
+    suspend fun fetchDetail(id: String): Flow<ApiResult<PostDetailResponse>>
 
     suspend fun uploadPost(
         userId: String,
@@ -26,7 +26,7 @@ interface BasePostRepository<ALL> {
         postID: String,
         userID: String,
         comment: String
-    ): Flow<ApiResult<DodamDuckResponse?>>
+    ): Flow<ApiResult<DodamDuckResponse>>
 
     suspend fun uploadViewCount(
         postID: String
@@ -35,7 +35,7 @@ interface BasePostRepository<ALL> {
     suspend fun deletePost(
         postID: String,
         userID: String
-    ): Flow<ApiResult<DodamDuckResponse?>>
+    ): Flow<ApiResult<DodamDuckResponse>>
 
     suspend fun createChat(
         postID: String,

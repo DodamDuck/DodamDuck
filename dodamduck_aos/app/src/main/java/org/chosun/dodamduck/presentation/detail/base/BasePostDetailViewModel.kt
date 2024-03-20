@@ -25,7 +25,7 @@ abstract class BasePostDetailViewModel<T>(
             getPostDetailUseCase(contentId).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
-                        sendEvent(PostDetailEvent.OnSuccessPostDetail(apiResult.value!!))
+                        sendEvent(PostDetailEvent.OnSuccessPostDetail(apiResult.value))
                     }
 
                     is ApiResult.Error -> sendEvent(PostDetailEvent.OnError)
@@ -64,10 +64,10 @@ abstract class BasePostDetailViewModel<T>(
     fun deletePost(postID: String, userID: String) {
         viewModelScope.launch {
             sendEvent(PostDetailEvent.OnLoading)
-            deletePostUseCase(postID, userID).collectLatest { apiResult ->
+            deletePostUseCase(Pair(postID, userID)).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
-                        if (apiResult.value?.error == "false") {
+                        if (apiResult.value.error == "false") {
                             sendEvent(PostDetailEvent.OnSuccess)
                             setEffect(PostDetailSideEffect.Toast("게시글이 삭제 되었습니다."))
                             setEffect(PostDetailSideEffect.NavigatePopBackStack)
@@ -89,10 +89,10 @@ abstract class BasePostDetailViewModel<T>(
     fun uploadComment(postID: String, userID: String, comment: String) {
         viewModelScope.launch {
             sendEvent(PostDetailEvent.OnLoading)
-            uploadCommentUseCase(postID, userID, comment).collectLatest { apiResult ->
+            uploadCommentUseCase(Triple(postID, userID, comment)).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
-                        if (apiResult.value?.error == "false") sendEvent(PostDetailEvent.OnSuccess)
+                        if (apiResult.value.error == "false") sendEvent(PostDetailEvent.OnSuccess)
                         else sendEvent(PostDetailEvent.OnError)
                     }
 

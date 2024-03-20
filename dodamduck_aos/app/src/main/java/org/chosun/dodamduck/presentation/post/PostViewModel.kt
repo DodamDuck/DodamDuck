@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import org.chosun.dodamduck.data.dto.PostDTO
+import org.chosun.dodamduck.data.dto.post.PostDto
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostCategories
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostList
@@ -44,7 +45,7 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch {
             viewModelScope.launch {
                 sendEvent(PostEvent.OnLoading)
-                getPostCategories().collectLatest { apiResult ->
+                getPostCategories(null).collectLatest { apiResult ->
                     when (apiResult) {
                         is ApiResult.Success -> {
                             sendEvent(PostEvent.OnSuccessPostCategories(apiResult.value))
@@ -69,19 +70,27 @@ class PostViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             sendEvent(PostEvent.OnLoading)
-            uploadPostUseCase(userId, categoryId, title, content, location, image)
-                .collectLatest { apiResult ->
-                    when (apiResult) {
-                        is ApiResult.Success -> {
-                            sendEvent(PostEvent.OnSuccess)
-                            setEffect(PostSideEffect.NavigatePopBackStack)
-                        }
-
-                        is ApiResult.Error -> sendEvent(PostEvent.OnError)
-
-                        is ApiResult.Exception -> {}
+            uploadPostUseCase(
+                PostDto(
+                    userId = userId,
+                    categoryId = categoryId,
+                    title = title,
+                    content = content,
+                    location = location,
+                    image = image
+                )
+            ).collectLatest { apiResult ->
+                when (apiResult) {
+                    is ApiResult.Success -> {
+                        sendEvent(PostEvent.OnSuccess)
+                        setEffect(PostSideEffect.NavigatePopBackStack)
                     }
+
+                    is ApiResult.Error -> sendEvent(PostEvent.OnError)
+
+                    is ApiResult.Exception -> {}
                 }
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import okhttp3.MultipartBody
 import org.chosun.dodamduck.data.database.SearchHistory
 import org.chosun.dodamduck.data.dto.SearchDTO
 import org.chosun.dodamduck.data.dto.Trade
+import org.chosun.dodamduck.data.dto.post.PostDto
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostList
 import org.chosun.dodamduck.domain.usecase.remote.post.SearchPost
@@ -68,7 +69,16 @@ class TradeViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             sendEvent(TradeEvent.OnLoading)
-            uploadTradeUseCase(userId, categoryId, title, content, location, image)
+            uploadTradeUseCase(
+                PostDto(
+                    userId = userId,
+                    categoryId = categoryId,
+                    title = title,
+                    content = content,
+                    location = location,
+                    image = image
+                )
+            )
                 .collectLatest { apiResult ->
                     when (apiResult) {
                         is ApiResult.Success -> {
