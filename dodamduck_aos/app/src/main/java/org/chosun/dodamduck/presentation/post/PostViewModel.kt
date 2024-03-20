@@ -5,7 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.chosun.dodamduck.data.dto.PostDTO
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostCategories
@@ -61,11 +60,11 @@ class PostViewModel @Inject constructor(
     }
 
     fun uploadPost(
-        userId: RequestBody,
-        categoryId: RequestBody,
-        title: RequestBody,
-        content: RequestBody,
-        location: RequestBody,
+        userId: String,
+        categoryId: String,
+        title: String,
+        content: String,
+        location: String,
         image: MultipartBody.Part
     ) {
         viewModelScope.launch {

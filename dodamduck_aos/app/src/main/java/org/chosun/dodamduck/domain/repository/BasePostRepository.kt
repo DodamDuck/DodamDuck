@@ -1,5 +1,6 @@
 package org.chosun.dodamduck.domain.repository
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -13,11 +14,11 @@ interface BasePostRepository<ALL> {
     suspend fun fetchDetail(id: String): Flow<ApiResult<PostDetailResponse?>>
 
     suspend fun uploadPost(
-        userId: RequestBody,
-        categoryId: RequestBody,
-        title: RequestBody,
-        content: RequestBody,
-        location: RequestBody,
+        userId: String,
+        categoryId: String,
+        title: String,
+        content: String,
+        location: String,
         image: MultipartBody.Part
     ):  Flow<ApiResult<Boolean>>
 

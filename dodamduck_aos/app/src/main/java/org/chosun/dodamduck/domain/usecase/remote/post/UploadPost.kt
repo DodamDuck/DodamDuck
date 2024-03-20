@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.repository.BasePostRepository
 import javax.inject.Inject
@@ -13,11 +12,11 @@ class UploadPost<T> @Inject constructor(
     private val postRepo: BasePostRepository<T>
 ) {
     operator fun invoke(
-        userId: RequestBody,
-        categoryId: RequestBody,
-        title: RequestBody,
-        content: RequestBody,
-        location: RequestBody,
+        userId: String,
+        categoryId: String,
+        title: String,
+        content: String,
+        location: String,
         image: MultipartBody.Part
     ): Flow<ApiResult<Boolean>> = channelFlow {
         postRepo.uploadPost(userId, categoryId, title, content, location, image)

@@ -1,11 +1,13 @@
 package org.chosun.dodamduck.data.repository
 
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.data.dto.CategoryDTO
 import org.chosun.dodamduck.data.dto.PostDTO
 import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.safeFlow
 import org.chosun.dodamduck.data.source.local.PostLocalSource
 import org.chosun.dodamduck.data.source.remote.PostRemoteSource
@@ -24,14 +26,20 @@ class PostRepositoryImpl<T> @Inject constructor(
 ) : PostRepository<PostDTO> {
 
     override suspend fun uploadPost(
-        userId: RequestBody,
-        categoryId: RequestBody,
-        title: RequestBody,
-        content: RequestBody,
-        location: RequestBody,
+        userId: String,
+        categoryId: String,
+        title: String,
+        content: String,
+        location: String,
         image: MultipartBody.Part
     ): Flow<ApiResult<Boolean>> = safeFlow {
-        postRemoteSource.uploadPost(userId, categoryId, title, content, location, image)
+        val userIdBody = DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
+        val categoryIdBody = categoryId.toRequestBody("text/plain".toMediaTypeOrNull())
+        val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
+        val contentBody = content.toRequestBody("text/plain".toMediaTypeOrNull())
+        val locationBody = location.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        postRemoteSource.uploadPost(userIdBody, categoryIdBody, titleBody, contentBody, locationBody, image)
     }
 
     override suspend fun fetchList(): Flow<ApiResult<List<PostDTO>>> = safeFlow {
