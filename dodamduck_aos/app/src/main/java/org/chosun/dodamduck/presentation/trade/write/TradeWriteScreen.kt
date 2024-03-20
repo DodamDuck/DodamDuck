@@ -40,8 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.presentation.trade.TradeViewModel
@@ -55,6 +53,7 @@ import org.chosun.dodamduck.ui.component.PrimaryButton
 import org.chosun.dodamduck.ui.component.lazy_components.PhotoCountBox
 import org.chosun.dodamduck.ui.component.lazy_components.PhotoSelectionList
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
+import org.chosun.dodamduck.ui.util.getDrawableUri
 import org.chosun.dodamduck.utils.Utils.uriToMultipartBody
 
 @Composable
@@ -77,36 +76,26 @@ fun TradeWriteScreen(
     var transactionType by remember { mutableIntStateOf(1) }
     val uploadSuccess by tradeViewModel.uploadSuccess.collectAsState(initial = false)
 
-    val handleTradeUpload = {
-        val userIdBody = DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
-        val categoryIdBody = transactionType.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
-        val contentBody = detailDescription.toRequestBody("text/plain".toMediaTypeOrNull())
-        val locationBody = tradeLocation.toRequestBody("text/plain".toMediaTypeOrNull())
-        val filePart = imageList[0].uriToMultipartBody(context)
-
-        tradeViewModel.uploadTrade(
-            userIdBody,
-            categoryIdBody,
-            titleBody,
-            contentBody,
-            locationBody,
-            filePart
-        )
-    }
-
-    val onImageClick = { galleryLauncher.launch("image/*") }
-
     LaunchedEffect(key1 = uploadSuccess) {
-        if(uploadSuccess)
+        if (uploadSuccess)
             navController.popBackStack()
     }
 
     TradeWriteContent(
         navController = navController,
         imageList = imageList,
-        onImageClick = onImageClick,
-        handleTradeUpload =  handleTradeUpload,
+        onImageClick = { galleryLauncher.launch("image/*") },
+        handleTradeUpload = {
+            tradeViewModel.uploadTrade(
+                DodamDuckData.userInfo.userID,
+                transactionType.toString(),
+                title,
+                detailDescription,
+                tradeLocation,
+                if (imageList.isEmpty()) context.getDrawableUri(R.drawable.img_no)
+                    .uriToMultipartBody(context) else imageList[0].uriToMultipartBody(context)
+            )
+        },
         onTitleTextChange = { title = it },
         onTransactionChange = { transactionType = it + 1 },
         onDescriptionChange = { detailDescription = it },
