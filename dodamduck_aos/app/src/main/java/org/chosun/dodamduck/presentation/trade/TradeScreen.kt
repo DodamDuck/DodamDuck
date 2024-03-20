@@ -71,8 +71,8 @@ fun TradeScreen(
     LaunchedEffect(Unit) {
         tradeViewModel.getTradeLists()
 
-        tradeViewModel.effect.collectLatest {  effect ->
-            when(effect) {
+        tradeViewModel.effect.collectLatest { effect ->
+            when (effect) {
                 is TradeSideEffect.Toast
                 -> Toast.makeText(context, effect.text, Toast.LENGTH_SHORT).show()
 
@@ -84,6 +84,14 @@ fun TradeScreen(
 
                 is TradeSideEffect.NavigateToSearch
                 -> navController.navigate(BottomNavItem.Search.screenRoute)
+
+                is TradeSideEffect.NavigateToDetail
+                -> navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${effect.postId}/trade") {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                }
             }
         }
     }
@@ -100,7 +108,10 @@ fun TradeScreen(
             ExchangeItemList(
                 modifier = Modifier.padding(top = 24.dp),
                 items = state.tradeList,
-                navController = navController
+                onItemClick = { id ->
+                    tradeViewModel.uploadViewCount(id)
+                    tradeViewModel.sendSideEffect(TradeSideEffect.NavigateToDetail(id))
+                }
             )
         }
 

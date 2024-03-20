@@ -24,54 +24,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import org.chosun.dodamduck.data.dto.Trade
-import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewExchangeItemList() {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        ExchangeItemList(navController = rememberNavController())
-    }
-}
 
 @Composable
 fun ExchangeItemList(
     modifier: Modifier = Modifier,
     items: List<Trade> = listOf(),
-    navController: NavController,
-    tradeViewModel: TradeViewModel = hiltViewModel()
+    onItemClick: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.padding(horizontal = 10.dp)
     ) {
         items(items.size) {
-            ExchangeItem(items[it], navController, tradeViewModel)
+            ExchangeItem(items[it]) { id -> onItemClick(id) }
             Divider(modifier = Modifier.padding(top = 6.dp, bottom = 16.dp))
         }
     }
 }
 
 @Composable
-fun ExchangeItem(item: Trade, navController: NavController, tradeViewModel: TradeViewModel) {
+fun ExchangeItem(
+    item: Trade,
+    onItemClick: (String) -> Unit
+) {
     Row(
-        modifier = Modifier.clickable {
-            tradeViewModel.uploadViewCount(item.post_id)
-            navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${item.post_id}/trade") {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-            }
-        }
+        modifier = Modifier.clickable { onItemClick(item.post_id) }
     ) {
         AsyncImage(
             modifier = Modifier
@@ -108,3 +89,14 @@ fun ExchangeItem(item: Trade, navController: NavController, tradeViewModel: Trad
         )
     }
 }
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewExchangeItemList() {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        ExchangeItemList(
+            onItemClick = { _ -> }
+        )
+    }
+}
+

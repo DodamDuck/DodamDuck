@@ -53,6 +53,7 @@ import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
 import org.chosun.dodamduck.ui.modifier.addFocusCleaner
+import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Gray5
 
@@ -89,6 +90,14 @@ fun SearchScreen(
         onTagSelected = {
             searchText = it
             tradeViewModel.searchTrade(searchText.trim())
+        },
+        onItemClick = { id ->
+            navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${id}/trade") {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+            }
         }
     )
 }
@@ -104,7 +113,8 @@ fun SearchContent(
     onSearchDelete: (String) -> Unit,
     popularSearchList: List<SearchDTO>,
     onSearchDeleteAll: () -> Unit,
-    onTagSelected: (String) -> Unit
+    onTagSelected: (String) -> Unit,
+    onItemClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -134,7 +144,7 @@ fun SearchContent(
             ExchangeItemList(
                 modifier = Modifier.padding(top = 24.dp),
                 items = tradeList,
-                navController = navController
+                onItemClick = { id -> onItemClick(id) }
             )
         }
     }
@@ -286,7 +296,8 @@ fun SearchScreenPreview() {
                 SearchDTO("2", "블록놀이", "", "")
             ),
             onSearchDeleteAll = {},
-            onTagSelected = {}
+            onTagSelected = {},
+            onItemClick = {}
         )
     }
 }

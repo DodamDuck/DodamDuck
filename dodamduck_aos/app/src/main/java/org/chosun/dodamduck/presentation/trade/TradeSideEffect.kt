@@ -11,4 +11,6 @@ sealed class TradeSideEffect: SideEffect {
     object NavigateToSearch: TradeSideEffect()
 
     object NavigateToTradeWrite: TradeSideEffect()
+
+    data class NavigateToDetail(val postId: String): TradeSideEffect()
 }
