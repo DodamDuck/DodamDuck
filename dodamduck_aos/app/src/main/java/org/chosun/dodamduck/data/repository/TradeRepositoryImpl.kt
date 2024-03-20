@@ -1,13 +1,16 @@
 package org.chosun.dodamduck.data.repository
 
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.data.database.SearchHistory
 import org.chosun.dodamduck.data.database.SearchHistoryDao
 import org.chosun.dodamduck.data.dto.PostDetailResponse
 import org.chosun.dodamduck.data.dto.SearchDTO
 import org.chosun.dodamduck.data.dto.Trade
+import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.safeFlow
 import org.chosun.dodamduck.data.source.remote.TradeRemoteSource
 import org.chosun.dodamduck.domain.model.ApiResult
@@ -29,14 +32,20 @@ class TradeRepositoryImpl<T> @Inject constructor(
     }
 
     override suspend fun uploadPost(
-        userId: RequestBody,
-        categoryId: RequestBody,
-        title: RequestBody,
-        content: RequestBody,
-        location: RequestBody,
+        userId: String,
+        categoryId: String,
+        title: String,
+        content: String,
+        location: String,
         image: MultipartBody.Part
     ):  Flow<ApiResult<Boolean>> = safeFlow {
-        tradeRemoteSource.uploadTrade(userId, categoryId, title, content, location, image)
+        val userIdBody = DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
+        val categoryIdBody = categoryId.toRequestBody("text/plain".toMediaTypeOrNull())
+        val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
+        val contentBody = content.toRequestBody("text/plain".toMediaTypeOrNull())
+        val locationBody = location.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        tradeRemoteSource.uploadTrade(userIdBody, categoryIdBody, titleBody, contentBody, locationBody, image)
     }
 
     override suspend fun fetchDetail(

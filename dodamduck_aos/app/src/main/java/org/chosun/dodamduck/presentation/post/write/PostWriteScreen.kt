@@ -56,8 +56,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.dto.CategoryDTO
@@ -71,6 +69,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.LightBrown80
+import org.chosun.dodamduck.ui.util.getDrawableUri
 import org.chosun.dodamduck.utils.Utils.uriToBitmap
 import org.chosun.dodamduck.utils.Utils.uriToMultipartBody
 
@@ -108,7 +107,7 @@ fun PostWriteScreen(
     }
 
     var categoryType by remember { mutableStateOf(CategoryDTO("", "게시글의 주제 선택해주세요.")) }
-    var selectedCategoryType by remember { mutableStateOf("") }
+    var selectedCategoryType by remember { mutableStateOf("게시글의 주제 선택해주세요.") }
 
     LaunchedEffect(key1 = categoryType) {
         selectedCategoryType = categoryType.name
@@ -121,26 +120,25 @@ fun PostWriteScreen(
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
-    val onImageClick = { galleryLauncher.launch("image/*") }
-
     PostWriteContent(
         navController = navController,
         context = context,
         onSubmit = {
-            handlePostUpload(
-                context,
-                postViewModel,
+            postViewModel.uploadPost(
+                DodamDuckData.userInfo.userID,
                 categoryType.id,
                 title,
                 detailDescription,
-                imageList[0]
+                DodamDuckData.userInfo.location,
+                if (imageList.isEmpty()) context.getDrawableUri(R.drawable.img_no)
+                    .uriToMultipartBody(context) else imageList[0].uriToMultipartBody(context)
             )
         },
         onTitleTextChange = { title = it },
         onDescriptionChange = { detailDescription = it },
         title = title,
         detailDescription = detailDescription,
-        onImageClick = onImageClick,
+        onImageClick = { galleryLauncher.launch("image/*") },
         onCategoryListClick = { showBottomSheet = true },
         selectedCategory = selectedCategoryType,
         imageList = imageList
@@ -378,34 +376,6 @@ fun PostWriteBottomSheetContent(
             }
         }
     }
-}
-
-fun handlePostUpload(
-    context: Context,
-    postViewModel: PostViewModel,
-    categoryId: String,
-    title: String,
-    detailDescription: String,
-    image: Uri
-) {
-    val userIdBody =
-        DodamDuckData.userInfo.userID.toRequestBody("text/plain".toMediaTypeOrNull())
-    val categoryIdBody =
-        categoryId.toRequestBody("text/plain".toMediaTypeOrNull())
-    val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
-    val contentBody = detailDescription.toRequestBody("text/plain".toMediaTypeOrNull())
-    val locationBody =
-        DodamDuckData.userInfo.location.toRequestBody("text/plain".toMediaTypeOrNull())
-    val filePart = image.uriToMultipartBody(context)
-
-    postViewModel.uploadPost(
-        userIdBody,
-        categoryIdBody,
-        titleBody,
-        contentBody,
-        locationBody,
-        filePart
-    )
 }
 
 @Preview

@@ -40,12 +40,15 @@ fun RegisterScreen(
     val checkPasswordMessage = stringResource(R.string.passwords_do_not_match_each_other)
 
     LaunchedEffect(key1 = effect) {
-        when(effect) {
+        when (effect) {
             is AuthSideEffect.NavigateToLoginScreen
-                -> navController.navigate(BottomNavItem.Login.screenRoute)
+            -> navController.navigate(BottomNavItem.Login.screenRoute) {
+                popUpTo(navController.graph.startDestinationId)
+            }
 
             is AuthSideEffect.Toast
-                -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG).show()
+            -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG)
+                .show()
 
             else -> {}
         }
@@ -66,7 +69,7 @@ fun RegisterScreen(
     }
 
     RegisterContent(
-        onBottomTextAction = { navController.navigate(BottomNavItem.Login.screenRoute) },
+        onBottomTextAction = { authViewModel.sendSideEffect(AuthSideEffect.NavigateToLoginScreen) },
         onButtonAction = { check, userID, password ->
             if (check)
                 authViewModel.sendSideEffect(AuthSideEffect.Toast(checkPasswordMessage))
