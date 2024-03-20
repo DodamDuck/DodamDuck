@@ -2,9 +2,7 @@ package org.chosun.dodamduck.data.source.remote
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.chosun.dodamduck.data.database.SearchHistory
-import org.chosun.dodamduck.data.dto.SearchDTO
-import org.chosun.dodamduck.network.TradeApiService
+import org.chosun.dodamduck.network.service.TradeApiService
 import javax.inject.Inject
 
 class TradeRemoteSource @Inject constructor(

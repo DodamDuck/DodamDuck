@@ -24,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
-import org.chosun.dodamduck.data.dto.ChatInfo
+import org.chosun.dodamduck.data.dto.chat.ChatDto
 import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.LikeButton
@@ -106,7 +105,7 @@ fun ChatContent(
     postTitle: String,
     postImageUrl: String,
     category: String,
-    chats: List<ChatInfo>?,
+    chats: List<ChatDto>?,
     currentUserID: String,
     otherUserID: String,
     otherUserName: String,
@@ -241,7 +240,7 @@ fun ChatScreenPreview() {
             postImageUrl = "",
             category = "1",
             chats = listOf(
-                ChatInfo(
+                ChatDto(
                     "1",
                     "user1",
                     "user2",

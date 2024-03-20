@@ -3,8 +3,8 @@ package org.chosun.dodamduck.data.repository
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.data.dto.PostCommentDTO
-import org.chosun.dodamduck.data.dto.PostDetailDTO
+import org.chosun.dodamduck.data.dto.post.PostCommentDto
+import org.chosun.dodamduck.data.dto.post.PostDetailDto
 import org.chosun.dodamduck.data.state.PostDetailUserInfoState
 
 object DummyItemFactory {
@@ -28,7 +28,7 @@ object DummyItemFactory {
         )
     }
 
-    fun createPostDetailDto() = PostDetailDTO(
+    fun createPostDetailDto() = PostDetailDto(
         "다양한 보드게임 원합니다.",
         "가족과 함께 즐길 수 있는 다양한 보드게임, 교환 원합니다.",
         "http://sy2978.dothome.co.kr/uploads/post_id18.jpg",
@@ -42,7 +42,7 @@ object DummyItemFactory {
         "http://sy2978.dothome.co.kr/uploads/post_id18.jpg"
     )
 
-    fun createPostComment() = PostCommentDTO(
+    fun createPostComment() = PostCommentDto(
         "1",
         "1",
         "user1",

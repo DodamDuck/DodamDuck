@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.chosun.dodamduck.data.dto.CategoryDTO
+import org.chosun.dodamduck.data.dto.post.CategoryDto
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.LightBrown
@@ -27,9 +27,9 @@ import org.chosun.dodamduck.ui.theme.LightBrown
 @Composable
 fun TagLazyRow(
     modifier: Modifier = Modifier,
-    categories: List<CategoryDTO>,
-    selectedTag: CategoryDTO,
-    onTagSelected: (CategoryDTO) -> Unit
+    categories: List<CategoryDto>,
+    selectedTag: CategoryDto,
+    onTagSelected: (CategoryDto) -> Unit
 ) {
     LazyRow(
         modifier = modifier
@@ -47,7 +47,7 @@ fun TagLazyRow(
 }
 
 @Composable
-fun TagLazyItem(tag: CategoryDTO, isSelected: Boolean, onTagSelected: (CategoryDTO) -> Unit) {
+fun TagLazyItem(tag: CategoryDto, isSelected: Boolean, onTagSelected: (CategoryDto) -> Unit) {
     val backgroundColor = if (isSelected) Brown else LightBrown
     val textColor = if (isSelected) Color.White else Brown
     val borderColor = if (isSelected) Brown else Color.LightGray
@@ -73,7 +73,7 @@ fun TagLazyItem(tag: CategoryDTO, isSelected: Boolean, onTagSelected: (CategoryD
 @Preview(showBackground = true)
 @Composable
 fun TagLazyItemPreview() {
-    val categories = listOf(CategoryDTO("12", "주제"), CategoryDTO("13", "인기글"), CategoryDTO("14","지식공유"))
+    val categories = listOf(CategoryDto("12", "주제"), CategoryDto("13", "인기글"), CategoryDto("14","지식공유"))
     var selectedTag by remember { mutableStateOf(categories.first()) }
 
     TagLazyRow(

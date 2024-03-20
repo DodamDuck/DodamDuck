@@ -1,6 +1,6 @@
 package org.chosun.dodamduck.data.source.remote
 
-import org.chosun.dodamduck.network.ChatApiService
+import org.chosun.dodamduck.network.service.ChatApiService
 import javax.inject.Inject
 
 class ChatRemoteSource @Inject constructor(

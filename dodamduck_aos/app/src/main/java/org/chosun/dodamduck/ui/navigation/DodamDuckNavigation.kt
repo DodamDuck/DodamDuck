@@ -34,7 +34,7 @@ import org.chosun.dodamduck.presentation.post.write.PostWriteScreen
 import org.chosun.dodamduck.presentation.auth.RegisterScreen
 import org.chosun.dodamduck.presentation.search.SearchScreen
 import org.chosun.dodamduck.presentation.trade.write.TradeWriteScreen
-import org.chosun.dodamduck.ui.UserScreen
+import org.chosun.dodamduck.presentation.user.UserScreen
 import org.chosun.dodamduck.ui.theme.Brown
 
 sealed class BottomNavItem(

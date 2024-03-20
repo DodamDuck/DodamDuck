@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import org.chosun.dodamduck.data.dto.Trade
+import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
@@ -52,7 +52,7 @@ fun ExchangeItem(
     onItemClick: (String) -> Unit
 ) {
     Row(
-        modifier = Modifier.clickable { onItemClick(item.post_id) }
+        modifier = Modifier.clickable { onItemClick(item.postId) }
     ) {
         AsyncImage(
             modifier = Modifier
@@ -60,7 +60,7 @@ fun ExchangeItem(
                 .size(80.dp)
                 .clip(RoundedCornerShape(10.dp)),
             contentScale = ContentScale.Crop,
-            model = item.image_url,
+            model = item.imageUrl,
             contentDescription = "Image"
         )
 
@@ -70,12 +70,12 @@ fun ExchangeItem(
         ) {
             DodamDuckTextH3(text = item.title)
             Text(
-                text = item.location + " \u00B7 " + item.created_at.formatDateDiff() + " \u00B7 조회 " + item.views,
+                text = item.location + " \u00B7 " + item.createdAt.formatDateDiff() + " \u00B7 조회 " + item.views,
                 fontSize = 12.sp,
                 color = Color.Gray
             )
             DodamDuckTextH3(
-                text = item.category_name,
+                text = item.categoryName,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -84,7 +84,7 @@ fun ExchangeItem(
         CommentIcon(
             modifier = Modifier
                 .align(alignment = Alignment.Bottom),
-            text = item.comment_count,
+            text = item.commentCount,
             size = 34.dp
         )
     }

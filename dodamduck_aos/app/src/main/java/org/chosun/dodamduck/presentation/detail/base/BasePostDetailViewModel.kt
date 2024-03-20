@@ -3,7 +3,7 @@ package org.chosun.dodamduck.presentation.detail.base
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.chosun.dodamduck.data.dto.post.PostDto
+import org.chosun.dodamduck.data.dto.post.PostUseCaseDto
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.post.CreateChat
 import org.chosun.dodamduck.domain.usecase.remote.post.DeletePost
@@ -39,7 +39,7 @@ abstract class BasePostDetailViewModel<T>(
     fun createChat(postId: String, userId: String) {
         viewModelScope.launch {
             sendEvent(PostDetailEvent.OnLoading)
-            createChatUseCase(PostDto(postId, userId)).collectLatest { apiResult ->
+            createChatUseCase(PostUseCaseDto(postId, userId)).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
                         if (apiResult.value.error == "false") {

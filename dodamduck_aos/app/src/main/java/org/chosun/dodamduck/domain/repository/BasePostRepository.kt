@@ -1,12 +1,10 @@
 package org.chosun.dodamduck.domain.repository
 
-import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.network.response.PostDetailResponse
 import org.chosun.dodamduck.domain.model.ApiResult
-import org.chosun.dodamduck.network.DodamDuckResponse
+import org.chosun.dodamduck.network.response.DodamDuckResponse
 
 interface BasePostRepository<ALL> {
     suspend fun fetchList(): Flow<ApiResult<List<ALL>>>

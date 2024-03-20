@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.data.dto
+package org.chosun.dodamduck.network.response
 
 data class ChatListDTO(
     val chat_id: String,

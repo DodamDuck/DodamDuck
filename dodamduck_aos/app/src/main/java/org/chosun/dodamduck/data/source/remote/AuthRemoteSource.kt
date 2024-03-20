@@ -1,6 +1,6 @@
 package org.chosun.dodamduck.data.source.remote
 
-import org.chosun.dodamduck.network.AuthApiService
+import org.chosun.dodamduck.network.service.AuthApiService
 import javax.inject.Inject
 
 class AuthRemoteSource @Inject constructor(

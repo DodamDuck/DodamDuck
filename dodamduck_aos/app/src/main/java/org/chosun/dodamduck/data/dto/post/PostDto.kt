@@ -1,13 +1,15 @@
 package org.chosun.dodamduck.data.dto.post
 
-import okhttp3.MultipartBody
+import com.google.gson.annotations.SerializedName
 
 data class PostDto(
-    val postId: String? = null,
-    val userId: String,
-    val categoryId: String? = null,
-    val title: String? = null,
-    val content: String? = null,
-    val location: String? = null,
-    val image: MultipartBody.Part? = null
+    @SerializedName("Title") val title: String,
+    @SerializedName("Content") val content: String,
+    @SerializedName("ImageURL") val imageUrl: String,
+    @SerializedName("CreatedAt") val createdAt: String,
+    @SerializedName("Location") val location: String,
+    @SerializedName("Views") val views: String,
+    @SerializedName("CommentCount") val commentCount: String,
+    @SerializedName("CategoryName") val categoryName: String,
+    @SerializedName("ShareID") val shareID: String
 )

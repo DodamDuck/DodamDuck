@@ -1,6 +1,6 @@
-package org.chosun.dodamduck.data.dto
+package org.chosun.dodamduck.data.dto.chat
 
-data class ChatInfo(
+data class ChatDto(
     val id: String,
     val senderID: String,
     val receiverID: String,

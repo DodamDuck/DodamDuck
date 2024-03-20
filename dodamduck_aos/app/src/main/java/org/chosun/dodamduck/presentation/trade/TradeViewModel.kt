@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import org.chosun.dodamduck.data.database.SearchHistory
-import org.chosun.dodamduck.data.dto.SearchDTO
-import org.chosun.dodamduck.data.dto.Trade
-import org.chosun.dodamduck.data.dto.post.PostDto
+import org.chosun.dodamduck.database.SearchHistory
+import org.chosun.dodamduck.data.dto.search.SearchDTO
+import org.chosun.dodamduck.data.dto.trade.Trade
+import org.chosun.dodamduck.data.dto.post.PostUseCaseDto
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostList
 import org.chosun.dodamduck.domain.usecase.remote.post.SearchPost
@@ -70,7 +70,7 @@ class TradeViewModel @Inject constructor(
         viewModelScope.launch {
             sendEvent(TradeEvent.OnLoading)
             uploadTradeUseCase(
-                PostDto(
+                PostUseCaseDto(
                     userId = userId,
                     categoryId = categoryId,
                     title = title,

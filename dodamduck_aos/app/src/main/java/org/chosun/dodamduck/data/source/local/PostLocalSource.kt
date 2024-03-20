@@ -1,7 +1,7 @@
 package org.chosun.dodamduck.data.source.local
 
-import org.chosun.dodamduck.data.database.SearchHistory
-import org.chosun.dodamduck.data.database.SearchHistoryDao
+import org.chosun.dodamduck.database.SearchHistory
+import org.chosun.dodamduck.database.SearchHistoryDao
 import javax.inject.Inject
 
 class PostLocalSource @Inject constructor(

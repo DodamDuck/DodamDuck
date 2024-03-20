@@ -1,10 +1,11 @@
-package org.chosun.dodamduck.network
+package org.chosun.dodamduck.network.service
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.chosun.dodamduck.data.dto.CategoryDTO
-import org.chosun.dodamduck.data.dto.PostDTO
-import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.network.response.PostDetailResponse
+import org.chosun.dodamduck.data.dto.search.SearchDTO
+import org.chosun.dodamduck.data.dto.trade.Trade
+import org.chosun.dodamduck.network.response.DodamDuckResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -14,24 +15,13 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Query
 
-interface PostApiService {
-
-    @GET("ContentShare.php")
-    suspend fun getPostList(): List<PostDTO>?
-
-    @GET("ContentShare.php")
-    suspend fun getPostList(
-        @Query("category_id") categoryID: String
-    ): List<PostDTO>
-
-    @GET("ContentShare_Detail.php")
-    suspend fun getPostDetail(
-        @Query("share_id") shareID: String
-    ): PostDetailResponse
+interface TradeApiService {
+    @GET("Post.php")
+    suspend fun getTradeList(): List<Trade>?
 
     @Multipart
-    @POST("upload_content_share.php")
-    suspend fun uploadPost(
+    @POST("PostWrite.php")
+    suspend fun uploadTrade(
         @Part("user_id") userId: RequestBody,
         @Part("category_id") categoryId: RequestBody,
         @Part("title") title: RequestBody,
@@ -40,27 +30,31 @@ interface PostApiService {
         @Part image: MultipartBody.Part
     ): DodamDuckResponse
 
-    @POST("upload_share_comment.php")
+
+    @POST("PostDetail.php")
+    @FormUrlEncoded
+    suspend fun getTradeDetail(
+        @Field("post_id") postId: String
+    ): PostDetailResponse
+
+    @POST("upload_comments.php")
     @FormUrlEncoded
     suspend fun uploadComment(
-        @Field("share_id") postId: String,
+        @Field("post_id") postId: String,
         @Field("user_id") userId: String,
-        @Field("comment") content: String
+        @Field("content") content: String
     ): DodamDuckResponse
 
-    @POST("content_share_view_up.php")
+    @POST("upload_post_view_up.php")
     @FormUrlEncoded
     suspend fun uploadViews(
-        @Field("share_id") shareId: String
+        @Field("post_id") postId: String
     ): DodamDuckResponse
 
-    @GET("Categories.php")
-    suspend fun getCategories(): List<CategoryDTO>
-
-    @HTTP(method = "DELETE", path = "ShareContentDelete.php", hasBody = true)
+    @HTTP(method = "DELETE", path = "PostDelete.php", hasBody = true)
     @FormUrlEncoded
-    suspend fun deletePost(
-        @Field("share_id") shareId: String,
+    suspend fun deleteTrade(
+        @Field("post_id") postId: String,
         @Field("user_id") userId: String
     ): DodamDuckResponse
 
@@ -74,6 +68,9 @@ interface PostApiService {
     @GET("SearchQuery.php")
     suspend fun searchPost(
         @Query("query") query: String
-    ): List<PostDTO>
+    ): List<Trade>
+
+    @GET("PopularPostSearch.php")
+    suspend fun popularSearch(): List<SearchDTO>
 
 }

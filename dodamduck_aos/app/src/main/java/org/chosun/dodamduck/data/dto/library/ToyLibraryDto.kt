@@ -1,8 +1,8 @@
-package org.chosun.dodamduck.data.dto
+package org.chosun.dodamduck.data.dto.library
 
 import com.google.gson.annotations.SerializedName
 
-data class ToyInfo(
+data class ToyLibraryDto(
     @SerializedName("순번")
     val sequenceNumber: String,
     @SerializedName("관리기관명")

@@ -3,19 +3,18 @@ package org.chosun.dodamduck.data.repository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.chosun.dodamduck.data.database.SearchHistory
-import org.chosun.dodamduck.data.database.SearchHistoryDao
-import org.chosun.dodamduck.data.dto.PostDetailResponse
-import org.chosun.dodamduck.data.dto.SearchDTO
-import org.chosun.dodamduck.data.dto.Trade
+import org.chosun.dodamduck.database.SearchHistory
+import org.chosun.dodamduck.database.SearchHistoryDao
+import org.chosun.dodamduck.network.response.PostDetailResponse
+import org.chosun.dodamduck.data.dto.search.SearchDTO
+import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.safeFlow
 import org.chosun.dodamduck.data.source.remote.TradeRemoteSource
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.repository.TradeRepository
-import org.chosun.dodamduck.network.DodamDuckResponse
+import org.chosun.dodamduck.network.response.DodamDuckResponse
 import javax.inject.Inject
 
 /**
