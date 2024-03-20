@@ -38,10 +38,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
+import org.chosun.dodamduck.presentation.post.PostSideEffect
+import org.chosun.dodamduck.presentation.trade.TradeSideEffect
 import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.DodamDuckRadioButton
 import org.chosun.dodamduck.ui.component.DodamDuckText
@@ -63,6 +66,9 @@ fun TradeWriteScreen(
 ) {
     val context = LocalContext.current
 
+    val state by tradeViewModel.uiState.collectAsStateWithLifecycle()
+    val effect by tradeViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
+
     var imageList by remember { mutableStateOf<List<Uri>>(listOf()) }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -79,6 +85,15 @@ fun TradeWriteScreen(
     LaunchedEffect(key1 = uploadSuccess) {
         if (uploadSuccess)
             navController.popBackStack()
+    }
+
+    LaunchedEffect(key1 = effect) {
+        when(effect) {
+            is TradeSideEffect.NavigatePopBackStack
+            -> navController.popBackStack()
+
+            else -> {}
+        }
     }
 
     TradeWriteContent(
