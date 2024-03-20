@@ -48,7 +48,8 @@ abstract class BasePostDetailViewModel<T>(
                         }
                         else {
                             sendEvent(PostDetailEvent.OnError)
-                            setEffect(PostDetailSideEffect.Toast("채팅방 생성 중 오류가 발생 했습니다."))
+                            if(apiResult.value.message == "Chat room already exists.")
+                              setEffect(PostDetailSideEffect.Toast("이미 존재하는 채팅이 있습니다."))
                         }
                     }
 
