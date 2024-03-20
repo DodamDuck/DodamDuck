@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.data.dto.ToyInfo
+import org.chosun.dodamduck.data.dto.library.ToyLibraryDto
 import org.chosun.dodamduck.ui.component.BottomRoundedBox
 import org.chosun.dodamduck.ui.component.DodamDuckIcon
 import org.chosun.dodamduck.ui.component.DodamDuckSearchBar
@@ -72,7 +72,7 @@ fun LibraryScreen(toyLibraryViewModel: ToyLibraryViewModel = hiltViewModel()) {
 
 @Composable
 fun LibraryContent(
-    toyInfos: List<ToyInfo>?
+    toyLibraryDtos: List<ToyLibraryDto>?
 ) {
     val focusManager = LocalFocusManager.current
     var searchText by remember { mutableStateOf("") }
@@ -96,7 +96,7 @@ fun LibraryContent(
                     onSearchTextChange = { searchText = it }
                 )
             }
-            ToyList(toyInfos ?: listOf(), searchText)
+            ToyList(toyLibraryDtos ?: listOf(), searchText)
         }
     }
 }
@@ -140,8 +140,8 @@ fun LibrarySearchBar(
 fun LibraryPreview() {
     DodamDuckTheme {
         LibraryContent(
-            toyInfos = listOf(
-                ToyInfo(
+            toyLibraryDtos = listOf(
+                ToyLibraryDto(
                     "", "",
                     "", "",
                     "", "", "", "",

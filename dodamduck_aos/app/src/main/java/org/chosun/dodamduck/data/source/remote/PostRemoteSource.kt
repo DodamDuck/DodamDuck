@@ -2,7 +2,7 @@ package org.chosun.dodamduck.data.source.remote
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.chosun.dodamduck.network.PostApiService
+import org.chosun.dodamduck.network.service.PostApiService
 import javax.inject.Inject
 
 class PostRemoteSource @Inject constructor(

@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import org.chosun.dodamduck.data.dto.ChatInfo
+import org.chosun.dodamduck.data.dto.chat.ChatDto
 import org.chosun.dodamduck.ui.theme.Orange
 import org.chosun.dodamduck.utils.Utils.convertDateTime
 import org.chosun.dodamduck.utils.Utils.getUserProfileUrl
@@ -35,7 +35,7 @@ import org.chosun.dodamduck.utils.Utils.getUserProfileUrl
 @Composable
 fun ChatUserItem(
     modifier: Modifier = Modifier,
-    chatInfo: ChatInfo
+    chatInfo: ChatDto
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
@@ -62,7 +62,7 @@ fun ChatUserItem(
 @Composable
 fun ChatPartnerItem(
     modifier: Modifier = Modifier,
-    chatInfo: ChatInfo,
+    chatInfo: ChatDto,
     otherUser: String = ""
 ) {
     Row(
@@ -113,7 +113,7 @@ fun ChatPartnerItem(
 @Composable
 fun ChatLazyList(
     modifier: Modifier = Modifier,
-    list: List<ChatInfo>,
+    list: List<ChatDto>,
     currentUser: String,
     otherUser: String
 ) {
@@ -150,7 +150,7 @@ fun ChatLazyList(
 @Preview
 fun ChatPartnerItemPreview() {
     ChatPartnerItem(
-        chatInfo = ChatInfo(
+        chatInfo = ChatDto(
             "1",
             "seyeong1",
             "seyeong2",
@@ -166,7 +166,7 @@ fun ChatPartnerItemPreview() {
 @Preview
 fun ChatItemPreview() {
     ChatPartnerItem(
-        chatInfo = ChatInfo(
+        chatInfo = ChatDto(
             "1",
             "seyeong1",
             "seyeong2",

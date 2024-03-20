@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.data.dto.ToyInfo
+import org.chosun.dodamduck.data.dto.library.ToyLibraryDto
 import org.chosun.dodamduck.ui.component.EllipsisText
 
 @Composable
@@ -35,8 +35,8 @@ import org.chosun.dodamduck.ui.component.EllipsisText
 fun PreviewToyList() {
     Box(modifier = Modifier.fillMaxWidth()) {
         ToyList(
-            toyInfos = listOf(
-                ToyInfo(
+            toyLibraryDtos = listOf(
+                ToyLibraryDto(
                     "", stringResource(id = R.string.dummy_toy_item_district_office),
                     "", stringResource(id = R.string.dummy_toy_item_metropolitan_city), "",
                     stringResource(id = R.string.dummy_toy_item_name),
@@ -52,8 +52,8 @@ fun PreviewToyList() {
 }
 
 @Composable
-fun ToyList(toyInfos: List<ToyInfo>, searchText: String) {
-    val filterList = toyInfos.filter { it.toyName.contains(searchText, ignoreCase = true) }
+fun ToyList(toyLibraryDtos: List<ToyLibraryDto>, searchText: String) {
+    val filterList = toyLibraryDtos.filter { it.toyName.contains(searchText, ignoreCase = true) }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -69,7 +69,7 @@ fun ToyList(toyInfos: List<ToyInfo>, searchText: String) {
 }
 
 @Composable
-fun ToyItem(toyInfo: ToyInfo) {
+fun ToyItem(toyLibraryDto: ToyLibraryDto) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,9 +81,9 @@ fun ToyItem(toyInfo: ToyInfo) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text(text = toyInfo.addressStreet.split(" ")[0])
-            Text(text = toyInfo.managementAgencyName)
-            val toyName = toyInfo.toyName.replace(" ", "")
+            Text(text = toyLibraryDto.addressStreet.split(" ")[0])
+            Text(text = toyLibraryDto.managementAgencyName)
+            val toyName = toyLibraryDto.toyName.replace(" ", "")
             Image(
                 painter = rememberAsyncImagePainter("http://sy2978.dothome.co.kr/library/${toyName}.jpg"),
                 contentDescription = null,
@@ -96,8 +96,8 @@ fun ToyItem(toyInfo: ToyInfo) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                EllipsisText(text = toyInfo.toyName, maxLength = 10, fontSize = 10)
-                Text(text = toyInfo.area, fontSize = 10.sp)
+                EllipsisText(text = toyLibraryDto.toyName, maxLength = 10, fontSize = 10)
+                Text(text = toyLibraryDto.area, fontSize = 10.sp)
             }
 
             Row(
@@ -105,8 +105,8 @@ fun ToyItem(toyInfo: ToyInfo) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = toyInfo.ageGroup, fontSize = 10.sp)
-                Text(text = "${toyInfo.rentalFee}원", fontSize = 10.sp)
+                Text(text = toyLibraryDto.ageGroup, fontSize = 10.sp)
+                Text(text = "${toyLibraryDto.rentalFee}원", fontSize = 10.sp)
             }
             OutlinedButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),

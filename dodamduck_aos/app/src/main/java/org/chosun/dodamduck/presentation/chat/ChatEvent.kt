@@ -1,13 +1,13 @@
 package org.chosun.dodamduck.presentation.chat
 
-import org.chosun.dodamduck.data.dto.ChatInfo
-import org.chosun.dodamduck.data.dto.ChatListDTO
+import org.chosun.dodamduck.data.dto.chat.ChatDto
+import org.chosun.dodamduck.network.response.ChatListDTO
 import org.chosun.dodamduck.presentation.base.Event
 
 sealed class ChatEvent : Event {
 
     object OnLoadingChats : ChatEvent()
-    data class OnSuccessChats(val chats: List<ChatInfo>) : ChatEvent()
+    data class OnSuccessChats(val chats: List<ChatDto>) : ChatEvent()
 
     object OnEmptyChats : ChatEvent()
 

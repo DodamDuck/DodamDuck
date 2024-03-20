@@ -58,8 +58,8 @@ import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
-import org.chosun.dodamduck.data.dto.PostCommentDTO
-import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.data.dto.post.PostCommentDto
+import org.chosun.dodamduck.network.response.PostDetailResponse
 import org.chosun.dodamduck.data.repository.DummyItemFactory
 import org.chosun.dodamduck.presentation.detail.base.BasePostDetailViewModel
 import org.chosun.dodamduck.presentation.detail.base.PostDetailSideEffect
@@ -327,14 +327,14 @@ fun PostDetailUserInfo(
 }
 
 @Composable
-fun PostDetailComments(items: List<PostCommentDTO>) {
+fun PostDetailComments(items: List<PostCommentDto>) {
     repeat(items.size) {
         val item = items[it]
         PostDetailUserInfo(
             modifier = Modifier.padding(start = 10.dp, top = 18.dp),
             userName = item.userName,
-            userProfile = item.profile_url,
-            userInfo = "${item.location.split(" ")[1]} · ${item.verification_count}회 · ${item.created_at.formatDateDiff()}",
+            userProfile = item.profileUrl,
+            userInfo = "${item.location.split(" ")[1]} · ${item.verificationCount}회 · ${item.createdAt.formatDateDiff()}",
             postContent = item.content
         )
     }

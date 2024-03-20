@@ -58,7 +58,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
-import org.chosun.dodamduck.data.dto.CategoryDTO
+import org.chosun.dodamduck.data.dto.post.CategoryDto
 import org.chosun.dodamduck.presentation.post.PostSideEffect
 import org.chosun.dodamduck.presentation.post.PostViewModel
 import org.chosun.dodamduck.ui.component.BottomSheet
@@ -106,7 +106,7 @@ fun PostWriteScreen(
         postViewModel.getCategories()
     }
 
-    var categoryType by remember { mutableStateOf(CategoryDTO("", "게시글의 주제 선택해주세요.")) }
+    var categoryType by remember { mutableStateOf(CategoryDto("", "게시글의 주제 선택해주세요.")) }
     var selectedCategoryType by remember { mutableStateOf("게시글의 주제 선택해주세요.") }
 
     LaunchedEffect(key1 = categoryType) {
@@ -356,8 +356,8 @@ fun PostWriteBottom(
 
 @Composable
 fun PostWriteBottomSheetContent(
-    categoryList: List<CategoryDTO>?,
-    onCategoryClick: (CategoryDTO) -> Unit
+    categoryList: List<CategoryDto>?,
+    onCategoryClick: (CategoryDto) -> Unit
 ) {
     Column(
         modifier = Modifier

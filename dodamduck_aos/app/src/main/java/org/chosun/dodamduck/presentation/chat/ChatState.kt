@@ -1,7 +1,7 @@
 package org.chosun.dodamduck.presentation.chat
 
-import org.chosun.dodamduck.data.dto.ChatInfo
-import org.chosun.dodamduck.data.dto.ChatListDTO
+import org.chosun.dodamduck.data.dto.chat.ChatDto
+import org.chosun.dodamduck.network.response.ChatListDTO
 import org.chosun.dodamduck.presentation.base.State
 
 data class ChatState(
@@ -14,7 +14,7 @@ data class ChatState(
     val chatSendLoading: Boolean = false,
     val chatSendSuccess: Boolean = false,
     val chatSendError: Boolean = false,
-    val chats: List<ChatInfo> = emptyList(),
+    val chats: List<ChatDto> = emptyList(),
     val chatList: List<ChatListDTO> = emptyList()
 ): State {
     companion object {

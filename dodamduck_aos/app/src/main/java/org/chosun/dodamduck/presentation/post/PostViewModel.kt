@@ -5,7 +5,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import org.chosun.dodamduck.data.dto.PostDTO
+import org.chosun.dodamduck.data.dto.post.PostDto
+import org.chosun.dodamduck.data.dto.post.PostUseCaseDto
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostCategories
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostList
@@ -16,10 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val getPostCategories: GetPostCategories<PostDTO>,
-    private val getPostList: GetPostList<PostDTO>,
-    private val uploadPostUseCase: UploadPost<PostDTO>,
-    private val uploadViewCountUseCase: UploadViewCount<PostDTO>,
+    private val getPostCategories: GetPostCategories<PostDto>,
+    private val getPostList: GetPostList<PostDto>,
+    private val uploadPostUseCase: UploadPost<PostDto>,
+    private val uploadViewCountUseCase: UploadViewCount<PostDto>,
 ) : BaseViewModel<PostState, PostEvent, PostSideEffect>(
     PostReducer(PostState.init())
 ) {
@@ -44,7 +45,7 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch {
             viewModelScope.launch {
                 sendEvent(PostEvent.OnLoading)
-                getPostCategories().collectLatest { apiResult ->
+                getPostCategories(null).collectLatest { apiResult ->
                     when (apiResult) {
                         is ApiResult.Success -> {
                             sendEvent(PostEvent.OnSuccessPostCategories(apiResult.value))
@@ -69,19 +70,27 @@ class PostViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             sendEvent(PostEvent.OnLoading)
-            uploadPostUseCase(userId, categoryId, title, content, location, image)
-                .collectLatest { apiResult ->
-                    when (apiResult) {
-                        is ApiResult.Success -> {
-                            sendEvent(PostEvent.OnSuccess)
-                            setEffect(PostSideEffect.NavigatePopBackStack)
-                        }
-
-                        is ApiResult.Error -> sendEvent(PostEvent.OnError)
-
-                        is ApiResult.Exception -> {}
+            uploadPostUseCase(
+                PostUseCaseDto(
+                    userId = userId,
+                    categoryId = categoryId,
+                    title = title,
+                    content = content,
+                    location = location,
+                    image = image
+                )
+            ).collectLatest { apiResult ->
+                when (apiResult) {
+                    is ApiResult.Success -> {
+                        sendEvent(PostEvent.OnSuccess)
+                        setEffect(PostSideEffect.NavigatePopBackStack)
                     }
+
+                    is ApiResult.Error -> sendEvent(PostEvent.OnError)
+
+                    is ApiResult.Exception -> {}
                 }
+            }
         }
     }
 

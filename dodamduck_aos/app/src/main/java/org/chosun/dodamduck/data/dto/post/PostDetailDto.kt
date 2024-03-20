@@ -1,6 +1,6 @@
-package org.chosun.dodamduck.data.dto
+package org.chosun.dodamduck.data.dto.post
 
-data class PostDetailDTO(
+data class PostDetailDto(
     val title: String,
     val content: String,
     val image_url: String,

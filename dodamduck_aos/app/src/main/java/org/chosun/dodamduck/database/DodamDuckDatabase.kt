@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.data.database
+package org.chosun.dodamduck.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

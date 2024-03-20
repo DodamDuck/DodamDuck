@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import org.chosun.dodamduck.data.dto.PostDTO
+import org.chosun.dodamduck.data.dto.post.PostDto
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.theme.Brown
@@ -36,7 +36,7 @@ import org.chosun.dodamduck.utils.Utils.formatDateDiff
 @Composable
 fun PostItem(
     modifier: Modifier = Modifier,
-    item: PostDTO
+    item: PostDto
 ) {
     Row(
         modifier = modifier
@@ -113,7 +113,7 @@ fun PostItemPreview() {
         LazyColumn() {
             items(5) {
                 PostItem(
-                    item = PostDTO(
+                    item = PostDto(
                         "1", "user1",
                         "1", "뽀로로 놀이기구 어떤가요?",
                         "뽀로로 놀이 기구를 이벤트로 받았는데 ...",

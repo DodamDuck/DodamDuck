@@ -43,11 +43,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.data.database.SearchHistory
-import org.chosun.dodamduck.data.dto.CategoryDTO
-import org.chosun.dodamduck.data.dto.SearchDTO
-import org.chosun.dodamduck.data.dto.Trade
-import org.chosun.dodamduck.data.dto.convertCategoryList
+import org.chosun.dodamduck.database.SearchHistory
+import org.chosun.dodamduck.data.dto.post.CategoryDto
+import org.chosun.dodamduck.data.dto.search.SearchDTO
+import org.chosun.dodamduck.data.dto.trade.Trade
+import org.chosun.dodamduck.data.dto.search.convertCategoryList
 import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
@@ -195,7 +195,7 @@ fun SearchTagContent(
     onTagSelected: (String) -> Unit
 ) {
     val categories = popularSearchList.convertCategoryList()
-    var selectedTag by remember { mutableStateOf(CategoryDTO("0", "")) }
+    var selectedTag by remember { mutableStateOf(CategoryDto("0", "")) }
 
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 12.dp)

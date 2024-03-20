@@ -1,7 +1,8 @@
-package org.chosun.dodamduck.network
+package org.chosun.dodamduck.network.service
 
 import org.chosun.dodamduck.BuildConfig
-import org.chosun.dodamduck.data.dto.ToyInfo
+import org.chosun.dodamduck.data.dto.library.ToyLibraryDto
+import org.chosun.dodamduck.network.response.OpenApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
@@ -12,5 +13,5 @@ interface ToyLibraryApiService {
     suspend fun getToyList(
         @Query("page") page: Int? = 0,
         @Query("perPage") perPage: Int = 0
-    ): OpenApiResponse<List<ToyInfo>>
+    ): OpenApiResponse<List<ToyLibraryDto>>
 }

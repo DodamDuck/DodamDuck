@@ -23,7 +23,7 @@ class ToyLibraryViewModel @Inject constructor(
     fun getToyInfos() {
         sendEvent(ToyLibraryEvent.OnRequestData)
         viewModelScope.launch {
-            getToys().collectLatest { apiResult ->
+            getToys(null).collectLatest { apiResult ->
                 when(apiResult) {
                     is ApiResult.Success -> {
                        sendEvent(ToyLibraryEvent.OnFetchToyList(apiResult.value))

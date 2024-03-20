@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.network
+package org.chosun.dodamduck.network.response
 
 data class OpenApiResponse<T> (
     val page: Int,

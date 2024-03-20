@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui
+package org.chosun.dodamduck.presentation.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -69,7 +69,7 @@ fun UserScreen() {
                     .size(120.dp, 120.dp)
                     .clip(RoundedCornerShape(60.dp)),
                 contentScale = ContentScale.Crop,
-                painter = rememberAsyncImagePainter(DodamDuckData.userInfo.profile_url),
+                painter = rememberAsyncImagePainter(DodamDuckData.userInfo.profileUrl),
                 contentDescription = "UserProfile"
             )
 

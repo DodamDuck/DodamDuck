@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.data.database
+package org.chosun.dodamduck.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

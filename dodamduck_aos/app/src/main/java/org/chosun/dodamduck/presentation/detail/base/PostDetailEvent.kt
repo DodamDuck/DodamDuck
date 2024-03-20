@@ -1,6 +1,6 @@
 package org.chosun.dodamduck.presentation.detail.base
 
-import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.network.response.PostDetailResponse
 import org.chosun.dodamduck.presentation.base.Event
 
 sealed class PostDetailEvent: Event {

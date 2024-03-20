@@ -40,7 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
-import org.chosun.dodamduck.data.dto.CategoryDTO
+import org.chosun.dodamduck.data.dto.post.CategoryDto
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.PostItem
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
@@ -54,7 +54,7 @@ fun PostScreen(
     postViewModel: PostViewModel = hiltViewModel()
 ) {
     val state by postViewModel.uiState.collectAsStateWithLifecycle()
-    var selectedTag by remember { mutableStateOf(CategoryDTO("0", "")) }
+    var selectedTag by remember { mutableStateOf(CategoryDto("0", "")) }
 
     LaunchedEffect(Unit) {
         postViewModel.getPostLists()

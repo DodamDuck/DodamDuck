@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.chosun.dodamduck.data.dto.auth.AuthDto
+import org.chosun.dodamduck.data.dto.auth.AuthUseCaseDto
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.auth.RequestLogin
@@ -29,10 +29,10 @@ class AuthViewModel @Inject constructor(
         userPassword: String
     ) {
         viewModelScope.launch {
-            requestLogin(AuthDto(userID, userPassword)).collectLatest { apiResult ->
+            requestLogin(AuthUseCaseDto(userID, userPassword)).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
-                        if (apiResult.value.login_success) {
+                        if (apiResult.value.loginSuccess) {
                             sendEvent(AuthEvent.onSuccessLogin)
                             DodamDuckData.userInfo = apiResult.value
                         }
@@ -53,7 +53,7 @@ class AuthViewModel @Inject constructor(
     ) {
         sendEvent(AuthEvent.onRequestRegister(userID, userPassword))
         viewModelScope.launch {
-            requestRegister(userID, userPassword).collectLatest { apiResult ->
+            requestRegister(AuthUseCaseDto(userID, userPassword)).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
                         if (apiResult.value.error == "false") sendEvent(AuthEvent.onSuccessRegister)

@@ -4,16 +4,16 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.chosun.dodamduck.data.dto.CategoryDTO
-import org.chosun.dodamduck.data.dto.PostDTO
-import org.chosun.dodamduck.data.dto.PostDetailResponse
+import org.chosun.dodamduck.data.dto.post.CategoryDto
+import org.chosun.dodamduck.data.dto.post.PostDto
+import org.chosun.dodamduck.network.response.PostDetailResponse
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.safeFlow
 import org.chosun.dodamduck.data.source.local.PostLocalSource
 import org.chosun.dodamduck.data.source.remote.PostRemoteSource
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.repository.PostRepository
-import org.chosun.dodamduck.network.DodamDuckResponse
+import org.chosun.dodamduck.network.response.DodamDuckResponse
 import javax.inject.Inject
 
 /**
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class PostRepositoryImpl<T> @Inject constructor(
     private val postRemoteSource: PostRemoteSource,
     private val postLocalSource: PostLocalSource
-) : PostRepository<PostDTO> {
+) : PostRepository<PostDto> {
 
     override suspend fun uploadPost(
         userId: String,
@@ -42,17 +42,17 @@ class PostRepositoryImpl<T> @Inject constructor(
         postRemoteSource.uploadPost(userIdBody, categoryIdBody, titleBody, contentBody, locationBody, image)
     }
 
-    override suspend fun fetchList(): Flow<ApiResult<List<PostDTO>>> = safeFlow {
+    override suspend fun fetchList(): Flow<ApiResult<List<PostDto>>> = safeFlow {
         postRemoteSource.fetchList() ?: emptyList()
     }
 
-    override suspend fun fetchList(categoryID: String): Flow<ApiResult<List<PostDTO>>> = safeFlow {
+    override suspend fun fetchList(categoryID: String): Flow<ApiResult<List<PostDto>>> = safeFlow {
         postRemoteSource.fetchList(categoryID)
     }
 
     override suspend fun fetchDetail(
         id: String
-    ): Flow<ApiResult<PostDetailResponse?>> = safeFlow {
+    ): Flow<ApiResult<PostDetailResponse>> = safeFlow {
         postRemoteSource.fetchDetail(id)
     }
 
@@ -60,7 +60,7 @@ class PostRepositoryImpl<T> @Inject constructor(
         postID: String,
         userID: String,
         comment: String
-    ): Flow<ApiResult<DodamDuckResponse?>> = safeFlow {
+    ): Flow<ApiResult<DodamDuckResponse>> = safeFlow {
         postRemoteSource.uploadComment(postID, userID, comment)
     }
 
@@ -73,7 +73,7 @@ class PostRepositoryImpl<T> @Inject constructor(
     override suspend fun deletePost(
         postID: String,
         userID: String
-    ): Flow<ApiResult<DodamDuckResponse?>> = safeFlow {
+    ): Flow<ApiResult<DodamDuckResponse>> = safeFlow {
         postRemoteSource.deletePost(postID, userID)
     }
 
@@ -86,11 +86,11 @@ class PostRepositoryImpl<T> @Inject constructor(
 
     override suspend fun searchPost(
         query: String
-    ): Flow<ApiResult<List<PostDTO>>> = safeFlow {
+    ): Flow<ApiResult<List<PostDto>>> = safeFlow {
         postRemoteSource.searchPost(query)
     }
 
-    override suspend fun fetchCategories(): Flow<ApiResult<List<CategoryDTO>>> = safeFlow {
+    override suspend fun fetchCategories(): Flow<ApiResult<List<CategoryDto>>> = safeFlow {
         postRemoteSource.fetchCategories()
     }
 

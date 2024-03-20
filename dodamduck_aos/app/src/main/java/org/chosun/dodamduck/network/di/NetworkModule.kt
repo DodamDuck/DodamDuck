@@ -1,50 +1,65 @@
 package org.chosun.dodamduck.network.di
 
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.chosun.dodamduck.network.AuthApiService
-import org.chosun.dodamduck.network.ChatApiService
-import org.chosun.dodamduck.network.NetworkType
-import org.chosun.dodamduck.network.PostApiService
-import org.chosun.dodamduck.network.ToyLibraryApiService
-import org.chosun.dodamduck.network.TradeApiService
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.create
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 object NetworkModule {
-    @Provides
-    @Singleton
-    fun provideAuthApiService(
-        @Named(NetworkType.DODAMDUCK) retrofit: Retrofit
-    ) = retrofit.create<AuthApiService>()
 
-    @Provides
     @Singleton
-    fun provideToyLibraryApiService(
-        @Named(NetworkType.OPEN_API) retrofit: Retrofit
-    ) = retrofit.create<ToyLibraryApiService>()
+    @Provides
+    @Named(NetworkType.DODAMDUCK)
+    fun provideDodamDuckRetrofit(): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl("http://sy2978.dothome.co.kr/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(
+                provideOkHttpClient(
+                    httpLoggingInterceptor
+                )
+            )
+            .build()
 
-    @Provides
     @Singleton
-    fun provideTradeApiService(
-        @Named(NetworkType.DODAMDUCK) retrofit: Retrofit
-    ) = retrofit.create<TradeApiService>()
+    @Provides
+    @Named(NetworkType.OPEN_API)
+    fun provideOpenApiRetrofit(): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl("https://api.odcloud.kr/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(
+                provideOkHttpClient(
+                    httpLoggingInterceptor
+                )
+            )
+            .build()
+}
 
-    @Provides
-    @Singleton
-    fun provideChatApiService(
-        @Named(NetworkType.DODAMDUCK) retrofit: Retrofit
-    ) = retrofit.create<ChatApiService>()
+private fun provideOkHttpClient(vararg interceptor: Interceptor): OkHttpClient =
+    OkHttpClient.Builder().run {
+        interceptor.forEach { addInterceptor(it) }
+        build()
+    }
 
-    @Provides
-    @Singleton
-    fun providePostApiService(
-        @Named(NetworkType.DODAMDUCK) retrofit: Retrofit
-    ) = retrofit.create<PostApiService>()
+var httpLoggingInterceptor = HttpLoggingInterceptor {log ->
+    Log.d("OkHttp", log)
+}.apply {
+    level = HttpLoggingInterceptor.Level.BODY
+}
+object NetworkType {
+    const val DODAMDUCK = "dodamDuck"
+    const val OPEN_API = "openApi"
 }

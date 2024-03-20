@@ -1,7 +1,8 @@
-package org.chosun.dodamduck.network
+package org.chosun.dodamduck.network.service
 
-import org.chosun.dodamduck.data.dto.ChatInfo
-import org.chosun.dodamduck.data.dto.ChatListResponse
+import org.chosun.dodamduck.data.dto.chat.ChatDto
+import org.chosun.dodamduck.network.response.DodamDuckResponse
+import org.chosun.dodamduck.network.response.ChatListResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -13,7 +14,7 @@ interface ChatApiService {
     suspend fun getChats(
         @Query("user1") user1: String,
         @Query("user2") user2: String,
-    ): List<ChatInfo>?
+    ): List<ChatDto>?
 
     @FormUrlEncoded
     @POST("sendMessage.php")

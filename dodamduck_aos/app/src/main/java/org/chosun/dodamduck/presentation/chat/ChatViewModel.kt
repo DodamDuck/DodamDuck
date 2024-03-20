@@ -27,7 +27,7 @@ class ChatViewModel @Inject constructor(
         scheduledExecutorService.scheduleAtFixedRate({
             sendEvent(ChatEvent.OnLoadingChats)
             viewModelScope.launch {
-                getChats(user1, user2).collectLatest { apiResult ->
+                getChats(Pair(user1, user2)).collectLatest { apiResult ->
                     when (apiResult) {
                         is ApiResult.Success -> {
                             if (apiResult.value.isNotEmpty()) sendEvent(ChatEvent.OnSuccessChats(apiResult.value))
@@ -49,7 +49,7 @@ class ChatViewModel @Inject constructor(
             getChatList(userId).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> {
-                        if (apiResult.value != null) sendEvent(ChatEvent.OnSuccessChatList(apiResult.value))
+                        if (apiResult.value.chat_list != null) sendEvent(ChatEvent.OnSuccessChatList(apiResult.value.chat_list))
                         else sendEvent(ChatEvent.OnEmptyChatList)
                     }
 
@@ -68,7 +68,7 @@ class ChatViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             sendEvent(ChatEvent.OnLoadingSendChat)
-            sendChatUseCase(sender, receiver, message).collectLatest { apiResult ->
+            sendChatUseCase(Triple(sender, receiver, message)).collectLatest { apiResult ->
                 when (apiResult) {
                     is ApiResult.Success -> sendEvent(ChatEvent.OnSuccessSendChat)
 
