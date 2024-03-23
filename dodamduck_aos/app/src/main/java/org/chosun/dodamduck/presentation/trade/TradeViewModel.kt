@@ -2,12 +2,10 @@ package org.chosun.dodamduck.presentation.trade
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.data.dto.post.PostUseCaseDto
-import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.local.trade.DeleteSearchQuery
 import org.chosun.dodamduck.domain.usecase.local.trade.GetSearchHistories
 import org.chosun.dodamduck.domain.usecase.local.trade.InsertSearchQuery
@@ -17,6 +15,7 @@ import org.chosun.dodamduck.domain.usecase.remote.post.UploadPost
 import org.chosun.dodamduck.domain.usecase.remote.post.UploadViewCount
 import org.chosun.dodamduck.domain.usecase.remote.trade.GetPopularSearch
 import org.chosun.dodamduck.presentation.base.BaseViewModel
+import org.chosun.dodamduck.presentation.processApiResult
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,19 +36,10 @@ class TradeViewModel @Inject constructor(
     }
 
     fun getTradeLists() {
-        viewModelScope.launch {
-            sendEvent(TradeEvent.OnLoading)
-            getTradeListUseCase().collectLatest { apiResult ->
-                when (apiResult) {
-                    is ApiResult.Success -> {
-                        sendEvent(TradeEvent.OnSuccessTradeList(apiResult.value))
-                    }
-
-                    is ApiResult.Error -> sendEvent(TradeEvent.OnError)
-
-                    is ApiResult.Exception -> {}
-                }
-            }
+        viewModelScope.processApiResult(getTradeListUseCase()) {
+            onLoading { sendEvent(TradeEvent.OnLoading) }
+            onSuccess { data -> sendEvent(TradeEvent.OnSuccessTradeList(data)) }
+            onError { sendEvent(TradeEvent.OnError) }
         }
     }
 
@@ -61,8 +51,7 @@ class TradeViewModel @Inject constructor(
         location: String,
         image: MultipartBody.Part
     ) {
-        viewModelScope.launch {
-            sendEvent(TradeEvent.OnLoading)
+        viewModelScope.processApiResult(
             uploadTradeUseCase(
                 PostUseCaseDto(
                     userId = userId,
@@ -72,55 +61,27 @@ class TradeViewModel @Inject constructor(
                     location = location,
                     image = image
                 )
-            )
-                .collectLatest { apiResult ->
-                    when (apiResult) {
-                        is ApiResult.Success -> {
-                            sendEvent(TradeEvent.OnSuccess)
-                            setEffect(TradeSideEffect.NavigatePopBackStack)
-                        }
-
-                        is ApiResult.Error -> sendEvent(TradeEvent.OnError)
-
-                        is ApiResult.Exception -> {}
-                    }
-                }
+            ),
+        ) {
+            onLoading { sendEvent(TradeEvent.OnLoading) }
+            onSuccess { sendEvent(TradeEvent.OnSuccess) }
+            onError { sendEvent(TradeEvent.OnError) }
         }
     }
 
     fun searchTrade(query: String) {
-        viewModelScope.launch {
-            sendEvent(TradeEvent.OnLoading)
-            searchTradeUseCase(query)
-                .collectLatest { apiResult ->
-                    when (apiResult) {
-                        is ApiResult.Success -> {
-                            sendEvent(TradeEvent.OnSuccessTradeList(apiResult.value))
-                        }
-
-                        is ApiResult.Error -> sendEvent(TradeEvent.OnError)
-
-                        is ApiResult.Exception -> {}
-                    }
-                }
+        viewModelScope.processApiResult(searchTradeUseCase(query)) {
+            onLoading { sendEvent(TradeEvent.OnLoading) }
+            onSuccess { data -> TradeEvent.OnSuccessTradeList(data) }
+            onError { sendEvent(TradeEvent.OnError) }
         }
     }
 
     fun uploadViewCount(tradeId: String) {
-        viewModelScope.launch {
-            sendEvent(TradeEvent.OnLoading)
-            uploadViewCountUseCase(tradeId)
-                .collectLatest { apiResult ->
-                    when (apiResult) {
-                        is ApiResult.Success -> {
-                            sendEvent(TradeEvent.OnSuccess)
-                        }
-
-                        is ApiResult.Error -> sendEvent(TradeEvent.OnError)
-
-                        is ApiResult.Exception -> {}
-                    }
-                }
+        viewModelScope.processApiResult(uploadViewCountUseCase(tradeId)) {
+            onLoading { sendEvent(TradeEvent.OnLoading) }
+            onSuccess { sendEvent(TradeEvent.OnSuccess) }
+            onError { sendEvent(TradeEvent.OnError) }
         }
     }
 
@@ -133,19 +94,10 @@ class TradeViewModel @Inject constructor(
     }
 
     fun fetchSearchQuery() {
-        viewModelScope.launch {
-            sendEvent(TradeEvent.OnLoading)
-            getSearchHistoriesUseCase(null).collectLatest { apiResult ->
-                when (apiResult) {
-                    is ApiResult.Success -> {
-                        sendEvent(TradeEvent.OnSuccessSearchHistories(apiResult.value))
-                    }
-
-                    is ApiResult.Error -> sendEvent(TradeEvent.OnError)
-
-                    is ApiResult.Exception -> {}
-                }
-            }
+        viewModelScope.processApiResult(getSearchHistoriesUseCase(null)) {
+            onLoading { sendEvent(TradeEvent.OnLoading) }
+            onSuccess { data -> sendEvent(TradeEvent.OnSuccessSearchHistories(data)) }
+            onError { sendEvent(TradeEvent.OnError) }
         }
     }
 
@@ -157,18 +109,10 @@ class TradeViewModel @Inject constructor(
     }
 
     fun fetchPopularSearches() {
-        viewModelScope.launch {
-            getPopularSearch(null).collectLatest {apiResult ->
-                when (apiResult) {
-                    is ApiResult.Success -> {
-                        sendEvent(TradeEvent.OnSuccessSearchPopularHistories(apiResult.value))
-                    }
-
-                    is ApiResult.Error -> sendEvent(TradeEvent.OnError)
-
-                    is ApiResult.Exception -> {}
-                }
-            }
+        viewModelScope.processApiResult(getPopularSearch(null)) {
+            onLoading { sendEvent(TradeEvent.OnLoading) }
+            onSuccess { data -> sendEvent(TradeEvent.OnSuccessSearchPopularHistories(data)) }
+            onError { sendEvent(TradeEvent.OnError) }
         }
     }
 
