@@ -2,17 +2,15 @@ package org.chosun.dodamduck.presentation.post
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import org.chosun.dodamduck.data.dto.post.PostDto
 import org.chosun.dodamduck.data.dto.post.PostUseCaseDto
-import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostCategories
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostList
 import org.chosun.dodamduck.domain.usecase.remote.post.UploadPost
 import org.chosun.dodamduck.domain.usecase.remote.post.UploadViewCount
 import org.chosun.dodamduck.presentation.base.BaseViewModel
+import org.chosun.dodamduck.presentation.processApiResult
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,38 +23,18 @@ class PostViewModel @Inject constructor(
     PostReducer(PostState.init())
 ) {
     fun getPostLists() {
-        viewModelScope.launch {
-            sendEvent(PostEvent.OnLoading)
-            getPostList().collectLatest { apiResult ->
-                when (apiResult) {
-                    is ApiResult.Success -> {
-                        sendEvent(PostEvent.OnSuccessPostList(apiResult.value))
-                    }
-
-                    is ApiResult.Error -> sendEvent(PostEvent.OnError)
-
-                    is ApiResult.Exception -> {}
-                }
-            }
+        viewModelScope.processApiResult(getPostList()) {
+            onLoading { sendEvent(PostEvent.OnLoading) }
+            onSuccess { data -> sendEvent(PostEvent.OnSuccessPostList(data)) }
+            onError { sendEvent(PostEvent.OnError) }
         }
     }
 
     fun getCategories() {
-        viewModelScope.launch {
-            viewModelScope.launch {
-                sendEvent(PostEvent.OnLoading)
-                getPostCategories(null).collectLatest { apiResult ->
-                    when (apiResult) {
-                        is ApiResult.Success -> {
-                            sendEvent(PostEvent.OnSuccessPostCategories(apiResult.value))
-                        }
-
-                        is ApiResult.Error -> sendEvent(PostEvent.OnError)
-
-                        is ApiResult.Exception -> {}
-                    }
-                }
-            }
+        viewModelScope.processApiResult(getPostCategories(null)) {
+            onLoading { sendEvent(PostEvent.OnLoading) }
+            onSuccess { data -> sendEvent(PostEvent.OnSuccessPostCategories(data)) }
+            onError { sendEvent(PostEvent.OnError) }
         }
     }
 
@@ -68,8 +46,7 @@ class PostViewModel @Inject constructor(
         location: String,
         image: MultipartBody.Part
     ) {
-        viewModelScope.launch {
-            sendEvent(PostEvent.OnLoading)
+        viewModelScope.processApiResult(
             uploadPostUseCase(
                 PostUseCaseDto(
                     userId = userId,
@@ -79,52 +56,30 @@ class PostViewModel @Inject constructor(
                     location = location,
                     image = image
                 )
-            ).collectLatest { apiResult ->
-                when (apiResult) {
-                    is ApiResult.Success -> {
-                        sendEvent(PostEvent.OnSuccess)
-                        setEffect(PostSideEffect.NavigatePopBackStack)
-                    }
-
-                    is ApiResult.Error -> sendEvent(PostEvent.OnError)
-
-                    is ApiResult.Exception -> {}
-                }
+            )
+        ) {
+            onLoading { sendEvent(PostEvent.OnLoading) }
+            onSuccess {
+                sendEvent(PostEvent.OnSuccess)
+                setEffect(PostSideEffect.NavigatePopBackStack)
             }
+            onError { sendEvent(PostEvent.OnError) }
         }
     }
 
     fun getPostLists(categoryID: String) {
-        viewModelScope.launch {
-            sendEvent(PostEvent.OnLoading)
-            getPostList(categoryID).collectLatest { apiResult ->
-                when (apiResult) {
-                    is ApiResult.Success -> {
-                        sendEvent(PostEvent.OnSuccessPostList(apiResult.value))
-                    }
-
-                    is ApiResult.Error -> sendEvent(PostEvent.OnError)
-
-                    is ApiResult.Exception -> {}
-                }
-            }
+        viewModelScope.processApiResult(getPostList(categoryID)) {
+            onLoading { sendEvent(PostEvent.OnLoading) }
+            onSuccess { data -> sendEvent(PostEvent.OnSuccessPostList(data)) }
+            onError { sendEvent(PostEvent.OnError) }
         }
     }
 
-    fun uploadViewCount(postID: String) {
-        viewModelScope.launch {
-            sendEvent(PostEvent.OnLoading)
-            uploadViewCountUseCase(postID).collectLatest { apiResult ->
-                when (apiResult) {
-                    is ApiResult.Success -> {
-                        sendEvent(PostEvent.OnSuccess)
-                    }
-
-                    is ApiResult.Error -> sendEvent(PostEvent.OnError)
-
-                    is ApiResult.Exception -> {}
-                }
-            }
+    fun uploadViewCount(postId: String) {
+        viewModelScope.processApiResult(uploadViewCountUseCase(postId)) {
+            onLoading { sendEvent(PostEvent.OnLoading) }
+            onSuccess { sendEvent(PostEvent.OnSuccess) }
+            onError { sendEvent(PostEvent.OnError) }
         }
     }
 }
