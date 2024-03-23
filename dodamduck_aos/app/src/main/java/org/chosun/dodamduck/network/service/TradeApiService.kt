@@ -3,7 +3,7 @@ package org.chosun.dodamduck.network.service
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.chosun.dodamduck.network.response.PostDetailResponse
-import org.chosun.dodamduck.data.dto.search.SearchDTO
+import org.chosun.dodamduck.data.dto.search.SearchEntity
 import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.network.response.DodamDuckResponse
 import retrofit2.http.Field
@@ -71,6 +71,6 @@ interface TradeApiService {
     ): List<Trade>
 
     @GET("PopularPostSearch.php")
-    suspend fun popularSearch(): List<SearchDTO>
+    suspend fun popularSearch(): List<SearchEntity>
 
 }

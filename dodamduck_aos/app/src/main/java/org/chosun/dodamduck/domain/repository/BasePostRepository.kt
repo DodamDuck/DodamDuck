@@ -2,6 +2,7 @@ package org.chosun.dodamduck.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
+import org.chosun.dodamduck.database.SearchHistory
 import org.chosun.dodamduck.network.response.PostDetailResponse
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.network.response.DodamDuckResponse
@@ -41,4 +42,12 @@ interface BasePostRepository<ALL> {
     ): Flow<ApiResult<DodamDuckResponse>>
 
     suspend fun searchPost(query: String): Flow<ApiResult<List<ALL>>>
+
+    suspend fun getSearchHistories(): Flow<ApiResult<List<SearchHistory>>>
+
+    suspend fun insertSearchQuery(query: String)
+
+    suspend fun deleteSearchQuery(query: String)
+
+    suspend fun deleteAllSearchQuery()
 }

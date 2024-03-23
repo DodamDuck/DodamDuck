@@ -5,12 +5,12 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.chosun.dodamduck.database.SearchHistory
-import org.chosun.dodamduck.database.SearchHistoryDao
 import org.chosun.dodamduck.network.response.PostDetailResponse
-import org.chosun.dodamduck.data.dto.search.SearchDTO
+import org.chosun.dodamduck.data.dto.search.SearchEntity
 import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.safeFlow
+import org.chosun.dodamduck.data.source.local.TradeLocalSource
 import org.chosun.dodamduck.data.source.remote.TradeRemoteSource
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.repository.TradeRepository
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class TradeRepositoryImpl<T> @Inject constructor(
     private val tradeRemoteSource: TradeRemoteSource,
-    private val searchHistoryDao: SearchHistoryDao
+    private val tradeLocalSource: TradeLocalSource
 ) : TradeRepository<Trade> {
 
     override suspend fun fetchList(): Flow<ApiResult<List<Trade>>> = safeFlow {
@@ -86,23 +86,24 @@ class TradeRepositoryImpl<T> @Inject constructor(
         tradeRemoteSource.searchTrade(query)
     }
 
-    suspend fun fetchPopularSearch(): Flow<ApiResult<List<SearchDTO>>> = safeFlow {
+    override suspend fun getSearchHistories(): Flow<ApiResult<List<SearchHistory>>> = safeFlow {
+        tradeLocalSource.getAllSearchHistory()
+    }
+
+    override suspend fun fetchPopularSearch(): Flow<ApiResult<List<SearchEntity>>> = safeFlow {
         tradeRemoteSource.fetchPopularSearch()
     }
 
-    suspend fun getAllSearchHistory(): List<SearchHistory> {
-        return searchHistoryDao.getAllSearchHistory()
+
+    override suspend fun insertSearchQuery(query: String) {
+        tradeLocalSource.insertSearchQuery(SearchHistory(query = query))
     }
 
-    suspend fun insertSearchQuery(query: String) {
-        searchHistoryDao.insertSearchQuery(SearchHistory(query = query))
+    override suspend fun deleteSearchQuery(query: String) {
+        tradeLocalSource.deleteSearchQuery(query)
     }
 
-    suspend fun deleteAll() {
-        searchHistoryDao.deleteAll()
-    }
-
-    suspend fun deleteSearchQuery(query: String) {
-        searchHistoryDao.deleteSearchQuery(query)
+    override suspend fun deleteAllSearchQuery() {
+        tradeLocalSource.deleteAll()
     }
 }
