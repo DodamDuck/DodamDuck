@@ -5,14 +5,12 @@ import org.chosun.dodamduck.presentation.base.Reducer
 class AuthReducer(state: AuthState): Reducer<AuthState, AuthEvent>(state) {
     override fun reduce(oldState: AuthState, event: AuthEvent) {
         when(event) {
-            is AuthEvent.onRequestRegister -> setState(oldState.copy(registerResult = false, isRegisterLoading = true))
-            is AuthEvent.onSuccessRegister -> setState(oldState.copy(registerResult = true, isRegisterLoading = false))
-            is AuthEvent.onFailRegister -> setState(oldState.copy(registerResult = false, isRegisterLoading = false))
-            is AuthEvent.onErrorRegister -> setState(oldState.copy(registerResult = false, registerError = event.error, loginError = null))
-            is AuthEvent.onRequestLogin -> setState(oldState.copy(loginError = null, loginResult = false, isLoginLoading = true))
-            is AuthEvent.onSuccessLogin -> setState(oldState.copy(loginResult = true, isLoginLoading = false))
-            is AuthEvent.onFailLogin -> setState(oldState.copy(loginResult = false, isLoginLoading = false, loginError = event.error))
-            is AuthEvent.onErrorLogin -> setState(oldState.copy(loginResult = false, loginError = event.error))
+            is AuthEvent.OnSuccessRegister -> setState(oldState.copy(registerResult = true, isRegisterLoading = false))
+            is AuthEvent.OnLoadingRegister -> setState(oldState.copy(registerResult = false, isRegisterLoading = true))
+            is AuthEvent.OnErrorRegister -> setState(oldState.copy(isRegisterLoading = false, registerResult = false, registerError = event.error))
+            is AuthEvent.OnSuccessLogin -> setState(oldState.copy(loginError = null, loginResult = true, isLoginLoading = false))
+            is AuthEvent.OnLoadingLogin -> setState(oldState.copy(loginResult = false, isLoginLoading = true))
+            is AuthEvent.OnErrorLogin -> setState(oldState.copy(loginResult = false, loginError = event.error))
         }
     }
 }

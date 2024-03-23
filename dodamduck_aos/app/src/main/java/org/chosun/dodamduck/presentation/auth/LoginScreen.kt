@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
@@ -33,42 +33,26 @@ fun LoginScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val state by authViewModel.uiState.collectAsStateWithLifecycle()
-    val effect by authViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
-
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = effect) {
-        when (effect) {
-            is AuthSideEffect.NavigateToHomeScreen
-            -> navController.navigate(BottomNavItem.Home.screenRoute) {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+    LaunchedEffect(key1 = Unit) {
+        authViewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is AuthSideEffect.NavigateToHomeScreen
+                -> navController.navigate(BottomNavItem.Home.screenRoute) {
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                }
+
+                is AuthSideEffect.NavigateToRegisterScreen
+                -> navController.navigate(BottomNavItem.Register.screenRoute) {
+                    popUpTo(navController.graph.startDestinationId)
+                }
+
+                is AuthSideEffect.Toast
+                -> Toast.makeText(context, effect.text, Toast.LENGTH_SHORT).show()
+
+                else -> {}
             }
-
-            is AuthSideEffect.NavigateToRegisterScreen
-            -> navController.navigate(BottomNavItem.Register.screenRoute) {
-                popUpTo(navController.graph.startDestinationId)
-            }
-
-            is AuthSideEffect.Toast
-            -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG)
-                .show()
-
-            else -> {}
-        }
-    }
-
-    when {
-        state.isLoginLoading -> {
-            // todo
-        }
-
-        state.loginResult -> {
-            authViewModel.sendSideEffect(AuthSideEffect.NavigateToHomeScreen)
-        }
-
-        state.loginError != null -> {
-            authViewModel.sendSideEffect(AuthSideEffect.Toast(stringResource(R.string.please_check_your_login_information)))
         }
     }
 

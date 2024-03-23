@@ -6,10 +6,9 @@ import org.chosun.dodamduck.presentation.base.Event
 
 sealed class ToyLibraryEvent: Event {
 
-    object OnRequestData : ToyLibraryEvent()
-
-    object OnCompleteData : ToyLibraryEvent()
+    object OnLoading : ToyLibraryEvent()
 
     object OnError : ToyLibraryEvent()
-    data class OnFetchToyList(val toyList: List<ToyLibraryDto>?) : ToyLibraryEvent()
+
+    data class OnSuccessToyList(val toyList: List<ToyLibraryDto>?) : ToyLibraryEvent()
 }
