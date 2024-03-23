@@ -79,7 +79,7 @@
 
 ### ⭐️ Architecture 
 
-<img width="794" alt="Architecture" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/33ee4f69-22e5-4613-8828-e572c5b25399">
+<img width="794" alt="Architecture" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/cf6df375-499a-46c1-b507-b10b8e3ea969">
 
 ---
 
@@ -94,3 +94,112 @@
  - Coil
  - Okhttp3
  - Retrofit2
+
+---
+## ✨ 코드 리팩토링 
+
+[PR](https://github.com/DodamDuck/DodamDuck/pull/230)
+
+기존 ViewModel 코드에서 API 호출 결과를 처리하는 로직에서 중복되는 부분이 많아 리팩토링의 필요성을 느끼게 되었습니다. <br>
+API 호출과 결과 처리를 더 안정적이고 유지보수가 용이하게 만들기 위해 리팩토링 작업을 진행하였습니다. <br> <br>
+기존 코드의 복잡성을 줄이고 코드의 가독성을 향상시키기 위해 <br>
+SafeApiResult 클래스를 추가해 기존 보일러 플레이트 코드들을 제거해 <br>
+ViewModel 클래스들의 불필요한 코드 라인 수를 `27%` 개선했습니다.
+
+### 기존 코드 
+```kotlin
+fun getTradeLists() {
+    viewModelScope.launch {
+        sendEvent(TradeEvent.OnLoading)
+        getTradeListUseCase().collectLatest { apiResult ->
+            when (apiResult) {
+                is ApiResult.Success ->  sendEvent(TradeEvent.OnSuccessTradeList(apiResult.value))
+                is ApiResult.Error -> sendEvent(TradeEvent.OnError)
+                is ApiResult.Exception -> {}
+            }
+        }
+    }
+}
+
+fun searchTrade(query: String) {
+    viewModelScope.launch {
+        sendEvent(TradeEvent.OnLoading)
+        searchTradeUseCase(query)
+            .collectLatest { apiResult ->
+                when (apiResult) {
+                    is ApiResult.Success ->  sendEvent(TradeEvent.OnSuccessTradeList(apiResult.value))
+                    is ApiResult.Error -> sendEvent(TradeEvent.OnError)
+                    is ApiResult.Exception -> {}
+            }
+        }
+    }
+}
+```
+
+### 개선 후 코드 
+```kotlin
+fun getTradeLists() {
+    viewModelScope.processApiResult(getTradeListUseCase()) {
+        onLoading { sendEvent(TradeEvent.OnLoading) }
+        onSuccess { data -> sendEvent(TradeEvent.OnSuccessTradeList(data)) }
+        onError { sendEvent(TradeEvent.OnError) }
+    }
+}
+
+fun searchTrade(query: String) {
+    viewModelScope.processApiResult(searchTradeUseCase(query)) {
+        onLoading { sendEvent(TradeEvent.OnLoading) }
+        onSuccess { data -> TradeEvent.OnSuccessTradeList(data) }
+        onError { sendEvent(TradeEvent.OnError) }
+    }
+}
+```
+
+```kotlin
+class SafeApiResult<T> {
+    private var onSuccess: (suspend (T) -> Unit)? = null
+    private var onLoading: (suspend () -> Unit)? = null
+    private var onError: (suspend (ApiResult.Error) -> Unit)? = null
+    private var onException: (suspend (Throwable) -> Unit)? = null
+
+    fun onSuccess(action: suspend (T) -> Unit) {
+        onSuccess = action
+    }
+
+    fun onLoading(action: suspend () -> Unit) {
+        onLoading = action
+    }
+
+    fun onError(action: suspend (ApiResult.Error) -> Unit) {
+        onError = action
+    }
+
+    fun onException(action: suspend (Throwable) -> Unit) {
+        onException = action
+    }
+
+    suspend fun process(flow: Flow<ApiResult<T>>, scope: CoroutineScope) {
+        scope.launch {
+            onLoading?.invoke()
+            flow.collectLatest { result ->
+                when (result) {
+                    is ApiResult.Success -> onSuccess?.invoke(result.value)
+                    is ApiResult.Error -> onError?.invoke(result)
+                    is ApiResult.Exception -> onException?.invoke(result.exception)
+                }
+            }
+        }
+    }
+}
+
+inline fun <T> CoroutineScope.processApiResult(
+    flow: Flow<ApiResult<T>>,
+    init: SafeApiResult<T>.() -> Unit
+): SafeApiResult<T> {
+    val processor = SafeApiResult<T>().apply(init)
+    launch {
+        processor.process(flow, this)
+    }
+    return processor
+}
+```
