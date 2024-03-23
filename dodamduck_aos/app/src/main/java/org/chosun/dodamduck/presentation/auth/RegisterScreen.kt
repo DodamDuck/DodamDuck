@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
@@ -34,37 +35,23 @@ fun RegisterScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val state by authViewModel.uiState.collectAsStateWithLifecycle()
-    val effect by authViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
 
     val context = LocalContext.current
     val checkPasswordMessage = stringResource(R.string.passwords_do_not_match_each_other)
 
-    LaunchedEffect(key1 = effect) {
-        when (effect) {
-            is AuthSideEffect.NavigateToLoginScreen
-            -> navController.navigate(BottomNavItem.Login.screenRoute) {
-                popUpTo(navController.graph.startDestinationId)
+    LaunchedEffect(key1 = Unit) {
+        authViewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is AuthSideEffect.NavigateToLoginScreen
+                -> navController.navigate(BottomNavItem.Login.screenRoute) {
+                    popUpTo(navController.graph.startDestinationId)
+                }
+
+                is AuthSideEffect.Toast
+                -> Toast.makeText(context, effect.text, Toast.LENGTH_SHORT).show()
+
+                else -> {}
             }
-
-            is AuthSideEffect.Toast
-            -> Toast.makeText(context, (effect as AuthSideEffect.Toast).text, Toast.LENGTH_LONG)
-                .show()
-
-            else -> {}
-        }
-    }
-
-    when {
-        state.isRegisterLoading -> {
-            // todo
-        }
-
-        state.registerResult -> {
-            authViewModel.sendSideEffect(AuthSideEffect.NavigateToLoginScreen)
-        }
-
-        state.registerError != null -> {
-            // todo
         }
     }
 
