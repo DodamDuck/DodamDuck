@@ -2,20 +2,20 @@ package org.chosun.dodamduck.presentation.trade
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import org.chosun.dodamduck.database.SearchHistory
-import org.chosun.dodamduck.data.dto.search.SearchDTO
 import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.data.dto.post.PostUseCaseDto
 import org.chosun.dodamduck.domain.model.ApiResult
+import org.chosun.dodamduck.domain.usecase.local.trade.DeleteSearchQuery
+import org.chosun.dodamduck.domain.usecase.local.trade.GetSearchHistories
+import org.chosun.dodamduck.domain.usecase.local.trade.InsertSearchQuery
 import org.chosun.dodamduck.domain.usecase.remote.post.GetPostList
 import org.chosun.dodamduck.domain.usecase.remote.post.SearchPost
 import org.chosun.dodamduck.domain.usecase.remote.post.UploadPost
 import org.chosun.dodamduck.domain.usecase.remote.post.UploadViewCount
+import org.chosun.dodamduck.domain.usecase.remote.trade.GetPopularSearch
 import org.chosun.dodamduck.presentation.base.BaseViewModel
 import javax.inject.Inject
 
@@ -24,20 +24,14 @@ class TradeViewModel @Inject constructor(
     private val getTradeListUseCase: GetPostList<Trade>,
     private val uploadTradeUseCase: UploadPost<Trade>,
     private val searchTradeUseCase: SearchPost<Trade>,
+    private val getPopularSearch: GetPopularSearch,
     private val uploadViewCountUseCase: UploadViewCount<Trade>,
+    private val getSearchHistoriesUseCase: GetSearchHistories,
+    private val insertSearchQueryUseCase: InsertSearchQuery,
+    private val deleteSearchQueryUseCase: DeleteSearchQuery
 ) : BaseViewModel<TradeState, TradeEvent, TradeSideEffect>(
     TradeReducer(TradeState.init())
 ) {
-
-    private val _uploadSuccess = MutableStateFlow<Boolean>(false)
-    val uploadSuccess: StateFlow<Boolean> = _uploadSuccess
-
-    private val _searchQueryList = MutableStateFlow<List<SearchHistory>?>(null)
-    val searchQueryList: StateFlow<List<SearchHistory>?> = _searchQueryList
-
-    private val _popularSearchList = MutableStateFlow<List<SearchDTO>?>(null)
-    val popularSearchList: StateFlow<List<SearchDTO>?> = _popularSearchList
-
     fun sendSideEffect(effect: TradeSideEffect) {
         setEffect(effect)
     }
@@ -132,33 +126,55 @@ class TradeViewModel @Inject constructor(
 
     fun insertSearchQuery(query: String) {
         viewModelScope.launch {
-//            repository.insertSearchQuery(query)
+            sendEvent(TradeEvent.OnLoading)
+            insertSearchQueryUseCase(query)
             fetchSearchQuery()
         }
     }
 
     fun fetchSearchQuery() {
         viewModelScope.launch {
-//            _searchQueryList.value = repository.getAllSearchHistory()
+            sendEvent(TradeEvent.OnLoading)
+            getSearchHistoriesUseCase(null).collectLatest { apiResult ->
+                when (apiResult) {
+                    is ApiResult.Success -> {
+                        sendEvent(TradeEvent.OnSuccessSearchHistories(apiResult.value))
+                    }
+
+                    is ApiResult.Error -> sendEvent(TradeEvent.OnError)
+
+                    is ApiResult.Exception -> {}
+                }
+            }
         }
     }
 
     fun deleteSearchQuery(query: String) {
         viewModelScope.launch {
-//            repository.deleteSearchQuery(query)
+            deleteSearchQueryUseCase(query)
             fetchSearchQuery()
         }
     }
 
     fun fetchPopularSearches() {
         viewModelScope.launch {
-//            _popularSearchList.value = repository.fetchPopularSearch()
+            getPopularSearch(null).collectLatest {apiResult ->
+                when (apiResult) {
+                    is ApiResult.Success -> {
+                        sendEvent(TradeEvent.OnSuccessSearchPopularHistories(apiResult.value))
+                    }
+
+                    is ApiResult.Error -> sendEvent(TradeEvent.OnError)
+
+                    is ApiResult.Exception -> {}
+                }
+            }
         }
     }
 
     fun deleteAllSearchQuery() {
         viewModelScope.launch {
-//            repository.deleteAll()
+            deleteSearchQueryUseCase()
             fetchSearchQuery()
         }
     }

@@ -9,8 +9,9 @@ import org.chosun.dodamduck.data.dto.post.PostDto
 import org.chosun.dodamduck.network.response.PostDetailResponse
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.data.safeFlow
-import org.chosun.dodamduck.data.source.local.PostLocalSource
+import org.chosun.dodamduck.data.source.local.TradeLocalSource
 import org.chosun.dodamduck.data.source.remote.PostRemoteSource
+import org.chosun.dodamduck.database.SearchHistory
 import org.chosun.dodamduck.domain.model.ApiResult
 import org.chosun.dodamduck.domain.repository.PostRepository
 import org.chosun.dodamduck.network.response.DodamDuckResponse
@@ -22,7 +23,7 @@ import javax.inject.Inject
 
 class PostRepositoryImpl<T> @Inject constructor(
     private val postRemoteSource: PostRemoteSource,
-    private val postLocalSource: PostLocalSource
+    private val tradeLocalSource: TradeLocalSource
 ) : PostRepository<PostDto> {
 
     override suspend fun uploadPost(
@@ -94,15 +95,19 @@ class PostRepositoryImpl<T> @Inject constructor(
         postRemoteSource.fetchCategories()
     }
 
-//    suspend fun getAllSearchHistory(): List<SearchHistory> {
-//        return searchHistoryDao.getAllSearchHistory()
-//    }
-//
-//    suspend fun insertSearchQuery(searchHistory: SearchHistory) {
-//        searchHistoryDao.insertSearchQuery(searchHistory)
-//    }
-//
-//    suspend fun deleteAll() {
-//        searchHistoryDao.deleteAll()
-//    }
+    override suspend fun getSearchHistories(): Flow<ApiResult<List<SearchHistory>>> = safeFlow {
+        tradeLocalSource.getAllSearchHistory()
+    }
+
+    override suspend fun insertSearchQuery(query: String) {
+        tradeLocalSource.insertSearchQuery(SearchHistory(query = query))
+    }
+
+    override suspend fun deleteSearchQuery(query: String) {
+        tradeLocalSource.deleteSearchQuery(query)
+    }
+
+    override suspend fun deleteAllSearchQuery() {
+        tradeLocalSource.deleteAll()
+    }
 }

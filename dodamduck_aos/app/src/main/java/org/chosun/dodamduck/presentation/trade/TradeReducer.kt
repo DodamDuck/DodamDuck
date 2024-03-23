@@ -11,6 +11,8 @@ class TradeReducer(state: TradeState): Reducer<TradeState, TradeEvent>(state) {
             is TradeEvent.OnLoading -> setState(oldState.copy(isLoading = true, isError = false))
             is TradeEvent.OnSuccessTradeCategories -> setState(oldState.copy(isLoading = false, categories = event.categories))
             is TradeEvent.OnSuccessTradeDetail -> setState(oldState.copy(isLoading = false, tradeDetail = event.tradeDetail))
+            is TradeEvent.OnSuccessSearchHistories -> setState(oldState.copy(isLoading = false, searchHistories = event.histories))
+            is TradeEvent.OnSuccessSearchPopularHistories -> setState(oldState.copy(isLoading = false, popularSearchHistories = event.histories))
         }
     }
 }

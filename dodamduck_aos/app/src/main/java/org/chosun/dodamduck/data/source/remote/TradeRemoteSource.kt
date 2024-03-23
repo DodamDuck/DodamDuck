@@ -42,19 +42,4 @@ class TradeRemoteSource @Inject constructor(
 
     suspend fun fetchPopularSearch() = tradeApiService.popularSearch()
 
-    suspend fun getAllSearchHistory() {
-        // List<SearchHistory>
-    }
-
-    suspend fun insertSearchQuery(query: String) {
-//        searchHistoryDao.insertSearchQuery(SearchHistory(query = query))
-    }
-
-    suspend fun deleteAll() {
-//        searchHistoryDao.deleteAll()
-    }
-
-    suspend fun deleteSearchQuery(query: String) {
-//        searchHistoryDao.deleteSearchQuery(query)
-    }
 }

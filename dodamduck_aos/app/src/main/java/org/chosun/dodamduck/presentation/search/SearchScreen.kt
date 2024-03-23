@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.database.SearchHistory
 import org.chosun.dodamduck.data.dto.post.CategoryDto
-import org.chosun.dodamduck.data.dto.search.SearchDTO
+import org.chosun.dodamduck.data.dto.search.SearchEntity
 import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.data.dto.search.convertCategoryList
 import org.chosun.dodamduck.presentation.trade.TradeViewModel
@@ -64,8 +63,6 @@ fun SearchScreen(
 ) {
     var searchText by remember { mutableStateOf("") }
     val state by tradeViewModel.uiState.collectAsStateWithLifecycle()
-    val searchList by tradeViewModel.searchQueryList.collectAsState(initial = null)
-    val popularSearchList by tradeViewModel.popularSearchList.collectAsState(initial = null)
 
     LaunchedEffect(key1 = Unit) {
         tradeViewModel.fetchSearchQuery()
@@ -81,11 +78,11 @@ fun SearchScreen(
         },
         onSearchTextChange = { searchText = it },
         state.tradeList,
-        searchList ?: listOf(),
+        state.searchHistories,
         onSearchDelete = { query ->
             tradeViewModel.deleteSearchQuery(query)
         },
-        popularSearchList = popularSearchList ?: listOf(),
+        popularSearchList = state.popularSearchHistories,
         onSearchDeleteAll = { tradeViewModel.deleteAllSearchQuery() },
         onTagSelected = {
             searchText = it
@@ -111,7 +108,7 @@ fun SearchContent(
     tradeList: List<Trade>,
     searchList: List<SearchHistory>,
     onSearchDelete: (String) -> Unit,
-    popularSearchList: List<SearchDTO>,
+    popularSearchList: List<SearchEntity>,
     onSearchDeleteAll: () -> Unit,
     onTagSelected: (String) -> Unit,
     onItemClick: (String) -> Unit
@@ -191,7 +188,7 @@ fun SearchScreenHeader(
 
 @Composable
 fun SearchTagContent(
-    popularSearchList: List<SearchDTO>,
+    popularSearchList: List<SearchEntity>,
     onTagSelected: (String) -> Unit
 ) {
     val categories = popularSearchList.convertCategoryList()
@@ -292,8 +289,8 @@ fun SearchScreenPreview() {
             ),
             onSearchDelete = {},
             popularSearchList = listOf(
-                SearchDTO("1", "뽀로로", "", ""),
-                SearchDTO("2", "블록놀이", "", "")
+                SearchEntity("1", "뽀로로", "", ""),
+                SearchEntity("2", "블록놀이", "", "")
             ),
             onSearchDeleteAll = {},
             onTagSelected = {},
