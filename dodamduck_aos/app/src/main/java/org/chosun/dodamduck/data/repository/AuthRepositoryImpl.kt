@@ -7,16 +7,21 @@ import org.chosun.dodamduck.data.dto.auth.LoginDto
 import org.chosun.dodamduck.network.response.DodamDuckResponse
 import org.chosun.dodamduck.data.safeFlow
 import org.chosun.dodamduck.data.source.remote.AuthRemoteSource
+import org.chosun.dodamduck.network.auth.TokenManager
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val authRemoteSource: AuthRemoteSource
+    private val authRemoteSource: AuthRemoteSource,
+    private val tokenManager: TokenManager
 ): AuthRepository {
     override suspend fun requestLogin(
         userID: String,
         userPassword: String
     ): Flow<ApiResult<LoginDto>> = safeFlow {
-        authRemoteSource.requestLogin(userID, userPassword)
+        val response = authRemoteSource.requestLogin(userID, userPassword)
+        tokenManager.saveAccessToken(response.token)
+        tokenManager.saveRefreshToken(response.refreshToken)
+        response
     }
 
     override suspend fun requestRegister(

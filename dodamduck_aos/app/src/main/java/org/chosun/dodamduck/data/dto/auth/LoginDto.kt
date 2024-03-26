@@ -12,5 +12,8 @@ data class LoginDto(
     @SerializedName("profile_url")
     val profileUrl: String,
     @SerializedName("login_success")
-    val loginSuccess: Boolean
+    val loginSuccess: Boolean,
+    val token: String,
+    @SerializedName("refresh_token")
+    val refreshToken: String
 )

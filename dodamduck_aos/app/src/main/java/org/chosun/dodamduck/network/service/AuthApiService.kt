@@ -2,6 +2,7 @@ package org.chosun.dodamduck.network.service
 
 import org.chosun.dodamduck.data.dto.auth.LoginDto
 import org.chosun.dodamduck.network.response.DodamDuckResponse
+import org.chosun.dodamduck.network.response.JwtResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -22,4 +23,9 @@ interface AuthApiService {
         @Field("userPassword") password: String
     ): DodamDuckResponse
 
+    @FormUrlEncoded
+    @POST("AccessToken.php")
+    suspend fun refreshToken(
+        @Field("refresh_token") retreshToken: String
+    ): JwtResponse
 }
