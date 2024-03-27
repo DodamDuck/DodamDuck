@@ -25,11 +25,13 @@ class AuthAuthenticator @Inject constructor(
             return null
         }
 
-        return newRequestWithToken(refreshToken, response.request)
+        val newAccessToken = runBlocking { tokenManager.refreshAccessToken(refreshToken) }
+
+        return newRequestWithToken(newAccessToken, response.request)
     }
 
     private fun newRequestWithToken(token: String, request: Request): Request =
         request.newBuilder()
-            .header(AUTHORIZATION, token)
+            .header(AUTHORIZATION, "Bearer $token")
             .build()
 }

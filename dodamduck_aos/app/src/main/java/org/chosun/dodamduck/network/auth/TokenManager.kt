@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TokenManager @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val tokenRefresher: TokenRefresher
 ) {
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
@@ -24,12 +25,17 @@ class TokenManager @Inject constructor(
         preferences[REFRESH_TOKEN_KEY]
     }
 
-    suspend fun saveAccessToken(token: String)
-        = dataStore.edit { prefs -> prefs[ACCESS_TOKEN_KEY] = token }
+    suspend fun saveAccessToken(token: String) =
+        dataStore.edit { prefs -> prefs[ACCESS_TOKEN_KEY] = token }
 
-    suspend fun saveRefreshToken(token: String)
-            = dataStore.edit { prefs -> prefs[REFRESH_TOKEN_KEY] = token }
+    suspend fun saveRefreshToken(token: String) =
+        dataStore.edit { prefs -> prefs[REFRESH_TOKEN_KEY] = token }
 
-    suspend fun deleteAccessToken()
-        = dataStore.edit { prefs -> prefs.remove(ACCESS_TOKEN_KEY) }
+    suspend fun refreshAccessToken(refreshToken: String): String {
+        val newAccessToken = tokenRefresher.refreshAccessToken(refreshToken)
+        saveAccessToken(newAccessToken)
+        return newAccessToken
+    }
+
+    suspend fun deleteAccessToken() = dataStore.edit { prefs -> prefs.remove(ACCESS_TOKEN_KEY) }
 }

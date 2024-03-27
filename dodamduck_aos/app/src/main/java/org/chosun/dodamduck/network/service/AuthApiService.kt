@@ -26,6 +26,6 @@ interface AuthApiService {
     @FormUrlEncoded
     @POST("AccessToken.php")
     suspend fun refreshToken(
-        @Field("refresh_token") retreshToken: String
+        @Field("refresh_token") refreshToken: String
     ): JwtResponse
 }

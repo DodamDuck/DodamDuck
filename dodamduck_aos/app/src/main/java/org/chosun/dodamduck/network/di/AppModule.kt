@@ -11,6 +11,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.chosun.dodamduck.network.auth.AuthAuthenticator
+import org.chosun.dodamduck.network.auth.AuthTokenRefresher
 import org.chosun.dodamduck.network.auth.TokenManager
 import javax.inject.Singleton
 
@@ -19,7 +20,7 @@ import javax.inject.Singleton
 object AppModule {
 
     private const val DATA_STORE_NAME = "user_preferences"
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATA_STORE_NAME)
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATA_STORE_NAME)
 
     @Provides
     @Singleton
@@ -29,12 +30,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTokenManager(dataStore: DataStore<Preferences>): TokenManager {
-        return TokenManager(dataStore)
+    fun provideTokenManager(
+        dataStore: DataStore<Preferences>,
+        refresher: AuthTokenRefresher
+    ): TokenManager {
+        return TokenManager(dataStore, refresher)
     }
 
-    @Singleton
     @Provides
-    fun provideAuthAuthenticator(tokenManager: TokenManager): AuthAuthenticator =
+    @Singleton
+    fun provideAuthAuthenticator(
+        tokenManager: TokenManager
+    ): AuthAuthenticator =
         AuthAuthenticator(tokenManager)
 }
