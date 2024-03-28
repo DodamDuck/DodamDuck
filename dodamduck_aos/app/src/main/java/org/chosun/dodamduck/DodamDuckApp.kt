@@ -2,7 +2,6 @@ package org.chosun.dodamduck
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import org.chosun.dodamduck.network.auth.TokenManager
 import org.chosun.dodamduck.presentation.auth.AuthSideEffect
 import org.chosun.dodamduck.presentation.auth.AuthViewModel
+import org.chosun.dodamduck.presentation.common.LoadingLottieScreen
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.navigation.DodamDuckBottomNavigation
 import org.chosun.dodamduck.ui.navigation.DoDamDuckNavigationGraph
@@ -38,29 +38,33 @@ fun DodamDuckApp(
 
     LaunchedEffect(Unit) {
         accessToken = tokenManager?.accessToken?.first()
-
-        accessToken?.let { authViewModel.loginRequest("", "") }
+        accessToken?.let { authViewModel.loginRequest("", "", loginCheckSkip = true) }
 
         authViewModel.effect.collectLatest { effect ->
             when(effect) {
-                AuthSideEffect.NavigateToHomeScreen -> startDestination = BottomNavItem.Home.screenRoute
+                AuthSideEffect.NavigateToHomeScreen -> {
+                    startDestination = BottomNavItem.Home.screenRoute
+                }
                 else -> {}
             }
         }
     }
 
-    if (state.isLoginLoading) {
-        CircularProgressIndicator()
-    } else {
-        DodamDuckTheme {
-            Scaffold(
-                bottomBar = { DodamDuckBottomNavigation(navController = navController) }
-            ) {
-                Box(Modifier.padding(it)) {
-                    DoDamDuckNavigationGraph(
-                        navController = navController,
-                        startDestination = startDestination
-                    )
+    when {
+        state.isLoginLoading -> {
+            LoadingLottieScreen()
+        }
+        else -> {
+            DodamDuckTheme {
+                Scaffold(
+                    bottomBar = { DodamDuckBottomNavigation(navController = navController) }
+                ) {
+                    Box(Modifier.padding(it)) {
+                        DoDamDuckNavigationGraph(
+                            navController = navController,
+                            startDestination = startDestination
+                        )
+                    }
                 }
             }
         }
