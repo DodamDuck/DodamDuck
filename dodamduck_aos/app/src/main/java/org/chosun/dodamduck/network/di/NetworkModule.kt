@@ -69,7 +69,7 @@ private fun provideOkHttpClient(
 var httpLoggingInterceptor = HttpLoggingInterceptor { log ->
     Log.d("OkHttp", log)
 }.apply {
-    level = HttpLoggingInterceptor.Level.BASIC
+    level = HttpLoggingInterceptor.Level.BODY
 }
 
 object NetworkType {
