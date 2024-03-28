@@ -51,6 +51,17 @@ class TradeViewModel @Inject constructor(
         location: String,
         image: MultipartBody.Part
     ) {
+        val validationResult = when {
+            title.length < 2 -> "제목은 최소 2글자 이상이어야 합니다."
+            content.length < 2 -> "내용은 최소 2글자 이상이어야 합니다."
+            else -> ""
+        }
+
+        if (validationResult.isNotEmpty()) {
+            setEffect(TradeSideEffect.Toast(validationResult))
+            return
+        }
+
         viewModelScope.processApiResult(
             uploadTradeUseCase(
                 PostUseCaseDto(

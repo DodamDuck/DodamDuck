@@ -87,13 +87,17 @@ fun PostWriteScreen(
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageList = (imageList + uri) as List<Uri>
+        uri?.let { imageList = imageList + it }
     }
 
     LaunchedEffect(key1 = effect) {
-        when(effect) {
+        when (effect) {
             is PostSideEffect.Toast
-            -> Toast.makeText(context, (effect as PostSideEffect.Toast).text, Toast.LENGTH_SHORT).show()
+            -> Toast.makeText(
+                context,
+                (effect as PostSideEffect.Toast).text,
+                Toast.LENGTH_SHORT
+            ).show()
 
             is PostSideEffect.NavigatePopBackStack
             -> navController.popBackStack()
@@ -214,7 +218,7 @@ fun PostWriteContent(
                 label = stringResource(id = R.string.post_information_message),
             )
 
-            if(imageList.isNotEmpty()) {
+            if (imageList.isNotEmpty()) {
                 Image(
                     contentScale = ContentScale.Crop,
                     modifier = imageModifier,

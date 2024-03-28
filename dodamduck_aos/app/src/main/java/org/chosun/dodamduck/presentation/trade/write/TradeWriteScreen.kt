@@ -1,6 +1,7 @@
 package org.chosun.dodamduck.presentation.trade.write
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -37,9 +38,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.presentation.trade.TradeSideEffect
@@ -64,13 +65,11 @@ fun TradeWriteScreen(
 ) {
     val context = LocalContext.current
 
-    val effect by tradeViewModel.effect.collectAsStateWithLifecycle(initialValue = null)
-
     var imageList by remember { mutableStateOf<List<Uri>>(listOf()) }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageList = ((imageList + uri) ?: throw NullPointerException()) as List<Uri>
+        uri?.let { imageList = imageList + it }
     }
 
     var title by remember { mutableStateOf("") }
@@ -78,12 +77,14 @@ fun TradeWriteScreen(
     var tradeLocation by remember { mutableStateOf(DodamDuckData.userInfo.location) }
     var transactionType by remember { mutableIntStateOf(1) }
 
-    LaunchedEffect(key1 = effect) {
-        when(effect) {
-            is TradeSideEffect.NavigatePopBackStack
-            -> navController.popBackStack()
+    LaunchedEffect(key1 = Unit) {
+        tradeViewModel.effect.collectLatest { effect ->
+            when(effect) {
+                is TradeSideEffect.NavigatePopBackStack -> navController.popBackStack()
+                is TradeSideEffect.Toast -> Toast.makeText(context, effect.text, Toast.LENGTH_SHORT).show()
 
-            else -> {}
+                else -> {}
+            }
         }
     }
 
