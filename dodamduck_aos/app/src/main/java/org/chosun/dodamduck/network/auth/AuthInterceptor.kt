@@ -23,9 +23,7 @@ class AuthInterceptor @Inject constructor(
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token: String = runBlocking {
-            tokenManager.accessToken.first()
-        } ?: return errorResponse(chain.request())
+        val token: String? = runBlocking { tokenManager.accessToken.first() }
 
         val request = chain.request().newBuilder().header(AUTHORIZATION, "Bearer $token").build()
 
@@ -43,12 +41,4 @@ class AuthInterceptor @Inject constructor(
 
         return response
     }
-
-    private fun errorResponse(request: Request): Response = Response.Builder()
-        .request(request)
-        .protocol(Protocol.HTTP_2)
-        .code(UNAUTHORIZED_ERROR)
-        .message("")
-        .body("".toResponseBody(null))
-        .build()
 }

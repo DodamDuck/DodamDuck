@@ -1,6 +1,5 @@
 package org.chosun.dodamduck
 
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -19,13 +18,16 @@ class OnboardingScreenNavigationTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-    lateinit var navController: NavHostController
+    private lateinit var navController: NavHostController
 
     @Before
     fun setupDodamDuckNavHost() {
         composeTestRule.setContent {
             navController = rememberNavController()
-            DoDamDuckNavigationGraph(navController = navController)
+            DoDamDuckNavigationGraph(
+                navController = navController,
+                startDestination = BottomNavItem.Onboarding.screenRoute
+            )
         }
     }
 

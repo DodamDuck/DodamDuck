@@ -81,10 +81,13 @@ sealed class BottomNavItem(
 }
 
 @Composable
-fun DoDamDuckNavigationGraph(navController: NavHostController) {
+fun DoDamDuckNavigationGraph(
+    navController: NavHostController,
+    startDestination: String
+) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavItem.Onboarding.screenRoute
+        startDestination = startDestination
     ) {
         composable(BottomNavItem.Home.screenRoute) {
             TradeScreen(navController)

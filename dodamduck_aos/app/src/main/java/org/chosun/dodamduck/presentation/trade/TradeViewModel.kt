@@ -64,7 +64,10 @@ class TradeViewModel @Inject constructor(
             ),
         ) {
             onLoading { sendEvent(TradeEvent.OnLoading) }
-            onSuccess { sendEvent(TradeEvent.OnSuccess) }
+            onSuccess {
+                sendEvent(TradeEvent.OnSuccess)
+                setEffect(TradeSideEffect.NavigatePopBackStack)
+            }
             onError { sendEvent(TradeEvent.OnError) }
         }
     }
