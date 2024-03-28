@@ -70,7 +70,7 @@ fun TradeWriteScreen(
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageList = ((imageList + uri) ?: throw NullPointerException()) as List<Uri>
+        uri?.let { imageList = imageList + it }
     }
 
     var title by remember { mutableStateOf("") }
