@@ -44,6 +44,7 @@ import org.chosun.dodamduck.data.dto.post.CategoryDto
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.PostItem
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
+import org.chosun.dodamduck.ui.modifier.noRippleClickable
 import org.chosun.dodamduck.ui.navigation.BottomNavItem
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
@@ -86,7 +87,7 @@ fun PostScreen(
                 items(state.postList.size) {index ->
                     PostItem(modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                        .clickable {
+                        .noRippleClickable {
                             postViewModel.uploadViewCount(state.postList[index].shareID)
                             navController.navigate(
                                 "${BottomNavItem.PostDetail.screenRoute}/${state.postList[index].shareID}/post"
