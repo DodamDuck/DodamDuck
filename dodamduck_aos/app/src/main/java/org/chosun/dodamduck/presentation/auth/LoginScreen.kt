@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.AuthBody
 import org.chosun.dodamduck.ui.component.AuthTopSurface
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
 
@@ -39,12 +39,12 @@ fun LoginScreen(
         authViewModel.effect.collectLatest { effect ->
             when (effect) {
                 is AuthSideEffect.NavigateToHomeScreen
-                -> navController.navigate(BottomNavItem.Home.screenRoute) {
+                -> navController.navigate(Screen.Trade.screenRoute) {
                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 }
 
                 is AuthSideEffect.NavigateToRegisterScreen
-                -> navController.navigate(BottomNavItem.Register.screenRoute) {
+                -> navController.navigate(Screen.Register.screenRoute) {
                     popUpTo(navController.graph.startDestinationId)
                 }
 

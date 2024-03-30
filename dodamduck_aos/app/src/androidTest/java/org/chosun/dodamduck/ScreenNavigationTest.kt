@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.navigation.DoDamDuckNavigationGraph
 import org.junit.Before
 import org.junit.Rule
@@ -26,7 +26,7 @@ class OnboardingScreenNavigationTest {
             navController = rememberNavController()
             DoDamDuckNavigationGraph(
                 navController = navController,
-                startDestination = BottomNavItem.Onboarding.screenRoute
+                startDestination = Screen.Onboarding.screenRoute
             )
         }
     }
@@ -34,13 +34,13 @@ class OnboardingScreenNavigationTest {
     @Test
     fun onboardingScreen_loginButtonClicked_navigatesToLoginScreen() {
         composeTestRule.onNodeWithText("로그인").performClick()
-        assert(navController.currentBackStackEntry?.destination?.route == BottomNavItem.Login.screenRoute)
+        assert(navController.currentBackStackEntry?.destination?.route == Screen.Login.screenRoute)
     }
 
     @Test
     fun onboardingScreen_registerButtonClicked_navigatesToRegisterScreen() {
         composeTestRule.onNodeWithText("회원가입").performClick()
-        assert(navController.currentBackStackEntry?.destination?.route == BottomNavItem.Register.screenRoute)
+        assert(navController.currentBackStackEntry?.destination?.route == Screen.Register.screenRoute)
     }
 
 }

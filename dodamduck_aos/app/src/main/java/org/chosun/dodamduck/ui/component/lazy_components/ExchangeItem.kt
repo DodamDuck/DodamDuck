@@ -84,9 +84,10 @@ fun ExchangeItem(
         Spacer(modifier = Modifier.weight(1f))
         CommentIcon(
             modifier = Modifier
-                .align(alignment = Alignment.Bottom),
+                .align(alignment = Alignment.Bottom)
+                .padding(top = 2.dp),
             text = item.commentCount,
-            size = 34.dp
+            size = 24.dp
         )
     }
 }

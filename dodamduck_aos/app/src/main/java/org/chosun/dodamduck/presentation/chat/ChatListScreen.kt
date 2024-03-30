@@ -37,7 +37,7 @@ import coil.compose.rememberAsyncImagePainter
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.data.model.DodamDuckData
 import org.chosun.dodamduck.network.response.ChatListDTO
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.utils.Utils.ellipsis
 import org.chosun.dodamduck.utils.Utils.getUserProfileUrl
@@ -123,7 +123,7 @@ fun ChatItem(
             .fillMaxWidth()
             .clickable {
                 navController.navigate(
-                    "${BottomNavItem.Chat.screenRoute}/${currentUserID}/${otherUserID}/${otherUserName}/${imageUrl}/${title}/${item.category}"
+                    "${Screen.Chat.screenRoute}/${currentUserID}/${otherUserID}/${otherUserName}/${imageUrl}/${title}/${item.category}"
                 )
             }
     ) {
