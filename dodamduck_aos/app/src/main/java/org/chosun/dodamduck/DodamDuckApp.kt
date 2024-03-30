@@ -20,7 +20,7 @@ import org.chosun.dodamduck.network.auth.TokenManager
 import org.chosun.dodamduck.presentation.auth.AuthSideEffect
 import org.chosun.dodamduck.presentation.auth.AuthViewModel
 import org.chosun.dodamduck.presentation.common.LoadingLottieScreen
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.navigation.DodamDuckBottomNavigation
 import org.chosun.dodamduck.ui.navigation.DoDamDuckNavigationGraph
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
@@ -34,7 +34,7 @@ fun DodamDuckApp(
     val navController = rememberNavController()
 
     val state by authViewModel.uiState.collectAsStateWithLifecycle()
-    var startDestination by rememberSaveable { mutableStateOf(BottomNavItem.Onboarding.screenRoute) }
+    var startDestination by rememberSaveable { mutableStateOf(Screen.Onboarding.screenRoute) }
 
     LaunchedEffect(Unit) {
         accessToken = tokenManager?.accessToken?.first()
@@ -43,10 +43,10 @@ fun DodamDuckApp(
         authViewModel.effect.collectLatest { effect ->
             when(effect) {
                 AuthSideEffect.NavigateToHomeScreen -> {
-                    startDestination = BottomNavItem.Home.screenRoute
+                    startDestination = Screen.Trade.screenRoute
                 }
                 AuthSideEffect.NavigateToOnBoardingScreen -> {
-                    startDestination = BottomNavItem.Onboarding.screenRoute
+                    startDestination = Screen.Onboarding.screenRoute
                 }
                 else -> {}
             }

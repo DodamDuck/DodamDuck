@@ -72,7 +72,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckMessageInputField
 import org.chosun.dodamduck.ui.component.DodamDuckText
 import org.chosun.dodamduck.ui.component.SpannableText
 import org.chosun.dodamduck.ui.component.lazy_components.PostType
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
@@ -102,7 +102,7 @@ fun PostDetailScreen(
     LaunchedEffect(key1 = effect) {
         when (effect) {
             is PostDetailSideEffect.NavigateToChatList
-            -> navController.navigate(BottomNavItem.ChatList.screenRoute)
+            -> navController.navigate(Screen.ChatList.screenRoute)
 
             is PostDetailSideEffect.Toast
             -> Toast.makeText(
@@ -179,9 +179,9 @@ fun PostDetailContent(
                     .padding(top = 8.dp)
                     .clickable {
                         if (postType == "trade")
-                            navController.navigate(BottomNavItem.Home.screenRoute)
+                            navController.navigate(Screen.Trade.screenRoute)
                         else if (postType == "post")
-                            navController.navigate(BottomNavItem.Post.screenRoute)
+                            navController.navigate(Screen.Post.screenRoute)
                     },
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = "Back Button",

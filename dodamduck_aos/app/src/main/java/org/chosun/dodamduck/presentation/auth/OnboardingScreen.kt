@@ -22,7 +22,7 @@ import org.chosun.dodamduck.ui.component.BottomRoundedBox
 import org.chosun.dodamduck.ui.component.DodamDuckIcon
 import org.chosun.dodamduck.ui.component.PrimaryButton
 import org.chosun.dodamduck.ui.component.WelcomeText
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
 
@@ -50,13 +50,13 @@ fun OnboardingScreen(navController: NavHostController) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.login),
-                onClick = { navController.navigate(BottomNavItem.Login.screenRoute) }
+                onClick = { navController.navigate(Screen.Login.screenRoute) }
             )
             Spacer(modifier = Modifier.height(27.dp))
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.register),
-                onClick = { navController.navigate(BottomNavItem.Register.screenRoute) }
+                onClick = { navController.navigate(Screen.Register.screenRoute) }
             )
         }
 

@@ -45,7 +45,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.PostItem
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
 import org.chosun.dodamduck.ui.modifier.noRippleClickable
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
@@ -90,7 +90,7 @@ fun PostScreen(
                         .noRippleClickable {
                             postViewModel.uploadViewCount(state.postList[index].shareID)
                             navController.navigate(
-                                "${BottomNavItem.PostDetail.screenRoute}/${state.postList[index].shareID}/post"
+                                "${Screen.PostDetail.screenRoute}/${state.postList[index].shareID}/post"
                             ) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true
@@ -119,7 +119,7 @@ fun PostScreen(
                 .align(Alignment.BottomEnd)
                 .height(60.dp)
                 .padding(end = 8.dp, bottom = 8.dp),
-            onClick = { navController.navigate(BottomNavItem.PostWrite.screenRoute) },
+            onClick = { navController.navigate(Screen.PostWrite.screenRoute) },
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Brown),
             border = BorderStroke(width = 1.dp, color = Brown)
         ) {
@@ -142,7 +142,7 @@ fun PostHeader(
         DodamDuckTextH2(text = "빛가람동", color = Brown)
         Spacer(modifier = Modifier.weight(1f))
         Icon(
-            modifier = Modifier.clickable { navController.navigate(BottomNavItem.Search.screenRoute) },
+            modifier = Modifier.clickable { navController.navigate(Screen.Search.screenRoute) },
             imageVector = Icons.Default.Search,
             contentDescription = "Search Icon"
         )

@@ -43,7 +43,7 @@ import kotlinx.coroutines.flow.collectLatest
 import org.chosun.dodamduck.R
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
-import org.chosun.dodamduck.ui.navigation.BottomNavItem
+import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 
@@ -80,13 +80,13 @@ fun TradeScreen(
                 -> navController.popBackStack()
 
                 is TradeSideEffect.NavigateToTradeWrite
-                -> navController.navigate(BottomNavItem.TradeWrite.screenRoute)
+                -> navController.navigate(Screen.TradeWrite.screenRoute)
 
                 is TradeSideEffect.NavigateToSearch
-                -> navController.navigate(BottomNavItem.Search.screenRoute)
+                -> navController.navigate(Screen.Search.screenRoute)
 
                 is TradeSideEffect.NavigateToDetail
-                -> navController.navigate("${BottomNavItem.PostDetail.screenRoute}/${effect.postId}/trade") {
+                -> navController.navigate("${Screen.PostDetail.screenRoute}/${effect.postId}/trade") {
                     popUpTo(navController.graph.startDestinationId) {
                         saveState = true
                     }
