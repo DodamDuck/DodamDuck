@@ -30,7 +30,7 @@ fun DodamDuckApp(
     tokenManager: TokenManager? = null,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    var accessToken: String?
+    var accessToken: String? = null
     val navController = rememberNavController()
 
     val state by authViewModel.uiState.collectAsStateWithLifecycle()
@@ -45,16 +45,19 @@ fun DodamDuckApp(
                 AuthSideEffect.NavigateToHomeScreen -> {
                     startDestination = BottomNavItem.Home.screenRoute
                 }
+                AuthSideEffect.NavigateToOnBoardingScreen -> {
+                    startDestination = BottomNavItem.Onboarding.screenRoute
+                }
                 else -> {}
             }
         }
     }
 
     when {
-        state.isLoginLoading -> {
+        state.isLoginLoading == true -> {
             LoadingLottieScreen()
         }
-        else -> {
+        state.isLoginLoading == false || state.loginResult == false || accessToken == null -> {
             DodamDuckTheme {
                 Scaffold(
                     bottomBar = { DodamDuckBottomNavigation(navController = navController) }
