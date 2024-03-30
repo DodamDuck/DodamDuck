@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,15 +64,15 @@ fun VisibleIcon(
 fun CommentIcon(
     modifier: Modifier,
     text: String = "3",
-    size: Dp = 25.dp
+    size: Dp = 12.dp
 ) {
     Row(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_comment_26),
+            painter = painterResource(id = R.drawable.vc_comment),
             contentDescription = "Chat Icon",
-            Modifier.size(size)
+            Modifier.size(size).padding(top = 2.dp, end = 2.dp)
         )
         Text(
             modifier = Modifier.align(Bottom),

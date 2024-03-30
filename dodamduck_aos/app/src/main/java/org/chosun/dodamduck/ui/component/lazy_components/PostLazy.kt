@@ -74,8 +74,8 @@ fun PostItem(
 
             CommentIcon(
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(top = 2.dp),
+                    .align(Alignment.End),
+                size = 18.dp,
                 text = item.commentCount
             )
         }
@@ -84,8 +84,8 @@ fun PostItem(
 
 @Composable
 fun PostType(
-    text: String = "수다",
     modifier: Modifier = Modifier,
+    text: String = "수다",
     horizontalPadding: Dp = 12.dp,
     verticalPadding: Dp = 2.dp,
     fontSize: Int = 10,
@@ -110,14 +110,16 @@ fun PostType(
 @Preview(showBackground = true)
 fun PostItemPreview() {
     Box(Modifier.fillMaxSize()) {
-        LazyColumn() {
+        LazyColumn {
             items(5) {
                 PostItem(
                     item = PostDto(
-                        "1", "user1",
-                        "1", "뽀로로 놀이기구 어떤가요?",
+                        "뽀로로 놀이기구 어떤가요?",
                         "뽀로로 놀이 기구를 이벤트로 받았는데 ...",
-                        "", "2023-11-16 22:59:38","", "1"
+                        "1",
+                        "2023-11-16 22:59:38",
+                        "동구",
+                        "21", "0","카테고리", "1"
                     )
                 )
             }
