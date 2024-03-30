@@ -40,7 +40,7 @@
 
 <table>
   <tr>
-    <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/624757c1-876f-4790-8bd7-51dda13c2570"></td>
+    <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/0d3cba28-2843-44f1-979f-e67ba57673ae"></td>
     <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/210950e5-a45a-4fef-833e-bccdbd8c6a3c"></td>
     <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/e8454905-f20d-4a89-acbd-a074d1496039"></td>
       <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/a6788af0-aded-47c1-8735-11782c86e440"></td>
@@ -59,7 +59,7 @@
     <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/ef6d3cf9-47a0-4b4f-b527-1ce0735b48a0"></td>
     <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/c063cb1f-392e-4e61-b61d-53428d0117d5"></td>
     <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/e2328d0c-ab06-4b3f-8ec0-9c56acf5554a"></td>
-    <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/fd420c3e-e521-477b-ba52-65d50c599f58"></td>
+    <td><img width="200" src="https://github.com/DodamDuck/DodamDuck/assets/54762273/c60a4ce5-91e0-47a5-887f-aa505dc8a47c"></td>
   </tr>
     <td align="center"><b>장난감 도서관 대여 화면</b></td>
     <td align="center"><b>채팅 목록</b></td>
