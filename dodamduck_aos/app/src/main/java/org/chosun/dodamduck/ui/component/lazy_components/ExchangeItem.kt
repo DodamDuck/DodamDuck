@@ -28,6 +28,7 @@ import coil.compose.AsyncImage
 import org.chosun.dodamduck.data.dto.trade.Trade
 import org.chosun.dodamduck.ui.component.CommentIcon
 import org.chosun.dodamduck.ui.component.DodamDuckTextH3
+import org.chosun.dodamduck.ui.modifier.noRippleClickable
 import org.chosun.dodamduck.utils.Utils.formatDateDiff
 
 @Composable
@@ -52,7 +53,7 @@ fun ExchangeItem(
     onItemClick: (String) -> Unit
 ) {
     Row(
-        modifier = Modifier.clickable { onItemClick(item.postId) }
+        modifier = Modifier.noRippleClickable { onItemClick(item.postId) }
     ) {
         AsyncImage(
             modifier = Modifier

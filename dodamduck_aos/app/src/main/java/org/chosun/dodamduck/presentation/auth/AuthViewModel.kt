@@ -36,7 +36,7 @@ class AuthViewModel @Inject constructor(
             onSuccess { data ->
                 if (data.loginSuccess) {
 
-                    if(loginCheckSkip) {
+                    if (loginCheckSkip) {
                         delay(2000)
                         sendEvent(AuthEvent.OnSuccessLogin)
                     } else {
@@ -44,12 +44,14 @@ class AuthViewModel @Inject constructor(
                     }
 
                     DodamDuckData.userInfo = data
-                    sendSideEffect(AuthSideEffect.NavigateToHomeScreen)
+                    setEffect(AuthSideEffect.NavigateToHomeScreen)
                 } else {
-                    sendSideEffect(AuthSideEffect.Toast("로그인 정보를 다시 확인해 주세요."))
+                    setEffect(AuthSideEffect.Toast("로그인 정보를 다시 확인해 주세요."))
                 }
             }
-            onError { error -> AuthEvent.OnErrorLogin(error = error.message ?: "error") }
+            onError { error ->
+                error.message?.let { sendEvent(AuthEvent.OnErrorLogin(error.message)) }
+            }
         }
     }
 

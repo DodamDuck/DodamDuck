@@ -10,6 +10,8 @@ sealed class AuthSideEffect: SideEffect {
 
     object NavigateToRegisterScreen: AuthSideEffect()
 
+    object NavigateToOnBoardingScreen: AuthSideEffect()
+
     data class Toast(val text: String): AuthSideEffect()
 
 }

@@ -20,7 +20,7 @@ class AuthAuthenticator @Inject constructor(
             tokenManager.refreshToken.first()
         }
 
-        if(refreshToken == null || refreshToken == "LOGIN") {
+        if(refreshToken == null) {
             response.close()
             return null
         }

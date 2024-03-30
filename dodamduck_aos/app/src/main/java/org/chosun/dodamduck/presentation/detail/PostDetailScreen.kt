@@ -100,12 +100,16 @@ fun PostDetailScreen(
     }
 
     LaunchedEffect(key1 = effect) {
-        when(effect) {
+        when (effect) {
             is PostDetailSideEffect.NavigateToChatList
             -> navController.navigate(BottomNavItem.ChatList.screenRoute)
 
             is PostDetailSideEffect.Toast
-            -> Toast.makeText(context, (effect as PostDetailSideEffect.Toast).text, Toast.LENGTH_SHORT).show()
+            -> Toast.makeText(
+                context,
+                (effect as PostDetailSideEffect.Toast).text,
+                Toast.LENGTH_SHORT
+            ).show()
 
             is PostDetailSideEffect.NavigatePopBackStack
             -> navController.popBackStack()
@@ -119,7 +123,8 @@ fun PostDetailScreen(
     val focusManager = LocalFocusManager.current
 
     LaunchedEffect(key1 = state.postDetail) {
-        scrollState.animateScrollTo(scrollState.maxValue)
+        if(!state.isFirstLoad)
+            scrollState.animateScrollTo(scrollState.maxValue)
     }
 
     PostDetailContent(
