@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,10 +38,7 @@ fun OnboardingScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxSize()
         ) {
-            BottomRoundedBox(
-                modifier = Modifier.height(400.dp),
-                startRound = 200
-            )
+            OnboardingTopArea(modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(82.dp))
 
             WelcomeText()
@@ -59,13 +56,24 @@ fun OnboardingScreen(navController: NavHostController) {
                 onClick = { navController.navigate(Screen.Register.screenRoute) }
             )
         }
+    }
+}
 
-        DodamDuckIcon(
-            modifier = Modifier
-                .offset(y = 60.dp)
-                .align(Alignment.TopCenter),
-            size = 300
-        )
+@Composable
+fun OnboardingTopArea(modifier: Modifier) {
+    BottomRoundedBox(
+        modifier = Modifier.height(400.dp),
+        startRound = 200
+    ) {
+        Box(modifier = modifier) {
+            DodamDuckIcon(
+                modifier = Modifier
+                    .padding(top = 60.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter),
+                size = 300
+            )
+        }
     }
 }
 

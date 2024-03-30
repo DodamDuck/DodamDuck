@@ -48,7 +48,7 @@ fun LoadingLottieScreen() {
             Box(modifier = Modifier.align(CenterHorizontally)) {
                 DodamDuckIcon(
                     modifier = Modifier
-                        .padding(top = 40.dp)
+                        .padding(top = 60.dp)
                         .fillMaxWidth()
                         .align(Alignment.TopCenter),
                     size = 300
