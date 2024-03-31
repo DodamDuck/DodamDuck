@@ -32,10 +32,10 @@ import org.chosun.dodamduck.ui.component.DodamDuckSearchBar
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.DodamDuckTitleText
 import org.chosun.dodamduck.ui.component.lazy_components.ToyList
-import org.chosun.dodamduck.ui.modifier.addFocusCleaner
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Primary
+import org.chosun.dodamduck.utils.addFocusCleaner
 
 @Composable
 fun LibraryScreen(toyLibraryViewModel: ToyLibraryViewModel = hiltViewModel()) {

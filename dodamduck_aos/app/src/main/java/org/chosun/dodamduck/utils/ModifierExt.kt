@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui.modifier
+package org.chosun.dodamduck.utils
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures

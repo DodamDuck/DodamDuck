@@ -44,10 +44,10 @@ import org.chosun.dodamduck.data.dto.post.CategoryDto
 import org.chosun.dodamduck.ui.component.DodamDuckTextH2
 import org.chosun.dodamduck.ui.component.lazy_components.PostItem
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
-import org.chosun.dodamduck.ui.modifier.noRippleClickable
 import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.Brown
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
+import org.chosun.dodamduck.utils.noRippleClickable
 
 @Composable
 fun PostScreen(
