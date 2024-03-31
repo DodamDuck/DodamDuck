@@ -12,7 +12,7 @@ class RequestRegister @Inject constructor(
     private val authRepo: AuthRepository
 ): BaseResultUseCase<AuthUseCaseDto, DodamDuckResponse>() {
 
-    override suspend fun execute(authUseCaseDto: AuthUseCaseDto): Flow<ApiResult<DodamDuckResponse>> {
-        return authRepo.requestRegister(authUseCaseDto.userID, authUseCaseDto.password)
+    override suspend fun execute(params: AuthUseCaseDto): Flow<ApiResult<DodamDuckResponse>> {
+        return authRepo.requestRegister(params.userID, params.password)
     }
 }

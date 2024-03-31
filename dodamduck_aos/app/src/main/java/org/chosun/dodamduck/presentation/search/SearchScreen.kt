@@ -51,10 +51,10 @@ import org.chosun.dodamduck.presentation.trade.TradeViewModel
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.component.lazy_components.ExchangeItemList
 import org.chosun.dodamduck.ui.component.lazy_components.TagLazyRow
-import org.chosun.dodamduck.ui.modifier.addFocusCleaner
 import org.chosun.dodamduck.ui.navigation.Screen
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.Gray5
+import org.chosun.dodamduck.utils.addFocusCleaner
 
 @Composable
 fun SearchScreen(
