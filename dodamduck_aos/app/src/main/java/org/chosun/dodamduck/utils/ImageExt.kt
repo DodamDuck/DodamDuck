@@ -1,4 +1,4 @@
-package org.chosun.dodamduck.ui.util
+package org.chosun.dodamduck.utils
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri

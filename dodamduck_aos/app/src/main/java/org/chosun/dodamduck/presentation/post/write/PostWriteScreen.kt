@@ -69,7 +69,7 @@ import org.chosun.dodamduck.ui.component.DodamDuckTextH3
 import org.chosun.dodamduck.ui.component.FocusTextField
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
 import org.chosun.dodamduck.ui.theme.LightBrown80
-import org.chosun.dodamduck.ui.util.getDrawableUri
+import org.chosun.dodamduck.utils.getDrawableUri
 import org.chosun.dodamduck.utils.Utils.uriToBitmap
 import org.chosun.dodamduck.utils.Utils.uriToMultipartBody
 
