@@ -55,7 +55,7 @@ import org.chosun.dodamduck.ui.component.PrimaryButton
 import org.chosun.dodamduck.ui.component.lazy_components.PhotoCountBox
 import org.chosun.dodamduck.ui.component.lazy_components.PhotoSelectionList
 import org.chosun.dodamduck.ui.theme.DodamDuckTheme
-import org.chosun.dodamduck.ui.util.getDrawableUri
+import org.chosun.dodamduck.utils.getDrawableUri
 import org.chosun.dodamduck.utils.Utils.uriToMultipartBody
 
 @Composable
